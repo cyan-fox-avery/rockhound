@@ -1353,3 +1353,49 @@
   .workbench-card .sparkle-gem::after,
   .museum-specimen-column.filled .sparkle-gem::after{display:none}
 }
+
+/* ===== Beta 1.2.2 discovery notebook ===== */
+.material-depths{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  margin:1px 0 5px;
+  color:#c7c1b8;
+  font-size:.66rem;
+  line-height:1.3;
+}
+.material-depths span{color:var(--gold);font-size:.72rem}
+.material-depths strong{color:#ddd6ca;font-weight:850}
+.workbench-empty{
+  padding:18px 16px;
+  border:1px dashed var(--line);
+  border-radius:17px;
+  background:rgba(23,27,30,.7);
+  text-align:center;
+}
+.workbench-empty strong{display:block;margin-bottom:5px}
+.workbench-empty p{margin:0;color:var(--muted);font-size:.76rem;line-height:1.45}
+.museum-group.undiscovered{
+  opacity:.88;
+}
+.museum-group.undiscovered .museum-group-title strong{
+  letter-spacing:.14em;
+  color:#8f9698;
+}
+.museum-specimen-column.unknown-specimen .museum-specimen{
+  border-style:dashed;
+  background:rgba(9,11,12,.44);
+}
+.unknown-material-icon{
+  display:grid;
+  place-items:center;
+  width:46px;
+  height:46px;
+  border:1px dashed #50575a;
+  border-radius:50%;
+  color:#737a7d;
+  background:rgba(255,255,255,.025);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:1.45rem;
+  font-weight:800;
+}

@@ -423,18 +423,18 @@ const DURABILITY_LEVELS = [
   ];
 
   const WORKSHOP_LEVELS = [
-    {name:'Basic Workshop',cost:180,next:'Precision Workshop',description:'Handles quartz, amethyst, iron ore, and copper ore.'},
-    {name:'Precision Workshop',cost:650,next:'Advanced Lapidary',description:'Adds garnet, topaz, citrine, calcite, fluorite, cassiterite, and other mid-game materials.'},
-    {name:'Advanced Lapidary',cost:1250,next:'Master Lapidary',description:'Can process aquamarine, sapphire, rose quartz, malachite, galena, and sphalerite.'},
-    {name:'Master Lapidary',cost:2400,next:'Specialist Lapidary',description:'Handles ruby and emerald and prepares the workshop for unusual deep-zone material.'},
-    {name:'Specialist Lapidary',cost:null,next:null,description:'Processes scheelite, willemite, hackmanite, apatite, and opal. Processing remains free.'}
+    {name:'Basic Workshop',cost:180,next:'Precision Workshop',description:'Handles your earliest processable minerals and ores.'},
+    {name:'Precision Workshop',cost:650,next:'Advanced Lapidary',description:'Adds support for a broader range of mid-game minerals and ores.'},
+    {name:'Advanced Lapidary',cost:1250,next:'Master Lapidary',description:'Handles tougher gemstones and deeper metal-bearing ores.'},
+    {name:'Master Lapidary',cost:2400,next:'Specialist Lapidary',description:'Handles demanding deep-zone gemstones and prepares the workshop for unusual material.'},
+    {name:'Specialist Lapidary',cost:null,next:null,description:'Processes the current deepest-zone materials. Processing remains free.'}
   ];
 
   const DEPTH_UPGRADES = {
-    2:{cost:225,description:'Unlock Depth 2: the Lower Works, adding garnet, topaz, pyrite, and new fossil hunting.'},
-    3:{cost:850,description:'Unlock Depth 3: the Deep Gallery, adding new quartz varieties, fluorite, beryl, corundum, tin ore, and deeper historical finds.'},
-    4:{cost:1800,description:'Unlock Depth 4: the Crystal Veins, adding ruby, emerald, rose quartz, malachite, lead and zinc ores, plus new fossils and artifacts.'},
-    5:{cost:3600,description:'Unlock Depth 5: the Luminous Zone, adding fluorescent minerals, tungsten ore, opal, belemnites, and deeper mining history.'}
+    2:{cost:225,description:'Unlock Depth 2: the Lower Works, adding new gemstones, metallic minerals, and more fossil hunting.'},
+    3:{cost:850,description:'Unlock Depth 3: the Deep Gallery, adding new crystal families, colourful minerals, another metal-bearing ore, and deeper historical finds.'},
+    4:{cost:1800,description:'Unlock Depth 4: the Crystal Veins, adding high-grade gemstones, new metal-bearing ores, fossils, and artifacts.'},
+    5:{cost:3600,description:'Unlock Depth 5: the Luminous Zone, adding fluorescent minerals, an unusual heavy-metal ore, a mineraloid, belemnites, and deeper mining history.'}
   };
 
 
@@ -470,6 +470,7 @@ const DURABILITY_LEVELS = [
   const emptyInventory = () => Object.fromEntries(Object.entries(MATERIALS).map(([k,m]) => [k,Object.fromEntries(m.stages.map(s => [s,0]))]));
   const emptyCollection = () => Object.fromEntries(Object.entries(MATERIALS).map(([k,m]) => [k,Object.fromEntries(m.stages.map(s => [s,false]))]));
   const emptyStats = () => Object.fromEntries(Object.keys(MATERIALS).map(k => [k,{found:0,sold:0,donated:0,processed:0,earned:0}]));
+  const emptyDiscovery = () => Object.fromEntries(Object.keys(MATERIALS).map(k => [k,{discovered:false,depths:[]}]));
 
   const defaultState = () => ({
     credits:0,
@@ -481,6 +482,7 @@ const DURABILITY_LEVELS = [
     inventory:emptyInventory(),
     collection:emptyCollection(),
     stats:emptyStats(),
+    discovery:emptyDiscovery(),
     achievements:{},
     meta:{
       tilesMined:0,scansUsed:0,doubleScans:0,anomalyFinds:0,metalSweeps:0,metalSignalFinds:0,
@@ -552,6 +554,7 @@ const DURABILITY_LEVELS = [
         inventory:fresh.inventory,
         collection:fresh.collection,
         stats:fresh.stats,
+        discovery:fresh.discovery,
         achievements:{...(parsed.achievements||{})},
         meta:{...fresh.meta,...(parsed.meta||{})}
       };
@@ -562,6 +565,21 @@ const DURABILITY_LEVELS = [
           merged.collection[k][stage] = parsed.collection?.[k]?.[stage] ?? false;
         });
         merged.stats[k] = {...fresh.stats[k],...(parsed.stats?.[k]||{})};
+
+        const priorDiscovery=parsed.discovery?.[k];
+        const hasHistoricalEvidence=(merged.stats[k].found||0)>0 || (merged.stats[k].sold||0)>0 || (merged.stats[k].donated||0)>0 || (merged.stats[k].processed||0)>0 || m.stages.some(stage=>(merged.inventory[k][stage]||0)>0 || !!merged.collection[k][stage]);
+        const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
+        let depths=Array.isArray(priorDiscovery?.depths)?priorDiscovery.depths.map(Number).filter(d=>DEPTHS[d]&&d<=merged.unlockedDepth):[];
+
+        // Beta 1.2.2 begins tracking where each discovery was actually encountered.
+        // Older saves did not store that history, so seed useful known locations for
+        // already-discovered items from the depths the old save had unlocked.
+        if(discovered && !depths.length){
+          const currentFaceSawIt=parsed.face?.finds?.[k]>0 ? Number(parsed.face?.depth||parsed.currentDepth||1) : null;
+          if(currentFaceSawIt && DEPTHS[currentFaceSawIt])depths=[currentFaceSawIt];
+          else depths=spawnDepthsFor(k).filter(d=>d<=Math.max(1,Math.min(5,merged.unlockedDepth||1)));
+        }
+        merged.discovery[k]={discovered,depths:[...new Set(depths)].sort((a,b)=>a-b)};
       });
 
       // v2.1 migration: if global automation was on, keep it on for materials
@@ -595,6 +613,36 @@ const DURABILITY_LEVELS = [
   function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
   function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
   function totalInventory(k){ return Object.values(state.inventory[k]||{}).reduce((a,n)=>a+n,0); }
+  function spawnDepthsFor(k){
+    return Object.entries(DEPTHS).filter(([,cfg])=>Object.prototype.hasOwnProperty.call(cfg.materials||{},k) || (cfg.sideFinds||[]).some(x=>x.key===k)).map(([d])=>Number(d));
+  }
+  function isDiscovered(k){ return !!state.discovery?.[k]?.discovered || (state.stats?.[k]?.found||0)>0; }
+  function shouldObscureIdentity(k){
+    const family=MATERIALS[k]?.family;
+    return !isDiscovered(k) && ['mineral','ore','artifact'].includes(family);
+  }
+  function discoveredDepths(k){ return [...new Set((state.discovery?.[k]?.depths||[]).map(Number).filter(d=>DEPTHS[d]))].sort((a,b)=>a-b); }
+  function depthKnowledgeText(k){
+    const depths=discoveredDepths(k);
+    if(!depths.length)return 'Depth not recorded yet';
+    const prefix=depths.length===1?'Depth':'Depths';
+    return `${prefix} ${depths.join(', ')}`;
+  }
+  function maskUndiscoveredNames(text){
+    let out=String(text||'');
+    Object.entries(MATERIALS).forEach(([k,m])=>{
+      if(!shouldObscureIdentity(k))return;
+      const names=[m.name];
+      Object.values(m.stageLabels||{}).forEach(label=>{
+        if(/^[A-Z][A-Za-z -]+$/.test(label) && !['Raw','Tumbled','Cut','Polished','Natural specimen'].includes(label))names.push(label);
+      });
+      names.sort((a,b)=>b.length-a.length).forEach(name=>{
+        if(!name)return;
+        out=out.replace(new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),'???');
+      });
+    });
+    return out;
+  }
   function isBulkSellEligible(k){
     const m=MATERIALS[k];
     return (m.family==='mineral'||m.family==='ore') && isMastered(k);
@@ -904,7 +952,8 @@ const DURABILITY_LEVELS = [
       });
       [...groups.entries()].sort((a,b)=>b[1].count-a[1].count).forEach(([key,g])=>{
         const strength=signalStrength(g.count);
-        results.push({html:`<strong>${strength} ${MATERIALS[key].name}</strong> signal · ${depositPattern(g.types)}`,plain:`${strength} ${MATERIALS[key].name} signal · ${depositPattern(g.types)}`});
+        const identified=isDiscovered(key)?MATERIALS[key].name:'Unknown mineral';
+        results.push({html:`<strong>${strength} ${identified}</strong> signal · ${depositPattern(g.types)}`,plain:`${strength} ${identified} signal · ${depositPattern(g.types)}`});
       });
       const fossilCount=side.filter(t=>MATERIALS[t.material].family==='fossil').length;
       const artifactCount=side.filter(t=>MATERIALS[t.material].family==='artifact').length;
@@ -957,6 +1006,11 @@ const DURABILITY_LEVELS = [
     const m=MATERIALS[k],stage=m.stages[0];
     state.inventory[k][stage]++;
     state.stats[k].found++;
+    if(!state.discovery)state.discovery=emptyDiscovery();
+    if(!state.discovery[k])state.discovery[k]={discovered:false,depths:[]};
+    state.discovery[k].discovered=true;
+    if(!state.discovery[k].depths.includes(state.currentDepth))state.discovery[k].depths.push(state.currentDepth);
+    state.discovery[k].depths.sort((a,b)=>a-b);
     if(canAutoProcess(k) && state.settings.autoProcessByMaterial[k])autoProcessOne(k);
   }
 
@@ -1176,7 +1230,12 @@ const DURABILITY_LEVELS = [
     }
 
     els.workbenchList.innerHTML='';
-    Object.entries(MATERIALS).forEach(([k,m])=>{
+    const discoveredEntries=Object.entries(MATERIALS).filter(([k])=>isDiscovered(k));
+    if(!discoveredEntries.length){
+      els.workbenchList.innerHTML='<div class="workbench-empty"><strong>Your field notebook is empty.</strong><p>Find your first specimen in the mine and its Workbench entry will appear here.</p></div>';
+      return;
+    }
+    discoveredEntries.forEach(([k,m])=>{
       const stock=totalInventory(k),mastered=isMastered(k);
       const card=document.createElement('article');
       card.className=`workbench-card ${openWorkbenchKey===k?'open':''} ${stock>0?'has-stock':''} ${mastered?'mastered':''}`;
@@ -1193,7 +1252,7 @@ const DURABILITY_LEVELS = [
       toggle.appendChild(buildIcon(k));
 
       const main=document.createElement('div');main.className='accordion-main';
-      main.innerHTML=`<h3>${m.name}</h3><div class="summary-chips">${m.stages.map(s=>`<span class="summary-chip">${m.stageLabels[s]} ${state.inventory[k][s]} · ${formatMoney(m.prices[s])}</span>`).join('')}</div>`;
+      main.innerHTML=`<h3>${m.name}</h3><div class="material-depths"><span>⌖</span> Found at: <strong>${depthKnowledgeText(k)}</strong></div><div class="summary-chips">${m.stages.map(s=>`<span class="summary-chip">${m.stageLabels[s]} ${state.inventory[k][s]} · ${formatMoney(m.prices[s])}</span>`).join('')}</div>`;
       toggle.appendChild(main);
 
       const chev=document.createElement('span');chev.className='chevron';chev.textContent='⌄';toggle.appendChild(chev);
@@ -1334,21 +1393,25 @@ const DURABILITY_LEVELS = [
 
       pairs.forEach(([k,m])=>{
         const group=document.createElement('div');
-        const gf=m.stages.filter(s=>state.collection[k][s]).length,mastered=isMastered(k);
-        group.className=`museum-group ${mastered?'mastered':''}`;
-        group.innerHTML=`<div class="museum-group-title"><strong>${m.name}</strong><span>${gf} / ${m.stages.length}</span></div>`;
+        const gf=m.stages.filter(s=>state.collection[k][s]).length,mastered=isMastered(k),obscured=shouldObscureIdentity(k);
+        group.className=`museum-group ${mastered?'mastered':''} ${obscured?'undiscovered':''}`;
+        group.innerHTML=`<div class="museum-group-title"><strong>${obscured?'???':m.name}</strong><span>${obscured?'Unidentified':`${gf} / ${m.stages.length}`}</span></div>`;
 
         const grid=document.createElement('div');
         grid.className=`museum-specimen-grid ${m.stages.length>=3?'three':m.stages.length===2?'two':'one'}`;
 
         m.stages.forEach(stage=>{
           const filled=state.collection[k][stage];
-          const column=document.createElement('div');column.className=`museum-specimen-column ${filled?'filled':''}`;
+          const column=document.createElement('div');column.className=`museum-specimen-column ${filled?'filled':''} ${obscured?'unknown-specimen':''}`;
           const specimen=document.createElement('div');specimen.className='museum-specimen';
-          const visual=document.createElement('div');visual.className='slot-visual';visual.appendChild(buildIcon(k,false,stage));specimen.appendChild(visual);
-          specimen.insertAdjacentHTML('beforeend',`<strong class="slot-stage">${m.stageLabels[stage]}</strong>${filled?'':'<span class="slot-state">Not collected</span>'}`);
+          const visual=document.createElement('div');visual.className='slot-visual';
+          if(obscured){
+            const mystery=document.createElement('span');mystery.className='unknown-material-icon';mystery.textContent='?';visual.appendChild(mystery);
+          }else visual.appendChild(buildIcon(k,false,stage));
+          specimen.appendChild(visual);
+          specimen.insertAdjacentHTML('beforeend',obscured?'<strong class="slot-stage">Unknown specimen</strong><span class="slot-state">Not identified</span>':`<strong class="slot-stage">${m.stageLabels[stage]}</strong>${filled?'':'<span class="slot-state">Not collected</span>'}`);
           const fact=document.createElement('div');fact.className='specimen-fact-card';
-          fact.innerHTML=filled?`<p>${m.facts[stage]}</p>`:'<p class="locked-fact">Donate this form to unlock its fact.</p>';
+          fact.innerHTML=obscured?'<p class="locked-fact">Find this specimen in the mine to identify it.</p>':filled?`<p>${m.facts[stage]}</p>`:'<p class="locked-fact">Donate this form to unlock its fact.</p>';
           column.appendChild(specimen);column.appendChild(fact);grid.appendChild(column);
         });
 
@@ -1409,7 +1472,7 @@ const DURABILITY_LEVELS = [
       const card=document.createElement('article');
       card.className=`achievement-card ${tier} ${earned?'unlocked':'locked'} ${a.hidden&&!earned?'hidden-achievement':''}`;
       const name=a.hidden&&!earned?'???':a.name;
-      const desc=a.hidden&&!earned?'A hidden achievement.':a.description;
+      const desc=a.hidden&&!earned?'A hidden achievement.':maskUndiscoveredNames(a.description);
       card.innerHTML=`<div class="achievement-icon">${earned?a.icon:'?'}</div><div><strong>${name}</strong><p>${desc}</p></div>`;
       els.achievementGrid.appendChild(card);
     });
@@ -1531,9 +1594,9 @@ const DURABILITY_LEVELS = [
   }
 
   function resetGame(){
-    if(!window.confirm('Reset all Rockhound Beta 1.2.1 progress?'))return;
+    if(!window.confirm('Reset all Rockhound Beta 1.2.2 progress?'))return;
     localStorage.removeItem(SAVE_KEY);state=defaultState();state.face=generateFace(1);openWorkbenchKey=null;scanMode=false;
-    saveState();renderAll();showToast('Beta 1.2.1 save reset.');
+    saveState();renderAll();showToast('Beta 1.2.2 save reset.');
   }
 
   function renderSoundButton(){

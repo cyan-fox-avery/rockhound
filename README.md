@@ -1,6 +1,6 @@
 # Rockhound
 
-**Beta 1.2.1 — Luminous Zone hotfix**
+**Beta 1.2.2 — Discovery notebook update**
 
 > rock go crunch.
 
@@ -61,10 +61,16 @@ Adds rose quartz, malachite, ruby, emerald, galena, sphalerite, brachiopods, and
 ### Depth 5 — Luminous Zone
 Adds scheelite and tungsten, willemite, hackmanite, apatite, opal, belemnites, and old mine-rail hardware. This depth introduces the game’s first dedicated mineral-property system: UV fluorescence.
 
-## Beta 1.2.1 hotfix
+## Beta 1.2.2 changes
 
-- Fixed a visual regression that could hide revealed mineral and gemstone sprites on the mine grid after the subtle sparkle effect was added.
-- No economy, content, progression, or save-format changes. Existing Beta 1.2 saves remain compatible.
+- The Workbench now behaves like a field notebook: only specimens you have actually discovered appear there.
+- Each discovered Workbench entry records the mine depth or depths where you have encountered that specimen.
+- Undiscovered minerals, ores/metals, and historical artifacts are obscured in the Museum until you find at least one. Empty collection slots remain visible without spoiling the identity.
+- The highest scanner tier no longer reveals the exact name of an undiscovered mineral before you have physically found one.
+- Upgrade copy was made less spoiler-heavy so future mine contents remain a surprise.
+- Existing Beta 1.2.x saves are migrated automatically. Previously discovered specimens remain discovered; because older versions did not track depth history, useful known locations are seeded for those legacy discoveries.
+- Includes the Beta 1.2.1 sprite-visibility hotfix.
+
 
 ## Beta 1.2 changes
 
