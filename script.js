@@ -1531,9 +1531,9 @@ const DURABILITY_LEVELS = [
   }
 
   function resetGame(){
-    if(!window.confirm('Reset all Rockhound Beta 1.2 progress?'))return;
+    if(!window.confirm('Reset all Rockhound Beta 1.2.1 progress?'))return;
     localStorage.removeItem(SAVE_KEY);state=defaultState();state.face=generateFace(1);openWorkbenchKey=null;scanMode=false;
-    saveState();renderAll();showToast('Beta 1.2 save reset.');
+    saveState();renderAll();showToast('Beta 1.2.1 save reset.');
   }
 
   function renderSoundButton(){

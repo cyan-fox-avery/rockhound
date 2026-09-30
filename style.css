@@ -1206,7 +1206,9 @@
 }
 
 /* Occasional micro-glints on gem/mineral art. */
-.sparkle-gem{position:relative}
+/* Sparkle positioning must preserve mine-tile sprites. */
+.material-icon.sparkle-gem{position:relative}
+.tile-find.sparkle-gem{position:absolute}
 .rock.revealed .sparkle-gem::after,
 .workbench-card .sparkle-gem::after,
 .museum-specimen-column.filled .sparkle-gem::after{

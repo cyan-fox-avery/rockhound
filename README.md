@@ -1,6 +1,6 @@
 # Rockhound
 
-**Beta 1.2 — Luminous Zone**
+**Beta 1.2.1 — Luminous Zone hotfix**
 
 > rock go crunch.
 
@@ -60,6 +60,11 @@ Adds rose quartz, malachite, ruby, emerald, galena, sphalerite, brachiopods, and
 
 ### Depth 5 — Luminous Zone
 Adds scheelite and tungsten, willemite, hackmanite, apatite, opal, belemnites, and old mine-rail hardware. This depth introduces the game’s first dedicated mineral-property system: UV fluorescence.
+
+## Beta 1.2.1 hotfix
+
+- Fixed a visual regression that could hide revealed mineral and gemstone sprites on the mine grid after the subtle sparkle effect was added.
+- No economy, content, progression, or save-format changes. Existing Beta 1.2 saves remain compatible.
 
 ## Beta 1.2 changes
 
