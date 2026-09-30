@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111416" />
+  <title>Rockhound — Beta 1.1</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">BETA 1.1</p>
+        <h1 id="gameTitle">ROCKHOUND</h1>
+        <p id="gameTagline" class="subtitle">rock go crunch.</p>
+      </div>
+      <button id="soundToggle" class="icon-button" type="button" aria-label="Toggle sound">🔊</button>
+    </header>
+
+    <main>
+      <section class="panel active" data-panel="mine">
+        <div class="status-grid">
+          <div class="status-card"><span class="status-label">Depth</span><strong id="depthName">Upper Seam</strong><span id="depthNumber" class="status-note">Depth 1</span></div>
+          <div class="status-card"><span class="status-label">Pick durability</span><strong><span id="durability">0</span>/<span id="maxDurability">0</span></strong><div class="meter"><span id="durabilityMeter"></span></div></div>
+          <div class="status-card"><span class="status-label">Scanner</span><strong id="surveyLevel">None</strong><span id="scanUseSummary" class="status-note">locked</span></div>
+          <div class="status-card"><span class="status-label">Balance</span><strong id="mineBalance">0¢</strong><span class="status-note">one currency only</span></div>
+        </div>
+
+        <div class="mine-card">
+          <div class="mine-heading">
+            <div><h2>Rock face</h2><p>Read the rock, survey promising areas, then follow the veins you uncover.</p></div>
+            <button id="newFaceButton" class="secondary-button" type="button">New face</button>
+          </div>
+
+          <div id="depthSelector" class="depth-selector"></div>
+
+          <div class="survey-box scanner-box">
+            <div class="survey-heading scanner-heading">
+              <span class="survey-icon">⌁</span>
+              <div class="scanner-copy"><span class="status-label">Area scanner</span><strong id="surveyTitle">No scanner equipment</strong></div>
+              <button id="scanButton" class="secondary-button scan-button" type="button">Scan area</button>
+            </div>
+            <div id="surveyReport" class="survey-report"></div>
+          </div>
+
+          <div class="survey-box detector-box">
+            <div class="survey-heading detector-heading">
+              <span class="survey-icon">🧲</span>
+              <div class="scanner-copy"><span class="status-label">Metal detector</span><strong id="detectorTitle">Not unlocked</strong></div>
+              <button id="metalDetectorButton" class="secondary-button scan-button" type="button">Sweep face</button>
+            </div>
+            <div id="detectorReport" class="survey-report"></div>
+          </div>
+
+          <div id="mineBoard" class="mine-board" aria-label="10 by 10 mine grid"></div>
+
+          <div class="run-footer">
+            <div><span class="status-label">Found this face</span><strong id="faceFinds">Nothing yet</strong></div>
+            <button id="surfaceButton" class="primary-button" type="button">Return to surface</button>
+          </div>
+        </div>
+
+        <div id="mineMessage" class="message-card"><span class="message-icon">⛏️</span><div><strong>Rock go crunch.</strong><p>Faint geological tells can suggest where to begin. Repeated scans can reveal the vaguest hint of something hidden.</p></div></div>
+      </section>
+
+      <section class="panel" data-panel="workbench">
+        <div class="section-heading">
+          <div><p class="eyebrow">SURFACE WORKSHOP</p><h2>Workbench</h2></div>
+          <p>A sparkle appears on the specific material card whenever that material is in your inventory.</p>
+        </div>
+        <div class="workbench-sell-bar">
+          <div>
+            <span class="status-label">Bulk-sell stock</span>
+            <strong id="masteredSellValue">0¢ eligible</strong>
+            <span class="status-note">Sell All only touches minerals and ores with complete museum sets.</span>
+          </div>
+          <button id="sellAllMasteredButton" class="primary-button" type="button">Sell All</button>
+        </div>
+        <div id="workbenchList" class="workbench-list"></div>
+      </section>
+
+      <section class="panel" data-panel="museum">
+        <div class="section-heading">
+          <div><p class="eyebrow">THE COLLECTION</p><h2>Museum</h2></div>
+          <p>Each specimen keeps its own fact card. Complete a material set to unlock its mastery fact and automation.</p>
+        </div>
+        <div class="collection-progress-card"><div><span class="status-label">Museum completion</span><strong id="museumCount">0 / 58</strong></div><div class="big-meter"><span id="museumMeter"></span></div></div>
+        <div id="museumWings" class="museum-wings"></div>
+      </section>
+
+      <section class="panel" data-panel="achievements">
+        <div class="section-heading">
+          <div><p class="eyebrow">ODDITIES & MILESTONES</p><h2>Achievements</h2></div>
+          <p>Some are obvious. Some are not. The game is paying attention.</p>
+        </div>
+        <div class="collection-progress-card"><div><span class="status-label">Unlocked</span><strong id="achievementCount">0 / 24</strong></div><div class="big-meter"><span id="achievementMeter"></span></div></div>
+        <div id="achievementGrid" class="achievement-grid"></div>
+      </section>
+
+      <section class="panel" data-panel="upgrades">
+        <div class="section-heading"><div><p class="eyebrow">GEAR & OPERATIONS</p><h2>Upgrades</h2></div><p>Better equipment is earned in-game. Nothing costs real money.</p></div>
+        <div class="shop-balance"><span class="status-label">Current balance</span><strong id="shopBalance">0¢</strong></div>
+        <div id="upgradeList" class="upgrade-list"></div>
+        <div class="design-note"><strong>Fair-play rule</strong><p>Processing is free. Scanner charges and pick durability reset with each fresh rock face. No real-time recharge, premium currency, or pay-to-skip.</p></div>
+        <button id="resetButton" class="danger-button" type="button">Reset Beta 1.1 save</button>
+      </section>
+    </main>
+
+    <div id="mobileMineHud" class="mobile-mine-hud" aria-live="polite">
+      <span id="mobileDurability">⛏️ 0 / 0</span>
+      <span id="mobileScans">⌁ locked</span>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Game navigation">
+      <button class="nav-button active" type="button" data-target="mine"><span>⛏️</span><small>Mine</small></button>
+      <button class="nav-button" type="button" data-target="workbench"><span>🛠️</span><small>Workbench</small></button>
+      <button class="nav-button" type="button" data-target="museum"><span>🏛️</span><small>Museum</small></button>
+      <button class="nav-button" type="button" data-target="achievements"><span>🏆</span><small>Achievements</small></button>
+      <button class="nav-button" type="button" data-target="upgrades"><span>⬆️</span><small>Upgrades</small></button>
+    </nav>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
