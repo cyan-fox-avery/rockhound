@@ -6,9 +6,18 @@
 
 The game is designed as a finite, curated incremental experience rather than an endless prestige loop. Progress gradually replaces repetitive work with useful automation, while deeper mining introduces genuinely new things to discover.
 
-## Beta 1.1
+## Beta 1.1.1
 
-Beta 1.1 is the first major content expansion.
+Beta 1.1.1 is a small interface polish update on top of the Beta 1.1 content expansion.
+
+### Interface polish
+- the mine screen now puts recent mining feedback and current-face finds above the rock grid
+- the Area Scanner and Metal Detector now sit beneath the rock face as compact prospecting tools
+- the Achievements page now uses a denser trophy-shelf layout
+- everyday achievements are compact, while harder and rarer achievements get more visual fanfare
+
+### Beta 1.1 content
+Beta 1.1 introduced the first major content expansion.
 
 ### New depth
 **Depth 4 — Crystal Veins** adds:
@@ -86,6 +95,6 @@ The mine itself is fictional and intentionally combines materials that would not
 
 ## Status
 
-**Beta 1.1**
+**Beta 1.1.1**
 
 Rockhound is still being expanded and balanced. The current beta focuses on the core mining, prospecting, museum, mastery, automation, and progression loop.

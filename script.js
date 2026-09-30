@@ -1295,13 +1295,17 @@ const DURABILITY_LEVELS = [
     els.achievementMeter.style.width=`${unlocked/ACHIEVEMENTS.length*100}%`;
     els.achievementGrid.innerHTML='';
 
+    const featured=new Set(['sio2Enjoyer','familyResemblance','berylBuddies','metalhead','lastSwingLuck','fourFloorsDown','allThatGlitters']);
+    const special=new Set(['rockGoCrunch']);
+
     ACHIEVEMENTS.forEach(a=>{
       const earned=!!state.achievements[a.id];
+      const tier=special.has(a.id)?'tier-special':featured.has(a.id)?'tier-featured':'tier-small';
       const card=document.createElement('article');
-      card.className=`achievement-card ${earned?'unlocked':'locked'} ${a.hidden&&!earned?'hidden-achievement':''}`;
+      card.className=`achievement-card ${tier} ${earned?'unlocked':'locked'} ${a.hidden&&!earned?'hidden-achievement':''}`;
       const name=a.hidden&&!earned?'???':a.name;
       const desc=a.hidden&&!earned?'A hidden achievement.':a.description;
-      card.innerHTML=`<div class="achievement-icon">${earned?a.icon:'?'}</div><div><strong>${name}</strong><p>${desc}</p>${earned?'<span class="achievement-state">Unlocked</span>':''}</div>`;
+      card.innerHTML=`<div class="achievement-icon">${earned?a.icon:'?'}</div><div><strong>${name}</strong><p>${desc}</p></div>`;
       els.achievementGrid.appendChild(card);
     });
   }
