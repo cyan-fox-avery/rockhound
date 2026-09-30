@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#111416" />
-  <title>Rockhound — Beta 1.1.1</title>
+  <title>Rockhound — Beta 1.2</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app-shell">
     <header class="topbar">
       <div>
-        <p class="eyebrow">BETA 1.1.1</p>
+        <p class="eyebrow">BETA 1.2</p>
         <h1 id="gameTitle">ROCKHOUND</h1>
         <p id="gameTagline" class="subtitle">rock go crunch.</p>
       </div>
@@ -33,33 +33,21 @@
             <button id="newFaceButton" class="secondary-button" type="button">New face</button>
           </div>
 
-          <div id="depthSelector" class="depth-selector"></div>
+          <div class="depth-picker">
+            <span class="status-label">Choose depth</span>
+            <div id="depthSelector" class="depth-selector"></div>
+          </div>
 
           <div class="mine-feedback">
             <div id="mineMessage" class="message-card mine-message-inline"><span class="message-icon">⛏️</span><div><strong>Rock go crunch.</strong><p>Faint geological tells can suggest where to begin. Repeated scans can reveal the vaguest hint of something hidden.</p></div></div>
-            <div class="face-find-strip"><span class="status-label">Found this face</span><strong id="faceFinds">Nothing yet</strong></div>
+            <div class="face-find-strip"><span class="status-label">Found this face</span><div id="faceFinds" class="face-find-list"><span class="face-find-empty">Nothing yet</span></div></div>
           </div>
 
           <div id="mineBoard" class="mine-board" aria-label="10 by 10 mine grid"></div>
 
-          <div class="mine-tools" aria-label="Prospecting tools">
-            <div class="survey-box scanner-box compact-tool-card">
-              <div class="survey-heading scanner-heading">
-                <span class="survey-icon">⌁</span>
-                <div class="scanner-copy"><span class="status-label">Area scanner</span><strong id="surveyTitle">No scanner equipment</strong></div>
-                <button id="scanButton" class="secondary-button scan-button" type="button">Scan area</button>
-              </div>
-              <div id="surveyReport" class="survey-report"></div>
-            </div>
-
-            <div class="survey-box detector-box compact-tool-card">
-              <div class="survey-heading detector-heading">
-                <span class="survey-icon">🧲</span>
-                <div class="scanner-copy"><span class="status-label">Metal detector</span><strong id="detectorTitle">Not unlocked</strong></div>
-                <button id="metalDetectorButton" class="secondary-button scan-button" type="button">Sweep face</button>
-              </div>
-              <div id="detectorReport" class="survey-report"></div>
-            </div>
+          <div class="mine-tool-buttons" aria-label="Prospecting tools">
+            <button id="scanButton" class="mine-tool-button" type="button"><span class="tool-button-icon">⌁</span><span><strong>Scan area</strong><small id="scanButtonStatus">Locked</small></span></button>
+            <button id="metalDetectorButton" class="mine-tool-button" type="button"><span class="tool-button-icon">🧲</span><span><strong>Sweep face</strong><small id="detectorButtonStatus">Locked</small></span></button>
           </div>
 
           <div class="run-footer mine-actions">
@@ -90,7 +78,14 @@
           <div><p class="eyebrow">THE COLLECTION</p><h2>Museum</h2></div>
           <p>Each specimen keeps its own fact card. Complete a material set to unlock its mastery fact and automation.</p>
         </div>
-        <div class="collection-progress-card"><div><span class="status-label">Museum completion</span><strong id="museumCount">0 / 58</strong></div><div class="big-meter"><span id="museumMeter"></span></div></div>
+        <div class="collection-progress-card"><div><span class="status-label">Museum completion</span><strong id="museumCount">0 / 74</strong></div><div class="big-meter"><span id="museumMeter"></span></div></div>
+        <div id="museumLighting" class="museum-lighting hidden" aria-label="Museum lighting controls">
+          <div><span class="status-label">Museum lighting</span><strong>UV fluorescence lamp</strong></div>
+          <div class="lighting-toggle" role="group" aria-label="Choose museum lighting">
+            <button id="normalLightButton" type="button" class="lighting-button active">Normal</button>
+            <button id="uvLightButton" type="button" class="lighting-button">UV</button>
+          </div>
+        </div>
         <div id="museumWings" class="museum-wings"></div>
       </section>
 
@@ -99,7 +94,7 @@
           <div><p class="eyebrow">ODDITIES & MILESTONES</p><h2>Achievements</h2></div>
           <p>Some are obvious. Some are not. The game is paying attention.</p>
         </div>
-        <div class="collection-progress-card"><div><span class="status-label">Unlocked</span><strong id="achievementCount">0 / 24</strong></div><div class="big-meter"><span id="achievementMeter"></span></div></div>
+        <div class="collection-progress-card"><div><span class="status-label">Unlocked</span><strong id="achievementCount">0 / 26</strong></div><div class="big-meter"><span id="achievementMeter"></span></div></div>
         <div id="achievementGrid" class="achievement-grid"></div>
       </section>
 
@@ -108,7 +103,7 @@
         <div class="shop-balance"><span class="status-label">Current balance</span><strong id="shopBalance">0¢</strong></div>
         <div id="upgradeList" class="upgrade-list"></div>
         <div class="design-note"><strong>Fair-play rule</strong><p>Processing is free. Scanner charges and pick durability reset with each fresh rock face. No real-time recharge, premium currency, or pay-to-skip.</p></div>
-        <button id="resetButton" class="danger-button" type="button">Reset Beta 1.1.1 save</button>
+        <button id="resetButton" class="danger-button" type="button">Reset Beta 1.2 save</button>
       </section>
     </main>
 

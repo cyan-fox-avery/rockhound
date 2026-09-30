@@ -1086,3 +1086,268 @@
   .face-find-strip{align-items:flex-start;flex-direction:column;gap:3px}
   .face-find-strip strong{width:100%}
 }
+
+
+/* ============================================================
+   Beta 1.2 — Luminous Zone + mine layout polish
+   ============================================================ */
+
+/* Depth selector is a complete, always-visible control rather than a scroller. */
+.depth-picker{
+  margin:0 0 10px;
+  padding:9px;
+  border:1px solid rgba(55,61,65,.88);
+  border-radius:14px;
+  background:rgba(9,11,12,.34);
+}
+.depth-picker>.status-label{margin:0 0 7px 2px}
+.depth-selector{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px;
+  margin:0;
+  overflow:visible;
+}
+.depth-chip{
+  width:100%;
+  min-width:0;
+  white-space:normal;
+  line-height:1.18;
+  border-radius:10px;
+  padding:8px 7px;
+  text-align:center;
+}
+.depth-chip:nth-child(5){grid-column:1/-1}
+
+/* Found-this-face information wraps completely and never clips. */
+.face-find-strip{
+  align-items:flex-start;
+  flex-direction:column;
+  gap:6px;
+}
+.face-find-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  width:100%;
+}
+.face-find-pill,
+.face-find-empty{
+  display:inline-flex;
+  align-items:center;
+  min-height:24px;
+  padding:4px 7px;
+  border:1px solid rgba(55,61,65,.9);
+  border-radius:999px;
+  color:#ddd8cf;
+  background:rgba(255,255,255,.035);
+  font-size:.64rem;
+  font-weight:800;
+  line-height:1.15;
+}
+.face-find-empty{color:var(--muted);font-weight:700}
+
+/* Prospecting tools are now just two game controls. Their explanations live in Upgrades. */
+.mine-tools,.compact-tool-card{display:none!important}
+.mine-tool-buttons{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-top:10px;
+}
+.mine-tool-button{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+  min-height:55px;
+  padding:8px 9px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  color:var(--text);
+  background:rgba(32,37,41,.88);
+  cursor:pointer;
+  text-align:left;
+  transition:transform .08s ease,border-color .15s ease,background .15s ease,opacity .15s ease;
+}
+.mine-tool-button:active{transform:scale(.98)}
+.mine-tool-button:disabled{opacity:.42;cursor:not-allowed}
+.mine-tool-button.active{
+  border-color:rgba(166,211,218,.62);
+  background:rgba(126,178,187,.12);
+}
+.tool-button-icon{
+  display:grid;
+  place-items:center;
+  width:31px;
+  height:31px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:9px;
+  background:rgba(8,10,11,.38);
+  font-size:.95rem;
+}
+.mine-tool-button strong{display:block;font-size:.74rem;line-height:1.15}
+.mine-tool-button small{display:block;margin-top:3px;color:var(--muted);font-size:.58rem;font-weight:750;line-height:1.15}
+
+/* Upgrade max states have one label, not several competing ones. */
+.max-state{
+  display:inline-flex;
+  align-items:center;
+  min-height:35px;
+  padding:8px 10px;
+  border:1px solid rgba(212,179,105,.28);
+  border-radius:999px;
+  color:#efd597;
+  background:rgba(212,179,105,.055);
+  font-size:.72rem;
+  font-weight:900;
+  text-align:center;
+}
+
+/* Occasional micro-glints on gem/mineral art. */
+.sparkle-gem{position:relative}
+.rock.revealed .sparkle-gem::after,
+.workbench-card .sparkle-gem::after,
+.museum-specimen-column.filled .sparkle-gem::after{
+  content:"";
+  position:absolute;
+  z-index:7;
+  left:67%;
+  top:24%;
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:rgba(255,255,255,.96);
+  box-shadow:0 0 4px rgba(255,255,255,.58),-2px 0 0 -1px rgba(255,255,255,.82),2px 0 0 -1px rgba(255,255,255,.82),0 -2px 0 -1px rgba(255,255,255,.82),0 2px 0 -1px rgba(255,255,255,.82);
+  opacity:0;
+  pointer-events:none;
+  animation:gemMicroGlint 7.2s ease-in-out infinite;
+  animation-delay:var(--sparkle-delay,0s);
+}
+@keyframes gemMicroGlint{
+  0%,72%,100%{opacity:0;transform:scale(.35)}
+  76%{opacity:.9;transform:scale(1)}
+  80%{opacity:0;transform:scale(.45)}
+}
+
+/* Beta 1.2 material art */
+.material-icon.willemite,.tile-find.willemite{
+  clip-path:polygon(34% 0,67% 3%,88% 28%,74% 96%,40% 100%,13% 67%,19% 20%);
+  background:linear-gradient(135deg,#d8f2c2 0%,#8bcf77 40%,#4e9354 72%,#255331 100%);
+}
+.material-icon.hackmanite,.tile-find.hackmanite{
+  clip-path:polygon(22% 9%,66% 1%,93% 31%,83% 77%,54% 98%,16% 87%,4% 46%);
+  background:linear-gradient(135deg,#eadbf5 0%,#ba97d1 42%,#7e5b9d 73%,#46365f 100%);
+}
+.material-icon.apatite,.tile-find.apatite{
+  clip-path:polygon(31% 2%,68% 2%,87% 21%,78% 91%,51% 100%,23% 90%,13% 21%);
+  background:linear-gradient(135deg,#d2f3ee 0%,#65c9bf 40%,#2c8d8f 72%,#195258 100%);
+}
+.material-icon.opal,.tile-find.opal{
+  clip-path:polygon(18% 12%,53% 1%,83% 18%,97% 52%,77% 88%,41% 100%,10% 80%,2% 43%);
+  background:
+    radial-gradient(circle at 30% 28%,rgba(255,178,209,.75),transparent 19%),
+    radial-gradient(circle at 68% 35%,rgba(132,221,255,.74),transparent 21%),
+    radial-gradient(circle at 55% 72%,rgba(255,225,139,.68),transparent 23%),
+    linear-gradient(135deg,#f6f1e8 0%,#cbd9dc 48%,#9baeb8 100%);
+}
+.material-icon.scheelite,.tile-find.scheelite{
+  clip-path:polygon(9% 24%,42% 4%,74% 12%,95% 43%,78% 88%,43% 99%,11% 75%,2% 45%);
+  background:linear-gradient(135deg,#ead9b5 0%,#bd9460 43%,#7c623f 73%,#44382a 100%);
+}
+.tungsten{background:linear-gradient(135deg,#e5e7e8 0%,#a6aaae 42%,#686d72 75%,#393e42 100%)}
+.material-icon.belemnite,.tile-find.belemnite{
+  display:grid;place-items:center;
+  border-radius:42% 58% 52% 48% / 58% 43% 57% 42%;
+  color:#332a22;
+  background:linear-gradient(160deg,#dfcaa6 0%,#b29168 56%,#786047 100%);
+  font-weight:950;
+}
+.tile-find.belemnite{width:72%;height:48%;clip-path:none;font-size:clamp(.58rem,3.4vw,1rem)}
+.material-icon.rail-spike,.tile-find.rail-spike{
+  display:grid;place-items:center;
+  height:31px;margin:3px 0;
+  border-radius:7px;
+  color:#17191b;
+  background:linear-gradient(145deg,#c8cbca,#777d7f 55%,#3d4244);
+  font-size:.68rem;font-weight:950;
+}
+.tile-find.rail-spike{width:66%;height:58%;clip-path:none;border-radius:7px;font-size:clamp(.52rem,3vw,.9rem)}
+
+/* Museum UV mode */
+.hidden{display:none!important}
+.museum-lighting{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:0 0 11px;
+  padding:10px 12px;
+  border:1px solid rgba(124,105,181,.34);
+  border-radius:15px;
+  background:linear-gradient(180deg,rgba(92,72,149,.10),rgba(23,27,30,.94));
+  box-shadow:var(--shadow);
+}
+.museum-lighting strong{display:block;margin-top:3px;font-size:.82rem}
+.lighting-toggle{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  overflow:hidden;
+  flex:0 0 auto;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:10px;
+  background:#0c0f12;
+}
+.lighting-button{
+  border:0;
+  padding:8px 10px;
+  color:var(--muted);
+  background:transparent;
+  cursor:pointer;
+  font-size:.68rem;
+  font-weight:900;
+}
+.lighting-button.active{color:#f2eefb;background:rgba(123,98,190,.28)}
+.museum-wings.uv-mode{
+  padding:8px;
+  border-radius:18px;
+  background:radial-gradient(circle at 50% 0,rgba(70,46,120,.12),transparent 35rem),#090b10;
+}
+.museum-wings.uv-mode .museum-wing{
+  border-color:#252633;
+  background:rgba(12,13,20,.96);
+}
+.museum-wings.uv-mode .museum-specimen-column.filled .material-icon{
+  opacity:.28;
+  filter:brightness(.42) saturate(.55);
+  transition:filter .18s ease,opacity .18s ease,background .18s ease;
+}
+.museum-wings.uv-mode .museum-specimen-column.filled .uv-reactive{
+  opacity:1;
+  filter:brightness(1.32) saturate(1.32) drop-shadow(0 0 5px currentColor);
+}
+.museum-wings.uv-mode .uv-fluorite{color:#728cff;background:linear-gradient(135deg,#edf1ff,#7a8cff 48%,#6748dd)}
+.museum-wings.uv-mode .uv-calcite{color:#ff6d62;background:linear-gradient(135deg,#ffd3c8,#ff7162 48%,#b82f3f)}
+.museum-wings.uv-mode .uv-ruby{color:#ff385c;background:linear-gradient(135deg,#ff9eb2,#ff3158 46%,#9d1231)}
+.museum-wings.uv-mode .uv-sphalerite{color:#ffad45;background:linear-gradient(135deg,#ffe091,#ff9f38 47%,#b9541e)}
+.museum-wings.uv-mode .uv-scheelite{color:#b6e7ff;background:linear-gradient(135deg,#f4fbff,#b7e9ff 48%,#77b9ef)}
+.museum-wings.uv-mode .uv-willemite{color:#70ff85;background:linear-gradient(135deg,#d8ffd8,#66ff7c 45%,#19a841)}
+.museum-wings.uv-mode .uv-hackmanite{color:#ff7f9d;background:linear-gradient(135deg,#ffd1df,#ff789e 45%,#b93876)}
+.museum-wings.uv-mode .uv-apatite{color:#eaff73;background:linear-gradient(135deg,#f8ffbd,#dfff63 48%,#77ae39)}
+.museum-wings.uv-mode .specimen-fact-card{background:rgba(8,9,14,.72);border-color:#272936}
+.museum-wings.uv-mode .mastery-panel{background:rgba(35,28,52,.72)}
+
+@media(min-width:650px){
+  .depth-selector{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .depth-chip:nth-child(5){grid-column:auto}
+}
+@media(max-width:470px){
+  .mine-actions .status-note{max-width:48%}
+  .museum-lighting{align-items:flex-start;flex-direction:column}
+}
+@media(prefers-reduced-motion:reduce){
+  .rock.revealed .sparkle-gem::after,
+  .workbench-card .sparkle-gem::after,
+  .museum-specimen-column.filled .sparkle-gem::after{display:none}
+}

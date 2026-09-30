@@ -1,100 +1,80 @@
 # Rockhound
 
-*rock go crunch.*
+**Beta 1.2 — Luminous Zone**
 
-**Rockhound** is a small browser-based mining, collecting, and museum-completion game. Dig through a fictional composite mine, follow mineral veins, use prospecting tools to narrow down interesting areas, process what you find, and build out a museum of minerals, ores, metals, fossils, and historical artifacts.
+> rock go crunch.
 
-The game is designed as a finite, curated incremental experience rather than an endless prestige loop. Progress gradually replaces repetitive work with useful automation, while deeper mining introduces genuinely new things to discover.
+Rockhound is a finite, collection-focused incremental mining game for the browser. Mine a 10×10 rock face, follow geological hints, use prospecting tools, process finds at the workbench, fill a museum, and gradually automate materials you have fully mastered.
 
-## Beta 1.1.1
+The game is designed around active discovery rather than timers or monetized friction. There is one in-game currency, processing is free, tool charges reset on a fresh rock face, and there is no premium currency, energy timer, pay-to-skip system, or real-money progression.
 
-Beta 1.1.1 is a small interface polish update on top of the Beta 1.1 content expansion.
+## Core loop
 
-### Interface polish
-- the mine screen now puts recent mining feedback and current-face finds above the rock grid
-- the Area Scanner and Metal Detector now sit beneath the rock face as compact prospecting tools
-- the Achievements page now uses a denser trophy-shelf layout
-- everyday achievements are compact, while harder and rarer achievements get more visual fanfare
+**Dig → discover → process, donate, or sell → improve the museum and equipment → go deeper → find stranger rocks.**
 
-### Beta 1.1 content
-Beta 1.1 introduced the first major content expansion.
+A common specimen can remain useful throughout the game. Deeper does not automatically mean “better,” and minerals are not arranged in a generic rarity ladder.
 
-### New depth
-**Depth 4 — Crystal Veins** adds:
-- Rose Quartz
-- Malachite
-- Ruby
-- Emerald
-- Galena → Lead
-- Sphalerite → Zinc
-- Brachiopod fossil
-- Old Drill Bit artifact
+## Mining
 
-Older depths also received new finds:
-- Crinoid Stem fossil
-- Worn Survey Marker
+Each rock face is a fixed **10×10 grid** containing isolated finds, small connected veins, occasional large veins, fossils, and historical artifacts. Subtle geological marks can suggest promising places without revealing exact targets.
 
-### Metal detector
-A new **Metal Detector** can be unlocked after reaching Depth 2.
+Prospecting tools add information without solving the board:
 
-It works differently from the area scanner:
-- one whole-face sweep per rock face
-- highlights broad, intentionally imprecise metallic signal zones
-- can help locate metal-bearing targets and some historical artifacts
-- does not identify the exact item or exact tile
+- **Area Scanner:** choose a tile to survey its 3×3 neighbourhood. Scanned tiles remain marked for that face. Early scanner levels report chemistry; stronger equipment adds pattern information and eventually exact identification. Scanning an occupied tile area twice can reveal a faint generic density shadow without showing what the find is.
+- **Metal Detector:** one whole-face sweep per rock face. It marks broad, intentionally vague zones that may contain metallic or conductive targets, including some historical artifacts.
 
-### Achievements
-Beta 1.1 adds the first **24 achievements**.
+Both tools use per-face charges rather than real-time recharge timers.
 
-Some reward normal progression. Others notice unusual play, geology relationships, scanner habits, lucky moments, and a few things that are deliberately not explained in advance.
+## Workbench
 
-### Expanded progression
-- Depth progression now extends through four mine levels
-- a new **Master Lapidary** workshop tier handles ruby and emerald
-- the pick upgrade path has been extended
-- prices and costs have been adjusted around the larger four-depth game
-- older depths remain useful for specific fossils, artifacts, and collection targets
+Minerals can move through forms such as **Raw → Tumbled → Cut**. Ores can be refined into their associated metals. Processing itself costs nothing, although later materials require better workshop equipment.
 
-## Core systems
+Completing every museum form of a processable material unlocks **auto-process for that specific material**. The global Sell All control is also mastery-gated and only sells stock from completed mineral and ore sets.
 
-### Mining
-Each rock face is a fixed 10×10 grid. Finds appear as isolated specimens, small veins, and occasional large veins. A few subtle geological tells can suggest where to begin without revealing the answer.
+## Museum
 
-### Area scanner
-The scanner analyzes a 3×3 area.
+The museum shows its empty slots in advance and gives each collected form its own geology or gemology fact. Completing a material set adds a bonus discovery and unlocks that material’s automation where applicable.
 
-Early scanner levels report chemistry rather than exact mineral names. Scanned areas remain visibly marked, and scanning the same tile twice can reveal a faint generic density anomaly when something is hidden behind it.
+Beta 1.2 adds a **UV Fluorescence Lamp**. Once installed, the museum gains a **Normal / UV** lighting control. Most specimens remain dark under UV, while selected fluorescent materials reveal distinctive glow colours.
 
-### Museum and mastery
-The museum contains separate wings for:
-- minerals
-- ores and refined metals
-- fossils
-- historical artifacts
+Current museum wings:
 
-Mineral and ore sets show their forms side by side with individual facts. Completing a full material set gilds that display, reveals a bonus fact, and unlocks automation for that material.
+- Mineral Hall
+- Ores & Metals
+- Fossil Wing
+- History Wing
 
-### Processing and automation
-Processing is free.
+## Current mine depths
 
-Early materials are simple to work with, while later finds require better equipment. Once a processable material is mastered, its **Auto-process** toggle becomes available.
+### Depth 1 — Upper Seam
+Quartz, amethyst, hematite, chalcopyrite, and early side finds.
 
-The Workbench **Sell All** button only sells stock from mastered minerals and ores, so collection progress is never sacrificed for convenience.
+### Depth 2 — Lower Works
+Adds garnet, topaz, pyrite, trilobites, crinoid fragments, and broader prospecting options.
 
-## Design principles
-- one in-game currency
-- no premium currency
-- no real-money purchases
-- no energy timers or real-time recharge
-- no prestige reset
-- common materials remain useful
-- deeper does not automatically mean “strictly better”
-- real geology and gemology are used as inspiration and lightly taught through play
+### Depth 3 — Deep Gallery
+Adds citrine, calcite, fluorite, aquamarine, sapphire, cassiterite, ammonites, and deeper historical finds.
 
-The mine itself is fictional and intentionally combines materials that would not all occur together in one real deposit.
+### Depth 4 — Crystal Veins
+Adds rose quartz, malachite, ruby, emerald, galena, sphalerite, brachiopods, and additional mining artifacts.
+
+### Depth 5 — Luminous Zone
+Adds scheelite and tungsten, willemite, hackmanite, apatite, opal, belemnites, and old mine-rail hardware. This depth introduces the game’s first dedicated mineral-property system: UV fluorescence.
+
+## Beta 1.2 changes
+
+- Added **Depth 5: Luminous Zone**.
+- Added **Scheelite → Tungsten**, **Willemite**, **Hackmanite**, **Apatite**, and **Opal**.
+- Added the **Belemnite** fossil and **Old Rail Spike** historical artifact.
+- Added a new **Specialist Lapidary** workshop tier for Depth 5 materials.
+- Added the **UV Fluorescence Lamp** and a museum-wide Normal / UV lighting mode.
+- Added UV behaviour to selected older specimens, including fluorite, calcite, ruby, and sphalerite.
+- Reworked the mine layout: every depth is visible in a dedicated selector, the complete “Found this face” list stays visible, and the scanner and metal detector are compact side-by-side controls under the rock face.
+- Moved scanner and detector explanations into the Upgrades screen.
+- Simplified completed upgrade states to **MAX** or **MAX (more coming soon... 👀)**.
+- Added occasional subtle glints to gemstone/mineral art.
+- Retained the compact trophy-shelf achievement layout and added **Glow Up** and **The Glow Show** for the new UV system.
 
 ## Status
 
-**Beta 1.1.1**
-
-Rockhound is still being expanded and balanced. The current beta focuses on the core mining, prospecting, museum, mastery, automation, and progression loop.
+Rockhound is still in beta. The mine, museum, workbench, upgrades, prospecting systems, achievements, and save migration are functional, while later depths, final-game completion, the Personal Collection, exceptional specimens, geodes, and the Gilded Steel Pickaxe remain future content.
