@@ -1,6 +1,6 @@
 # Rockhound
 
-**Beta 1.4.2 — content-complete full-game beta with exceptional-specimen postgame**
+**Beta 1.4.3 — content-complete full-game beta with postgame polish**
 
 > rock go crunch.
 
@@ -23,11 +23,11 @@ Museum completion unlocks the **Personal Collection** tab and expands the existi
 
 ## Postgame prospecting supplies
 
-Three optional consumables give completed players something meaningful to spend money on. They can be used separately or stacked on the same fresh face.
+Three optional consumables give completed players something meaningful to spend money on. They are bought in the **Shop**, then used directly on the current rock face. They can be used separately or stacked on the same face, and changing depths never consumes them.
 
-- **Prospector's Kit — $40.00:** raises the next-face exceptional chance from 5% to 15%.
-- **Survey Chalk — $20.00:** if an exceptional specimen is present, marks a vague 3×3 promising zone without revealing the exact tile.
-- **Collector's Focus — $40.00:** choose an eligible mineral at the current depth; if an exceptional specimen appears, the roll strongly favours that mineral when it is present on the face.
+- **Prospector's Kit — $40.00:** raises the current-face exceptional chance from 5% to 30%.
+- **Survey Chalk — $20.00:** checks the current face and, if an exceptional specimen is present, marks a vague 3×3 promising zone without revealing the exact tile.
+- **Collector's Focus — $40.00:** choose an eligible material at the current depth; any hidden exceptional specimen on that face strongly favours that target when it is present.
 
 Exceptional specimens can still appear naturally without any supplies. At most one exceptional specimen appears on a face.
 
@@ -37,13 +37,13 @@ The museum ending still grants the permanent Completion Plaque and effectively u
 
 Rockhound contains **50 achievements**. **TRUE ROCKHOUND** marks museum completion. The hidden **ROCKAHOLIC** achievement is the full completionist challenge and requires every other achievement plus all permanent upgrades and core discoveries. The Personal Collection itself has no completion checklist.
 
-## Beta 1.4.2 changes
+## Beta 1.4.3 changes
 
-- Removed the experimental geode system, Geode Finder, cartridges, and cracking station.
-- Rebuilt the postgame around curated **Exceptional Specimens**.
-- Added unlimited **Specimen Storage** alongside the 30-slot Display Case.
-- Added three stackable postgame prospecting consumables.
-- Exceptional specimens now have individual names, geological notes, find depths, and fixed sell values.
-- Removed ordinary-specimen display from the Personal Collection so it stays focused on extraordinary finds.
-- Replaced geode-related achievements with exceptional-specimen and prospecting milestones.
-- Migrates older Beta 1.3/1.4 saves without touching museum progress, upgrades, or completion status. Retired geode items and remaining cartridges are converted to ordinary money once during migration.
+- Renamed **Upgrades** to **Shop** and moved postgame Prospecting Supplies there.
+- Prospecting supplies are now used directly on the **current rock face**, so changing depths cannot waste them.
+- Increased the **Prospector's Kit** exceptional-specimen chance from 15% to **30%**.
+- Added compact Mine-page controls for Prospector's Kit, Survey Chalk, and Collector's Focus.
+- Reworked **Specimen Storage** into compact collapsible material drawers beneath the Display Case, with individual Inspect, Display, and Sell controls.
+- Fossils and historical artifacts now receive a silver completion treatment once their museum specimen is donated.
+- Surplus fossils **and artifacts** whose museum entries are complete are included in **Sell All**.
+- Preserves the existing `rockhound-lab-1.3` save key and Beta 1.4.2 progress.
