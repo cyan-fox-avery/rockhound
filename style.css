@@ -1190,24 +1190,8 @@
 .mine-tool-button strong{display:block;font-size:.74rem;line-height:1.15}
 .mine-tool-button small{display:block;margin-top:3px;color:var(--muted);font-size:.58rem;font-weight:750;line-height:1.15}
 
-.rock.geode-hint{
-  box-shadow:inset 0 0 0 2px rgba(240,215,150,.78),0 0 0 1px rgba(240,215,150,.20);
-}
-.geode-hint-mark{
-  position:absolute;
-  inset:auto auto 5px 5px;
-  display:grid;
-  place-items:center;
-  width:20px;
-  height:20px;
-  border-radius:50%;
-  color:#f6e4b2;
-  background:rgba(24,28,31,.88);
-  border:1px solid rgba(240,215,150,.48);
-  font-size:.68rem;
-  font-weight:900;
-  box-shadow:0 0 10px rgba(240,215,150,.14);
-}
+
+
 
 /* Upgrade max states have one label, not several competing ones. */
 .max-state{
@@ -1498,11 +1482,7 @@
   background:radial-gradient(circle,#e8d28d 0 38%,#9d7c2f 40% 62%,#51401b 64% 100%);font-weight:950;
 }
 .tile-find.survey-compass{width:66%;height:66%;font-size:clamp(.54rem,3vw,.9rem)}
-.geode-find{
-  display:grid;place-items:center;width:70%;height:70%;clip-path:none!important;border-radius:50%;
-  color:#cfd7da;background:radial-gradient(circle at 45% 40%,#5f686b 0 34%,#343a3d 36% 67%,#202528 70% 100%);
-  box-shadow:inset 0 0 0 2px rgba(255,255,255,.06);font-weight:950;
-}
+
 
 /* Postgame Workbench */
 .postgame-workbench{display:grid;gap:10px;margin:0 0 12px}
@@ -1513,11 +1493,11 @@
 .postgame-station{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
 .postgame-station-copy strong,.postgame-vault-heading strong{display:block;margin-top:3px}
 .postgame-station-copy p{margin:4px 0 0;color:var(--muted);font-size:.72rem;line-height:1.4}
-.geode-action{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
-.geode-action span{color:var(--muted);font-size:.68rem;font-weight:800}
-.geode-reveal{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:10px;border:1px solid rgba(255,255,255,.07);border-radius:13px;background:rgba(8,10,11,.35)}
-.geode-reveal-icon{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#292f32;font-size:1.25rem}
-.geode-reveal strong{display:block;margin:2px 0 3px}.geode-reveal p{margin:0;color:var(--muted);font-size:.69rem;line-height:1.35}
+
+
+
+
+
 .postgame-vault-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:9px}
 .postgame-vault-heading>span{color:var(--muted);font-size:.68rem}
 .postgame-vault-list{display:grid;gap:7px}
@@ -1564,7 +1544,7 @@ body.modal-open{overflow:hidden}
 .completion-continue{width:100%;margin-top:15px;padding:13px;font-size:.85rem;letter-spacing:.08em}
 
 @media(max-width:470px){
-  .postgame-station{grid-template-columns:1fr}.geode-action{align-items:stretch}.geode-action .primary-button{width:100%}
+  .postgame-station{grid-template-columns:1fr}
   .vault-item{grid-template-columns:auto 1fr}.vault-item .mini-button{grid-column:1/-1}
   .completion-plaque,.personal-heading{align-items:flex-start;flex-direction:column}.personal-heading p{text-align:left}
   .personal-collection-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.personal-slot{min-height:108px;padding:7px}.personal-slot-copy strong{font-size:.62rem}
@@ -1658,7 +1638,7 @@ body.modal-open{overflow:hidden}
 
 
 /* ============================================================
-   Beta 1.4.1 — Personal Collection postgame room
+   Beta 1.4.2 — Personal Collection postgame room
    ============================================================ */
 .bottom-nav.postgame-nav{grid-template-columns:repeat(6,1fr)}
 #collectionNavButton small{line-height:1.02}
@@ -1667,45 +1647,13 @@ body.modal-open{overflow:hidden}
   .bottom-nav.postgame-nav .nav-button small{font-size:.47rem;line-height:1.02}
 }
 
-/* Geodes now read as actual rough nodules and opened crystal cavities. */
-.geode-find{display:grid;place-items:center;width:78%;height:78%;clip-path:none!important;border-radius:0;background:none;box-shadow:none;color:inherit}
-.geode-sprite{display:inline-block;position:relative;flex:0 0 auto}
-.geode-closed{
-  width:44px;height:39px;border-radius:47% 53% 44% 56% / 54% 43% 57% 46%;
-  background:
-    radial-gradient(circle at 28% 30%,rgba(255,255,255,.18) 0 5%,transparent 6%),
-    radial-gradient(circle at 70% 65%,rgba(0,0,0,.22) 0 7%,transparent 8%),
-    radial-gradient(circle at 58% 25%,#697174 0 8%,transparent 9%),
-    linear-gradient(145deg,#71797b 0%,#50585b 42%,#343b3e 72%,#23292b 100%);
-  border:2px solid #202629;
-  box-shadow:inset -5px -5px 9px rgba(0,0,0,.25),inset 4px 4px 7px rgba(255,255,255,.08),0 2px 4px rgba(0,0,0,.25);
-  transform:rotate(-5deg)
-}
-.geode-closed::before{content:"";position:absolute;left:8%;right:10%;top:45%;height:3px;border-radius:50%;background:linear-gradient(90deg,transparent,#9ca5a6 24%,#42494c 52%,#8d9698 76%,transparent);opacity:.72;transform:rotate(9deg)}
-.geode-closed::after{content:"";position:absolute;width:7px;height:5px;right:8px;top:7px;border-radius:50%;background:#303638;box-shadow:-20px 14px 0 #60686a,-8px 22px 0 #2e3436;opacity:.75}
-.geode-find .geode-closed{width:100%;height:100%;min-width:0;min-height:0;border-width:1px}
-.geode-station-visual .geode-closed{width:76px;height:66px}
-
-.geode-open{--core1:#f2f0e8;--core2:#bfc9c8;display:inline-flex;align-items:center;justify-content:center;gap:2px;width:48px;height:42px}
-.geode-half{position:relative;display:block;width:22px;height:39px;overflow:hidden;background:linear-gradient(145deg,#777f81,#474f52 60%,#252b2d);border:2px solid #262c2e;box-shadow:inset 0 0 0 2px rgba(255,255,255,.05),0 2px 4px rgba(0,0,0,.24)}
-.geode-half.left{border-radius:85% 16% 18% 76% / 52% 18% 20% 50%;transform:rotate(-7deg)}
-.geode-half.right{border-radius:16% 85% 76% 18% / 18% 52% 50% 20%;transform:rotate(7deg)}
-.geode-cavity{position:absolute;inset:5px 3px;background:radial-gradient(circle at 50% 45%,var(--core1) 0 18%,var(--core2) 22% 53%,#5e6668 57% 69%,transparent 72%);filter:saturate(1.05);box-shadow:inset 0 0 7px rgba(255,255,255,.24)}
-.geode-half.left .geode-cavity{border-radius:78% 10% 12% 69% / 48% 15% 18% 45%}
-.geode-half.right .geode-cavity{border-radius:10% 78% 69% 12% / 15% 48% 45% 18%}
-.geode-amethyst{--core1:#ead8f2;--core2:#8656a0}
-.geode-calcite{--core1:#fff3d0;--core2:#d6c28e}
-.geode-bandedAgate{--core1:#f1d2aa;--core2:#a96957}
-.geode-chalcedony{--core1:#d7eef0;--core2:#76a9af}
-.geode-quartzDruzy{--core1:#f7fbfb;--core2:#b9d0d2}
-.geode-reveal-icon .geode-open,.vault-item-icon .geode-open,.personal-slot-visual .geode-open{width:46px;height:40px}
 
 .collection-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .collection-mini-stat{padding:10px 11px;border:1px solid var(--line);border-radius:14px;background:rgba(23,27,30,.94)}
 .collection-mini-stat strong{display:block;margin-top:4px;color:#ead6a0;font-size:1.05rem}
-.geode-cracker-station{grid-template-columns:auto 1fr auto}
-.geode-station-visual{display:grid;place-items:center;width:88px;min-height:82px;border:1px solid rgba(255,255,255,.07);border-radius:15px;background:rgba(8,10,11,.34)}
-.geode-action-buttons{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px}
+
+
+
 .vault-help{margin:-2px 0 9px;color:var(--muted);font-size:.68rem;line-height:1.42}
 .vault-item{grid-template-columns:auto 1fr auto}
 .vault-item-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:5px}
@@ -1714,15 +1662,34 @@ body.modal-open{overflow:hidden}
 .personal-collection{margin-top:0}
 .personal-collection-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .personal-slot{min-height:122px}
-.cartridge-card .cartridge-actions{gap:7px}
-.cartridge-card .cartridge-actions button{min-width:108px}
+
+
 
 @media(max-width:560px){
   .collection-overview{grid-template-columns:1fr 1fr 1fr}
   .collection-mini-stat{padding:8px}.collection-mini-stat .status-label{font-size:.55rem}.collection-mini-stat strong{font-size:.9rem}
-  .geode-cracker-station{grid-template-columns:auto 1fr}.geode-action{grid-column:1/-1;align-items:stretch}.geode-action-buttons{justify-content:stretch}.geode-action-buttons button{flex:1 1 140px}
+  
   .vault-item{grid-template-columns:auto 1fr}.vault-item-actions{grid-column:1/-1;justify-content:stretch}.vault-item-actions button{flex:1}
   .personal-collection-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
   .personal-slot{min-height:112px;padding:7px}
   .personal-slot-copy strong{font-size:.6rem}.personal-slot-copy span{font-size:.52rem}
 }
+
+
+/* Beta 1.4.2 — exceptional-specimen postgame */
+.exceptional-zone-hint{box-shadow:inset 0 0 0 1px rgba(212,179,105,.50),inset 0 0 12px rgba(212,179,105,.09)}
+.exceptional-zone-hint::after{content:"";position:absolute;inset:17%;border:1px dashed rgba(233,223,207,.22);border-radius:4px;pointer-events:none}
+.exceptional-find-tile{box-shadow:inset 0 0 0 1px rgba(212,179,105,.34)}
+.exceptional-find-mark{position:absolute;z-index:8;right:3px;top:2px;color:#f0d894;font-size:.66rem;text-shadow:0 1px 4px #000;pointer-events:none}
+.prospecting-supplies,.specimen-storage{padding:13px;border:1px solid var(--line);border-radius:18px;background:rgba(23,27,30,.94);box-shadow:var(--shadow)}
+.prospecting-supplies{margin-bottom:10px}
+.supply-list{display:grid;gap:8px}
+.supply-card{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.07);border-radius:13px;background:rgba(8,10,11,.32)}
+.supply-card.armed{border-color:rgba(212,179,105,.40);background:linear-gradient(135deg,rgba(212,179,105,.07),rgba(8,10,11,.34))}
+.supply-icon{display:grid;place-items:center;width:40px;height:40px;border:1px solid rgba(255,255,255,.07);border-radius:12px;background:rgba(255,255,255,.025);font-size:1.15rem}
+.supply-copy strong{display:block;margin:2px 0 3px;font-size:.8rem}.supply-copy p{margin:0 0 5px;color:var(--muted);font-size:.66rem;line-height:1.4}.supply-stock{display:block;color:#d9c895;font-size:.62rem;font-weight:800}
+.supply-actions{display:flex;flex-direction:column;gap:6px;min-width:118px}.supply-actions button{width:100%;font-size:.65rem;padding:8px}
+.focus-picker{display:flex;align-items:center;gap:7px;margin:6px 0}.focus-picker span{color:var(--muted);font-size:.6rem;white-space:nowrap}.focus-picker select{min-width:0;max-width:180px;border:1px solid var(--line);border-radius:9px;padding:6px 8px;color:var(--text);background:#15191b;font:inherit;font-size:.64rem}
+.vault-item-copy p{margin:5px 0 0;color:#c6c0b7;font-size:.63rem;line-height:1.38}
+.specimen-storage .vault-item{align-items:start}
+@media(max-width:560px){.supply-card{grid-template-columns:auto 1fr}.supply-actions{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr}.focus-picker{align-items:flex-start;flex-direction:column}.focus-picker select{max-width:100%;width:100%}}

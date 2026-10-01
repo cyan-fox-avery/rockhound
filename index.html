@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#111416" />
-  <title>Rockhound — Beta 1.4.1</title>
-  <link rel="stylesheet" href="style.css?v=1.4.1" />
+  <title>Rockhound — Beta 1.4.2</title>
+  <link rel="stylesheet" href="style.css?v=1.4.2" />
 </head>
 <body>
   <div class="app-shell">
     <header class="topbar">
       <div>
-        <p class="eyebrow">BETA 1.4.1</p>
+        <p class="eyebrow">BETA 1.4.2</p>
         <h1 id="gameTitle">ROCKHOUND</h1>
         <p id="gameTagline" class="subtitle">rock go crunch.</p>
       </div>
@@ -49,7 +49,6 @@
           <div class="mine-tool-buttons" aria-label="Prospecting tools">
             <button id="scanButton" class="mine-tool-button" type="button"><span class="tool-button-icon">⌁</span><span><strong>Scan area</strong><small id="scanButtonStatus">Locked</small></span></button>
             <button id="metalDetectorButton" class="mine-tool-button" type="button"><span class="tool-button-icon">🧲</span><span><strong>Sweep face</strong><small id="detectorButtonStatus">Locked</small></span></button>
-            <button id="geodeFinderButton" class="mine-tool-button hidden" type="button"><span class="tool-button-icon">🪨</span><span><strong>Find geode</strong><small id="geodeFinderStatus">Postgame reward</small></span></button>
           </div>
 
           <div class="run-footer mine-actions">
@@ -99,13 +98,13 @@
       <section id="personalCollectionPanel" class="panel hidden" data-panel="collection">
         <div class="section-heading">
           <div><p class="eyebrow">POSTGAME ROOM</p><h2>Personal Collection</h2></div>
-          <p>Crack geodes, sort special finds, and build a display that is entirely yours. No checklist. No percentage.</p>
+          <p>Hunt extraordinary specimens, keep the ones you love, and build a display that is entirely yours. No checklist. No percentage.</p>
         </div>
         <div id="postgameWorkbench" class="postgame-workbench hidden"></div>
         <section id="personalCollectionSection" class="personal-collection hidden">
           <div class="personal-heading">
-            <div><span class="status-label">Private display</span><h3>Thirty spaces. Your rules.</h3></div>
-            <p>Favourite specimens, exceptional finds, and opened geodes can all live here. Displayed items are protected from selling.</p>
+            <div><span class="status-label">Display case</span><h3>Thirty spaces. Your rules.</h3></div>
+            <p>Exceptional specimens can be kept in Specimen Storage whether or not they are displayed. Anything in the case is protected from selling.</p>
           </div>
           <div id="personalCollectionGrid" class="personal-collection-grid"></div>
         </section>
@@ -124,7 +123,7 @@
         <div class="section-heading"><div><p class="eyebrow">GEAR & OPERATIONS</p><h2>Upgrades</h2></div><p>Upgrade your tools and open deeper workings as you progress.</p></div>
         <div class="shop-balance"><span class="status-label">Current balance</span><strong id="shopBalance">0¢</strong></div>
         <div id="upgradeList" class="upgrade-list"></div>
-        <button id="resetButton" class="danger-button" type="button">Reset Beta 1.4.1 save</button>
+        <button id="resetButton" class="danger-button" type="button">Reset Beta 1.4.2 save</button>
       </section>
     </main>
 
@@ -152,6 +151,6 @@
     </div>
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="script.js?v=1.4.1"></script>
+  <script src="script.js?v=1.4.2"></script>
 </body>
 </html>
