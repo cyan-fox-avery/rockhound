@@ -499,10 +499,6 @@ belemnite: {
       {id:'amethystSceptre',label:'Amethyst Sceptre',sellValue:4400,detail:'A later crystal generation widened near the tip, producing the distinctive sceptre-shaped habit.'},
       {id:'deepPurpleCluster',label:'Deep-purple Amethyst Cluster',sellValue:3800,detail:'Strong colour developed across a tightly packed group of quartz crystals.'}
     ],
-    pyrite:[
-      {id:'striatedCubes',label:'Striated Pyrite Cube Cluster',sellValue:4600,detail:'Intergrown cubic crystals show the fine parallel striations that are common on pyrite faces.'},
-      {id:'intergrownPyrite',label:'Intergrown Pyrite Crystals',sellValue:4000,detail:'Multiple brassy crystals grew into one another instead of forming a single isolated cube.'}
-    ],
     calcite:[
       {id:'dogtoothCalcite',label:'Dogtooth Calcite Cluster',sellValue:3200,detail:'Sharp scalenohedral calcite crystals form the classic pointed habit often nicknamed dogtooth spar.'},
       {id:'opticalCalcite',label:'Optical Calcite Crystal',sellValue:3600,detail:'An unusually clear calcite crystal shows strong double refraction through its rhombohedral structure.'}
@@ -511,23 +507,22 @@ belemnite: {
       {id:'zonedFluorite',label:'Colour-zoned Fluorite',sellValue:4800,detail:'Changes in chemistry during growth produced visible bands of colour inside the same crystal.'},
       {id:'fluoriteCubes',label:'Fluorite Cube Cluster',sellValue:4200,detail:'A group of sharply formed cubic fluorite crystals grew together along a vein surface.'}
     ],
+    pyrite:[
+      {id:'pyriteCubeCluster',label:'Pyrite Cube Cluster',sellValue:4600,detail:'Intergrown brassy cubes show the crisp geometry that makes pyrite crystals so distinctive.'}
+    ],
     malachite:[
       {id:'botryoidalMalachite',label:'Botryoidal Malachite',sellValue:5200,detail:'Rounded grape-like surfaces formed as malachite grew outward in many tiny radiating fibres.'},
       {id:'fibrousMalachite',label:'Fibrous Malachite',sellValue:4600,detail:'Fine radiating fibres give this specimen a silky texture very different from polished banded material.'}
     ],
     obsidian:[
-      {id:'snowflakeObsidian',label:'Snowflake Obsidian',sellValue:3000,detail:'Pale spherulites crystallized inside volcanic glass, producing the familiar snowflake pattern.'}
+      {id:'snowflakeObsidian',label:'Snowflake Obsidian',sellValue:3000,detail:'Pale spherulites crystallized inside volcanic glass, producing the familiar snowflake pattern.'},
+      {id:'rainbowSheenObsidian',label:'Rainbow-sheen Obsidian',sellValue:4200,detail:'Microscopic structures inside the volcanic glass reflect light as subtle bands of iridescent colour.'}
     ],
     olivine:[
-      {id:'olivineBasalt',label:'Olivine in Basalt',sellValue:4400,detail:'Green olivine crystals remain embedded in the dark volcanic rock that carried them upward.'},
-      {id:'gemmyOlivine',label:'Gemmy Olivine (Peridot) Crystal',sellValue:5800,detail:'An unusually transparent olivine crystal is good enough to show why gem-quality olivine is called peridot.'}
-    ],
-    hematite:[
-      {id:'specularHematite',label:'Specular Hematite',sellValue:3600,detail:'Tiny platy hematite crystals create a glittering metallic surface known as specularite.'}
+      {id:'gemmyOlivine',label:'Gemmy Olivine Crystal',sellValue:5800,detail:'An unusually transparent olivine crystal is good enough to show why gem-quality olivine is called peridot.'}
     ],
     rhodochrosite:[
-      {id:'bandedRhodochrosite',label:'Banded Rhodochrosite',sellValue:5000,detail:'Repeated mineral deposition produced distinct pink and pale bands through the specimen.'},
-      {id:'rhodoCrystalCluster',label:'Rhodochrosite Crystal Cluster',sellValue:6200,detail:'Well-formed rhodochrosite crystals grew into open space along a hydrothermal vein.'}
+      {id:'bandedRhodochrosite',label:'Banded Rhodochrosite',sellValue:5000,detail:'Repeated mineral deposition produced distinct pink and pale bands through the specimen.'}
     ],
     nativeSulfur:[
       {id:'sulfurCluster',label:'Native Sulfur Crystal Cluster',sellValue:3500,detail:'Bright yellow sulfur crystals formed together in a geothermal environment.'}
@@ -538,16 +533,53 @@ belemnite: {
     emerald:[
       {id:'emeraldMatrix',label:'Emerald in Matrix',sellValue:6800,detail:'Green beryl crystals remain embedded in contrasting host rock, preserving more of their geological context.'}
     ],
-    adularia:[
-      {id:'adulariaCluster',label:'Adularia Crystal Cluster',sellValue:4200,detail:'A cluster of low-temperature potassium feldspar crystals formed from hydrothermal fluids in an epithermal vein.'}
+    hematite:[
+      {id:'specularHematite',label:'Specular Hematite',sellValue:3600,detail:'Tiny platy hematite crystals create a glittering metallic surface known as specularite.'}
     ],
     nativeGold:[
       {id:'dendriticGold',label:'Dendritic Native Gold',sellValue:7500,detail:'Native gold grew in branching, tree-like forms along tiny fractures rather than as a rounded nugget.'}
-    ],
-    diamond:[
-      {id:'wellFormedDiamond',label:'Well-formed Diamond Crystal',sellValue:6000,detail:'A sharply formed natural diamond crystal shows the geometry it had before any cutting or polishing.'}
     ]
   };
+
+  const SPRITE_SLUGS = {
+    roseQuartz:'rose-quartz', nativeSulfur:'native-sulfur', nativeGold:'native-gold'
+  };
+  const EXCEPTIONAL_SPRITES = {
+    waterClearPoint:'water-clear-quartz-point',
+    phantomQuartz:'phantom-quartz',
+    quartzCluster:'quartz-crystal-cluster',
+    amethystSceptre:'amethyst-sceptre',
+    deepPurpleCluster:'deep-purple-amethyst-cluster',
+    dogtoothCalcite:'dogtooth-calcite-cluster',
+    opticalCalcite:'optical-calcite-crystal',
+    zonedFluorite:'colour-zoned-fluorite',
+    fluoriteCubes:'fluorite-cube-cluster',
+    pyriteCubeCluster:'pyrite-cube-cluster',
+    botryoidalMalachite:'botryoidal-malachite',
+    fibrousMalachite:'fibrous-malachite',
+    snowflakeObsidian:'snowflake-obsidian',
+    rainbowSheenObsidian:'rainbow-sheen-obsidian',
+    gemmyOlivine:'gemmy-olivine-crystal',
+    bandedRhodochrosite:'banded-rhodochrosite',
+    sulfurCluster:'native-sulfur-crystal-cluster',
+    rubyMatrix:'ruby-in-matrix',
+    emeraldMatrix:'emerald-in-matrix',
+    specularHematite:'specular-hematite',
+    dendriticGold:'dendritic-native-gold'
+  };
+
+  function spriteSlug(key){ return SPRITE_SLUGS[key]||key; }
+  function miniSpriteSrc(key){
+    const m=MATERIALS[key];
+    if(m?.family==='fossil')return 'images/sprites/mini/fossil.png';
+    if(m?.family==='artifact')return 'images/sprites/mini/artifact.png';
+    return `images/sprites/mini/${spriteSlug(key)}.png`;
+  }
+  function detailSpriteSrc(key,stage){ return `images/sprites/detail/${spriteSlug(key)}-${stage}.webp`; }
+  function exceptionalSpriteSrc(item){
+    const slug=EXCEPTIONAL_SPRITES[item?.variantId];
+    return slug?`images/sprites/exceptional/${slug}.webp`:detailSpriteSrc(item?.key,MATERIALS[item?.key]?.stages?.[0]||'raw');
+  }
 
 
   const WINGS = [
@@ -1833,26 +1865,25 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
 
 
   function buildIcon(key,forTile=false,stage=null){
-    const m=MATERIALS[key],span=document.createElement('span');
-    if(!forTile)span.classList.add('material-icon');
-    m.iconClass.split(' ').forEach(c=>span.classList.add(c));
-    if(!forTile&&stage==='refined'&&key==='hematite'){span.classList.remove('hematite');span.classList.add('iron');}
-    if(!forTile&&stage==='refined'&&key==='chalcopyrite'){span.classList.remove('chalcopyrite');span.classList.add('copper');}
-    if(!forTile&&stage==='refined'&&key==='cassiterite'){span.classList.remove('cassiterite');span.classList.add('tin');}
-    if(!forTile&&stage==='refined'&&key==='galena'){span.classList.remove('galena');span.classList.add('lead');}
-    if(!forTile&&stage==='refined'&&key==='sphalerite'){span.classList.remove('sphalerite');span.classList.add('zinc');}
-    if(!forTile&&stage==='refined'&&key==='scheelite'){span.classList.remove('scheelite');span.classList.add('tungsten');}
-    if(!forTile&&stage==='refined'&&key==='acanthite'){span.classList.remove('acanthite');span.classList.add('silver');}
-    if(forTile&&m.family==='mineral')span.classList.add('gem');
-    if(forTile&&m.family==='ore')span.classList.add('ore');
-    if(SPARKLE_KEYS.has(key)){
-      span.classList.add('sparkle-gem');
-      const seed=[...`${key}-${stage||'raw'}-${forTile?'tile':'ui'}`].reduce((n,ch)=>n+ch.charCodeAt(0),0)%7;
-      span.style.setProperty('--sparkle-delay',`${-seed}.2s`);
-    }
-    if(UV_CLASSES[key])span.classList.add('uv-reactive',UV_CLASSES[key]);
-    if(m.iconText)span.textContent=m.iconText;
-    return span;
+    const m=MATERIALS[key],wrap=document.createElement('span');
+    wrap.className=forTile?'tile-sprite sprite-wrap':'material-icon sprite-wrap';
+    const img=document.createElement('img');
+    img.className='sprite-image';img.src=miniSpriteSrc(key);img.alt='';img.loading='lazy';img.decoding='async';
+    wrap.appendChild(img);
+    return wrap;
+  }
+
+  function buildDetailSprite(key,stage){
+    const img=document.createElement('img');
+    img.className='detail-sprite';img.src=detailSpriteSrc(key,stage);img.alt='';img.loading='lazy';img.decoding='async';
+    if(UV_CLASSES[key])img.classList.add('uv-reactive',UV_CLASSES[key]);
+    return img;
+  }
+
+  function buildExceptionalSprite(item,compact=false){
+    const img=document.createElement('img');
+    img.className=`exceptional-sprite${compact?' compact':''}`;img.src=exceptionalSpriteSrc(item);img.alt='';img.loading='lazy';img.decoding='async';
+    return img;
   }
 
 
@@ -2031,12 +2062,12 @@ if(scans>=1)b.classList.add('scan-area');
       const rows=document.createElement('div');rows.className='storage-drawer-rows';
       items.forEach(item=>{
         const value=specialItemSellValue(item),row=document.createElement('div');row.className='storage-specimen-row';
-        const rowIcon=document.createElement('div');rowIcon.className='storage-specimen-icon';if(item.key)rowIcon.appendChild(buildIcon(item.key));else rowIcon.textContent='✦';
+        const rowIcon=document.createElement('div');rowIcon.className='storage-specimen-icon';rowIcon.appendChild(buildExceptionalSprite(item,true));
         const copy=document.createElement('div');copy.className='storage-specimen-copy';
         const foundDepth=item.foundDepth&&DEPTHS[item.foundDepth]?`Depth ${item.foundDepth} · ${DEPTHS[item.foundDepth].name}`:'Postgame find';
         let foundDate='';
         try{if(item.foundAt)foundDate=new Date(item.foundAt).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});}catch{foundDate='';}
-        copy.innerHTML=`<strong>${item.label}</strong><span>${foundDepth} · ${formatMoney(value)}</span><div class="storage-inspect-detail hidden">${foundDate?`<span>Found ${foundDate}</span>`:''}<p>${item.detail||'An unusually fine example worth keeping because rocks are cool.'}</p></div>`;
+        copy.innerHTML=`<strong>${item.label}</strong><span>${foundDepth} · ${formatMoney(value)}</span><div class="storage-inspect-detail hidden"><img class="storage-inspect-image" src="${exceptionalSpriteSrc(item)}" alt="" loading="lazy">${foundDate?`<span>Found ${foundDate}</span>`:''}<p>${item.detail||'An unusually fine example worth keeping because rocks are cool.'}</p></div>`;
         const actions=document.createElement('div');actions.className='storage-specimen-actions';
         const inspect=document.createElement('button');inspect.type='button';inspect.className='mini-button';inspect.textContent='Inspect';inspect.addEventListener('click',()=>{const detail=copy.querySelector('.storage-inspect-detail');detail.classList.toggle('hidden');inspect.textContent=detail.classList.contains('hidden')?'Inspect':'Close';});
         const display=document.createElement('button');display.type='button';display.className='mini-button personal-display';display.textContent='Display';display.disabled=firstEmptyPersonalSlot()<0;display.addEventListener('click',()=>displayStoredSpecimen(item.id));
@@ -2092,7 +2123,7 @@ state.credits+=value;
       if(!item){slot.innerHTML=`<span class="personal-slot-number">${String(index+1).padStart(2,'0')}</span><span class="personal-empty">Empty display</span>`;}
       else{
         const visual=document.createElement('div');visual.className='personal-slot-visual';
-        if(item.key)visual.appendChild(buildIcon(item.key));else visual.textContent='✦';
+        visual.appendChild(buildExceptionalSprite(item));
         const copy=document.createElement('div');copy.className='personal-slot-copy';copy.innerHTML=`<strong>${item.label}</strong><span>Exceptional ${MATERIALS[item.key]?.name||'specimen'}</span>`;
         const remove=document.createElement('button');remove.type='button';remove.className='mini-button';remove.textContent='Store';remove.addEventListener('click',()=>removePersonalSlot(index));
         slot.append(visual,copy,remove);
@@ -2177,7 +2208,7 @@ state.credits+=value;
 
     const rows=m.stages.map(stage=>{
       const count=state.inventory[k][stage],next=m.process?.[stage],can=canProcessMaterial(k),donated=state.collection[k][stage];
-      return `<div class="stage-row"><div class="stage-copy"><strong>${m.stageLabels[stage]} · ${count} owned</strong><span>${formatMoney(m.prices[stage])} each</span>${next&&!can?`<span class="process-lock">Needs ${WORKSHOP_LEVELS[m.workshopRequired||0].name}</span>`:''}</div><div class="stage-actions">${next?`<button class="mini-button accent" data-action="process" data-material="${k}" data-stage="${stage}" ${count<1||!can?'disabled':''}>${m.processLabels[stage]}</button>`:''}<button class="mini-button donate" data-action="donate" data-material="${k}" data-stage="${stage}" ${count<1||donated?'disabled':''}>${donated?'In museum':'Donate'}</button><button class="mini-button" data-action="sell" data-material="${k}" data-stage="${stage}" ${count<1?'disabled':''}>Sell ${formatMoney(m.prices[stage])}</button></div></div>`;
+      return `<div class="stage-row"><div class="stage-art"><img src="${detailSpriteSrc(k,stage)}" alt="" loading="lazy" decoding="async"></div><div class="stage-copy"><strong>${m.stageLabels[stage]} · ${count} owned</strong><span>${formatMoney(m.prices[stage])} each</span>${next&&!can?`<span class="process-lock">Needs ${WORKSHOP_LEVELS[m.workshopRequired||0].name}</span>`:''}</div><div class="stage-actions">${next?`<button class="mini-button accent" data-action="process" data-material="${k}" data-stage="${stage}" ${count<1||!can?'disabled':''}>${m.processLabels[stage]}</button>`:''}<button class="mini-button donate" data-action="donate" data-material="${k}" data-stage="${stage}" ${count<1||donated?'disabled':''}>${donated?'In museum':'Donate'}</button><button class="mini-button" data-action="sell" data-material="${k}" data-stage="${stage}" ${count<1?'disabled':''}>Sell ${formatMoney(m.prices[stage])}</button></div></div>`;
     }).join('');
 
 
@@ -2328,7 +2359,7 @@ const uvAvailable=!!state.upgrades.uvLamp;
           const visual=document.createElement('div');visual.className='slot-visual';
           if(obscured){
             const mystery=document.createElement('span');mystery.className='unknown-material-icon';mystery.textContent='?';visual.appendChild(mystery);
-          }else visual.appendChild(buildIcon(k,false,stage));
+          }else visual.appendChild(buildDetailSprite(k,stage));
           specimen.appendChild(visual);
           specimen.insertAdjacentHTML('beforeend',obscured?'<strong class="slot-stage">Unknown specimen</strong><span class="slot-state">Not identified</span>':`<strong class="slot-stage">${m.stageLabels[stage]}</strong>${filled?'':'<span class="slot-state">Not collected</span>'}`);
           const fact=document.createElement('div');fact.className='specimen-fact-card';

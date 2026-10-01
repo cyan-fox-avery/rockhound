@@ -1885,3 +1885,171 @@ body.modal-open{overflow:hidden}
 
 /* ===== Beta 1.4.4 prospecting commitment polish ===== */
 /* Armed supplies stay selected across depth changes and are only spent on the first mined tile. */
+
+/* ============================================================
+   Beta 1.5.0 — finished specimen sprite pass
+   ============================================================ */
+.sprite-wrap{
+  display:grid !important;
+  place-items:center;
+  overflow:visible !important;
+  clip-path:none !important;
+  border-radius:0 !important;
+  color:inherit !important;
+  background:none !important;
+  box-shadow:none;
+}
+.sprite-image{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  pointer-events:none;
+  user-select:none;
+}
+.material-icon.sprite-wrap{
+  width:42px;
+  height:42px;
+  min-width:42px;
+}
+.tile-find.tile-sprite{
+  width:76%;
+  height:76%;
+  background:none !important;
+  clip-path:none !important;
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.5));
+}
+.exceptional-find-tile .tile-find.tile-sprite{
+  filter:drop-shadow(0 0 3px rgba(240,216,148,.36)) drop-shadow(0 1px 1px rgba(0,0,0,.55));
+}
+.exceptional-find-mark{
+  right:1px;
+  top:0;
+  font-size:.72rem;
+  text-shadow:0 0 5px rgba(245,213,124,.7),0 1px 3px #000;
+}
+.exceptional-find-mark::after{
+  content:"✦";
+  position:absolute;
+  right:9px;
+  top:7px;
+  font-size:.42rem;
+  opacity:.72;
+}
+
+.detail-sprite{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:8px;
+  pointer-events:none;
+  user-select:none;
+}
+.museum-specimen .slot-visual{
+  height:78px;
+  margin:0 0 7px;
+  overflow:hidden;
+  border-radius:9px;
+  background:#0d1011;
+}
+.museum-specimen-column:not(.filled):not(.unknown-specimen) .detail-sprite{
+  opacity:.18;
+  filter:grayscale(.8) brightness(.75);
+}
+.museum-specimen-column.filled .detail-sprite{opacity:1}
+.museum-wing.compact-wing .museum-specimen .slot-visual{height:102px}
+.museum-wing.compact-wing .museum-specimen{min-height:150px}
+
+.stage-row{
+  grid-template-columns:62px minmax(0,1fr) auto;
+}
+.stage-art{
+  width:62px;
+  height:48px;
+  overflow:hidden;
+  align-self:center;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:9px;
+  background:#0d1011;
+}
+.stage-art img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.storage-drawer-icon .material-icon.sprite-wrap{width:32px;height:32px;min-width:32px}
+.storage-specimen-icon{
+  width:45px;
+  height:45px;
+  overflow:hidden;
+  border:1px solid rgba(212,179,105,.14);
+  border-radius:9px;
+  background:#0d1011;
+}
+.exceptional-sprite{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  border-radius:inherit;
+}
+.exceptional-sprite.compact{width:100%;height:100%}
+.storage-inspect-detail{
+  margin-top:7px;
+  padding-top:7px;
+  border-top:1px solid rgba(255,255,255,.055);
+}
+.storage-inspect-image{
+  display:block;
+  width:min(100%,320px);
+  aspect-ratio:4/3;
+  margin:0 0 7px;
+  object-fit:contain;
+  border:1px solid rgba(212,179,105,.18);
+  border-radius:10px;
+  background:#0d1011;
+}
+.personal-slot{min-height:162px}
+.personal-slot-visual{
+  height:88px;
+  overflow:hidden;
+  margin:2px 0 7px;
+  border-radius:9px;
+  background:#0d1011;
+}
+.personal-slot-visual .exceptional-sprite{object-fit:contain}
+
+/* The UV lamp now treats the detailed specimen image as the object being lit. */
+.museum-wings.uv-mode .detail-sprite.uv-reactive{
+  opacity:1;
+  transition:filter .18s ease;
+}
+.museum-wings.uv-mode .detail-sprite.uv-fluorite{filter:brightness(1.06) saturate(1.35) drop-shadow(0 0 7px #728cff)}
+.museum-wings.uv-mode .detail-sprite.uv-calcite{filter:sepia(.15) saturate(1.45) brightness(1.05) drop-shadow(0 0 7px #ff7162)}
+.museum-wings.uv-mode .detail-sprite.uv-ruby{filter:saturate(1.7) brightness(1.06) drop-shadow(0 0 8px #ff3158)}
+.museum-wings.uv-mode .detail-sprite.uv-sphalerite{filter:sepia(.32) saturate(1.7) brightness(1.08) drop-shadow(0 0 8px #ff9f38)}
+.museum-wings.uv-mode .detail-sprite.uv-scheelite{filter:saturate(.38) brightness(1.35) hue-rotate(155deg) drop-shadow(0 0 8px #b7e9ff)}
+.museum-wings.uv-mode .detail-sprite.uv-willemite{filter:saturate(1.85) brightness(1.18) drop-shadow(0 0 9px #66ff7c)}
+.museum-wings.uv-mode .detail-sprite.uv-hackmanite{filter:saturate(1.5) brightness(1.1) drop-shadow(0 0 8px #ff789e)}
+.museum-wings.uv-mode .detail-sprite.uv-apatite{filter:hue-rotate(38deg) saturate(1.6) brightness(1.18) drop-shadow(0 0 8px #dfff63)}
+
+@media(max-width:560px){
+  .museum-specimen .slot-visual{height:68px}
+  .museum-wing.compact-wing .museum-specimen .slot-visual{height:86px}
+  .museum-wing.compact-wing .museum-specimen{min-height:132px}
+  .stage-row{grid-template-columns:56px minmax(0,1fr)}
+  .stage-art{width:56px;height:44px}
+  .stage-actions{grid-column:1/-1;justify-content:flex-start;padding-left:64px}
+  .personal-slot{min-height:150px;padding:7px}
+  .personal-slot-visual{height:76px}
+  .storage-specimen-row{grid-template-columns:45px minmax(0,1fr)}
+}
+@media(max-width:380px){
+  .museum-specimen .slot-visual{height:61px}
+  .personal-slot{min-height:142px}
+  .personal-slot-visual{height:69px}
+  .stage-actions{padding-left:0}
+}

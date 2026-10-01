@@ -1,6 +1,6 @@
 # Rockhound
 
-**Beta 1.4.4 — content-complete full-game beta with postgame polish**
+**Beta 1.5.0 — finished sprite pass**
 
 > rock go crunch.
 
@@ -37,12 +37,15 @@ The museum ending still grants the permanent Completion Plaque and effectively u
 
 Rockhound contains **50 achievements**. **TRUE ROCKHOUND** marks museum completion. The hidden **ROCKAHOLIC** achievement is the full completionist challenge and requires every other achievement plus all permanent upgrades and core discoveries. The Personal Collection itself has no completion checklist.
 
-## Beta 1.4.4 changes
+## Beta 1.5.0 changes
 
-- Reworked postgame consumables around **next-face arming** instead of modifying the current face.
-- Armed supplies now persist safely while the player browses between depths or generates fresh faces.
-- Supplies are only consumed when the player mines the **first tile** of a prepared face.
-- **Survey Chalk** waits until that first dig before revealing its vague 3×3 search zone or reporting no promising signs.
-- Supplies can be disarmed before commitment without being spent.
-- Preserves the 30% Prospector's Kit chance, the Shop / Mine separation, compact Specimen Storage, silver fossil/artifact completion treatment, and surplus fossil/artifact Sell All behaviour from Beta 1.4.3.
+- Replaces the placeholder specimen shapes with the finished Rockhound art pass.
+- Adds dedicated **mini mine sprites** for every raw mineral/ore, plus shared fossil and historical-artifact mine icons.
+- Adds **95 stage-specific detail sprites** across the Museum and Workbench, including special pipelines such as Rough → Cleaved → Cut Diamond, Raw Olivine → Tumbled Olivine → Cut Peridot, and Raw → Tumbled → Polished Malachite.
+- Adds full-detail art for all curated **Exceptional Specimens** in Specimen Storage and the Personal Collection.
+- Exceptional mine finds keep the clean mini sprite and gain a small sparkle treatment; the detailed specimen is revealed in the collection.
+- Preserves the museum UV-lamp interaction with reactive glow treatments on the finished specimen art.
+- Keeps the Beta 1.4.4 prospecting commitment rules unchanged: armed supplies are only spent on the first mined tile of a prepared face.
 - Preserves the existing `rockhound-lab-1.3` save key and prior beta progress.
+
+The game remains in final-polish/playtest territory. The sprite pass changes presentation, not the core progression or ending.
