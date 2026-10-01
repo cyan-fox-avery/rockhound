@@ -483,9 +483,9 @@ belemnite: {
   const EXCEPTIONAL_KIT_CHANCE = 0.30;
   const COLLECTOR_FOCUS_WEIGHT = 0.60;
   const PROSPECTING_SUPPLIES = {
-    prospectorKit:{label:"Prospector's Kit",icon:'🎒',cost:4000,description:'Raises this rock face from a 5% to a 30% chance of containing one exceptional specimen.'},
-    surveyChalk:{label:'Survey Chalk',icon:'▧',cost:2000,description:'Checks this rock face. If an exceptional specimen is present, marks a vague 3×3 promising zone around it.'},
-    collectorsFocus:{label:"Collector's Focus",icon:'◎',cost:4000,description:'Choose one eligible material for this rock face. Any hidden exceptional specimen strongly favours that target when it is present.'}
+    prospectorKit:{label:"Prospector's Kit",icon:'🎒',cost:4000,description:'Arm it for a fresh face. When you commit that face by mining the first tile, its exceptional-specimen chance rises from 5% to 30%.'},
+    surveyChalk:{label:'Survey Chalk',icon:'▧',cost:2000,description:'Arm it for a fresh face. On the first mined tile, it reports whether an exceptional specimen is present and marks a vague 3×3 zone if so.'},
+    collectorsFocus:{label:"Collector's Focus",icon:'◎',cost:4000,description:'Arm it with a target for a fresh face. If an exceptional specimen spawns and that material is present, the target receives a 60% weighting.'}
   };
 
 
@@ -888,9 +888,11 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
       merged.postgame.nextCollectibleId = Math.max(1,merged.postgame.nextCollectibleId||1);
       merged.postgame.supplies = {...fresh.postgame.supplies,...(merged.postgame.supplies||{})};
       Object.keys(merged.postgame.supplies).forEach(k=>merged.postgame.supplies[k]=Math.max(0,Math.floor(Number(merged.postgame.supplies[k])||0)));
-      // Beta 1.4.3 retires next-face arming. Any previously armed supply stays in inventory
-      // and simply returns to the shelf instead of being consumed by a depth change.
-      merged.postgame.armedSupplies = {...fresh.postgame.armedSupplies};
+      // Beta 1.4.4 restores next-face arming, but supplies are only consumed when
+      // the player commits a prepared face by mining its first tile.
+      merged.postgame.armedSupplies = {...fresh.postgame.armedSupplies,...(parsed.postgame?.armedSupplies||{})};
+      ['prospectorKit','surveyChalk','collectorsFocus'].forEach(k=>merged.postgame.armedSupplies[k]=!!merged.postgame.armedSupplies[k]&&(merged.postgame.supplies[k]||0)>0);
+      if(!merged.postgame.armedSupplies.collectorsFocus)merged.postgame.armedSupplies.focusTarget=null;
       while(merged.postgame.personalSlots.length<30)merged.postgame.personalSlots.push(null);
 
 
@@ -1044,6 +1046,23 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     const tile=currentExceptionalTile();
     return !!tile?.revealed;
   }
+  function emptyProspectingEffects(){
+    return {prospectorKit:false,surveyChalk:false,collectorsFocus:false,focusTarget:null};
+  }
+  function faceHasMinedTile(face=state.face){
+    return !!face?.tiles?.some(t=>t.revealed);
+  }
+  function preparedSuppliesForDepth(depth){
+    const armed=state.postgame?.armedSupplies||emptyProspectingEffects();
+    const stock=state.postgame?.supplies||{};
+    const focusValid=!!armed.collectorsFocus&&!!armed.focusTarget&&exceptionalKeysForDepth(depth).includes(armed.focusTarget)&&(stock.collectorsFocus||0)>0;
+    return {
+      prospectorKit:!!armed.prospectorKit&&(stock.prospectorKit||0)>0,
+      surveyChalk:!!armed.surveyChalk&&(stock.surveyChalk||0)>0,
+      collectorsFocus:focusValid,
+      focusTarget:focusValid?armed.focusTarget:null
+    };
+  }
   function updateExceptionalChalkHint(){
     if(!state.face?.prospectingEffects?.surveyChalk)return;
     const tile=currentExceptionalTile();
@@ -1056,54 +1075,42 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
       state.meta.fullProspectingStacks=(state.meta.fullProspectingStacks||0)+1;
     }
   }
-  function prospectingCanStillAffectFace(){
-    if(!state.postgame?.completed||!state.face)return false;
-    if(exceptionalAlreadyFound())return false;
-    return state.face.tiles.some(t=>!t.revealed&&t.material&&exceptionalEligible(t.material)&&isDiscovered(t.material));
+  function removePreparedSupplyFromCurrentFace(key){
+    const face=state.face;
+    if(!face||face.prospectingCommitted||faceHasMinedTile(face)||!face.preparedSupplies)return;
+    face.preparedSupplies[key]=false;
+    if(key==='collectorsFocus')face.preparedSupplies.focusTarget=null;
   }
-  function useProspectorKit(){
+  function toggleProspectingSupply(key){
     if(!state.postgame?.completed)return;
-    const fx=state.face.prospectingEffects;
-    if(fx.prospectorKit){showToast("Prospector's Kit already used on this face.");return;}
-    if((state.postgame.supplies.prospectorKit||0)<1){showToast("No Prospector's Kits in the Shop inventory.");return;}
-    if(!prospectingCanStillAffectFace()){showToast('Nothing left on this face for the kit to prospect.');return;}
-    state.postgame.supplies.prospectorKit--;
-    fx.prospectorKit=true;
-    if(!Number.isInteger(state.face.exceptionalTileIndex)){
-      // Natural faces already had a 5% roll. This supplemental roll raises the
-      // combined probability to exactly 30% without creating a second specimen.
-      const supplemental=(EXCEPTIONAL_KIT_CHANCE-EXCEPTIONAL_BASE_CHANCE)/(1-EXCEPTIONAL_BASE_CHANCE);
-      const exceptional=placeExceptionalOnFace(state.face.tiles,state.currentDepth,fx,supplemental);
-      if(exceptional)state.face.exceptionalTileIndex=exceptional.index;
+    const armed=state.postgame.armedSupplies;
+    const stock=state.postgame.supplies||{};
+    if(armed[key]){
+      armed[key]=false;
+      if(key==='collectorsFocus')armed.focusTarget=null;
+      removePreparedSupplyFromCurrentFace(key);
+      focusPickerOpen=false;
+      saveState();renderProspectingTools();
+      setMineMessage('⛏️','Supply disarmed.','Nothing was spent. Any supply still armed will wait for the next fresh face.');
+      showToast(`${PROSPECTING_SUPPLIES[key].label} disarmed.`);
+      return;
     }
-    updateExceptionalChalkHint();
-    markFullProspectingStack();
-    checkAchievements();saveState();renderAll();
-    setMineMessage('🎒',"Prospector's Kit used.",'This face now has a 30% exceptional-specimen chance. It still guarantees nothing, because rocks enjoy being difficult.');
-    showToast("Prospector's Kit used on this face.");
+    if((stock[key]||0)<1){showToast(`No ${PROSPECTING_SUPPLIES[key].label} in the Shop inventory.`);return;}
+    armed[key]=true;
+    saveState();renderProspectingTools();
+    setMineMessage(PROSPECTING_SUPPLIES[key].icon,`${PROSPECTING_SUPPLIES[key].label} armed.`,'It will apply to the next fresh face and will not be spent until you mine the first tile.');
+    showToast(`${PROSPECTING_SUPPLIES[key].label} armed for the next face.`);
   }
-  function useSurveyChalk(){
-    if(!state.postgame?.completed)return;
-    const fx=state.face.prospectingEffects;
-    if(fx.surveyChalk){showToast('Survey Chalk already used on this face.');return;}
-    if((state.postgame.supplies.surveyChalk||0)<1){showToast('No Survey Chalk in the Shop inventory.');return;}
-    if(exceptionalAlreadyFound()){showToast('You already found the exceptional specimen on this face.');return;}
-    if(!prospectingCanStillAffectFace()){showToast('Nothing left on this face for the chalk to survey.');return;}
-    state.postgame.supplies.surveyChalk--;
-    fx.surveyChalk=true;
-    updateExceptionalChalkHint();
-    markFullProspectingStack();
-    checkAchievements();saveState();renderAll();
-    if(Number.isInteger(state.face.exceptionalTileIndex))setMineMessage('▧','Survey Chalk found a promising zone.','The marked 3×3 area contains something unusually interesting. It still will not tell you which tile.');
-    else setMineMessage('▧','No promising signs on this face.','The Survey Chalk did not pick up an exceptional specimen here. You can keep mining normally.');
-  }
+  function useProspectorKit(){ toggleProspectingSupply('prospectorKit'); }
+  function useSurveyChalk(){ toggleProspectingSupply('surveyChalk'); }
   function toggleCollectorFocusPicker(){
     if(!state.postgame?.completed)return;
-    const fx=state.face.prospectingEffects;
-    if(fx.collectorsFocus){showToast("Collector's Focus already used on this face.");return;}
+    const armed=state.postgame.armedSupplies;
+    if(armed.collectorsFocus){
+      toggleProspectingSupply('collectorsFocus');
+      return;
+    }
     if((state.postgame.supplies.collectorsFocus||0)<1){showToast("No Collector's Focus in the Shop inventory.");return;}
-    if(exceptionalAlreadyFound()){showToast('You already found the exceptional specimen on this face.');return;}
-    if(!prospectingCanStillAffectFace()){showToast('Nothing left on this face for the focus to affect.');return;}
     const eligible=exceptionalKeysForDepth(state.currentDepth);
     if(!eligible.length){showToast('No eligible exceptional materials at this depth.');return;}
     focusPickerOpen=!focusPickerOpen;
@@ -1111,36 +1118,62 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
   function useCollectorsFocus(target){
     if(!state.postgame?.completed||!target)return;
-    const fx=state.face.prospectingEffects;
-    if(fx.collectorsFocus||(state.postgame.supplies.collectorsFocus||0)<1)return;
+    if((state.postgame.supplies.collectorsFocus||0)<1)return;
     const eligible=exceptionalKeysForDepth(state.currentDepth);
     if(!eligible.includes(target)){showToast('Choose an eligible material for this depth.');return;}
-    if(exceptionalAlreadyFound()){showToast('You already found the exceptional specimen on this face.');return;}
-    if(!prospectingCanStillAffectFace()){showToast('Nothing left on this face for the focus to affect.');return;}
-    state.postgame.supplies.collectorsFocus--;
-    fx.collectorsFocus=true;fx.focusTarget=target;
-    const existing=currentExceptionalTile();
-    if(existing&&!existing.revealed&&existing.material!==target){
-      const focusedTiles=state.face.tiles.filter(t=>!t.revealed&&t.material===target&&exceptionalEligible(t.material)&&isDiscovered(t.material));
-      if(focusedTiles.length&&Math.random()<COLLECTOR_FOCUS_WEIGHT){
-        existing.exceptionalVariantId=null;
-        const tile=focusedTiles[randInt(0,focusedTiles.length-1)];
-        const variants=exceptionalVariantsFor(target);
-        const variant=variants[randInt(0,variants.length-1)];
-        tile.exceptionalVariantId=variant.id;
-        state.face.exceptionalTileIndex=tile.index;
-      }
-    }
+    state.postgame.armedSupplies.collectorsFocus=true;
+    state.postgame.armedSupplies.focusTarget=target;
     focusPickerOpen=false;
+    saveState();renderProspectingTools();
+    setMineMessage('◎',"Collector's Focus armed.",`${MATERIALS[target].name} will be favoured on the next fresh face if an exceptional specimen spawns and that material is present.`);
+    showToast(`Focus armed for ${MATERIALS[target].name}.`);
+  }
+  function commitProspectingFace(){
+    const face=state.face;
+    if(!state.postgame?.completed||!face||face.prospectingCommitted)return null;
+    const prepared={...emptyProspectingEffects(),...(face.preparedSupplies||{})};
+    const effects={...emptyProspectingEffects(),...prepared};
+    const chance=effects.prospectorKit?EXCEPTIONAL_KIT_CHANCE:EXCEPTIONAL_BASE_CHANCE;
+    if(!face.exceptionalResolved){
+      const exceptional=placeExceptionalOnFace(face.tiles,state.currentDepth,effects,chance);
+      face.exceptionalTileIndex=exceptional?.index??null;
+      face.exceptionalResolved=true;
+    }
+    face.prospectingEffects=effects;
+    face.prospectingCommitted=true;
+    const stock=state.postgame.supplies||{};
+    const armed=state.postgame.armedSupplies||emptyProspectingEffects();
+    ['prospectorKit','surveyChalk','collectorsFocus'].forEach(key=>{
+      if(!effects[key])return;
+      stock[key]=Math.max(0,(stock[key]||0)-1);
+      armed[key]=false;
+      if(key==='collectorsFocus')armed.focusTarget=null;
+    });
     updateExceptionalChalkHint();
     markFullProspectingStack();
-    checkAchievements();saveState();renderAll();
-    setMineMessage('◎',"Collector's Focus used.",`${MATERIALS[target].name} is favoured on this face if an exceptional specimen is present. It is still not guaranteed.`);
-    showToast(`Focused on ${MATERIALS[target].name}.`);
+    checkAchievements();
+    if(effects.surveyChalk){
+      return Number.isInteger(face.exceptionalTileIndex)
+        ? 'Survey Chalk: promising 3×3 zone marked.'
+        : 'Survey Chalk: no promising signs on this face.';
+    }
+    return null;
   }
   function freshFaceMessage(face){
-    const postgameNote=state.postgame?.completed?' Postgame supplies can be used directly on this face.':'';
-    setMineMessage('⛏️','Fresh rock face.',`Read the faint geological tells, survey where it seems worthwhile, then start crunching.${postgameNote}`);
+    if(state.postgame?.completed){
+      const p=face?.preparedSupplies||{};
+      const prepared=[p.prospectorKit&&'Kit',p.surveyChalk&&'Chalk',p.collectorsFocus&&`Focus: ${MATERIALS[p.focusTarget]?.name||'target'}`].filter(Boolean);
+      if(prepared.length){
+        setMineMessage('🎒','Prospecting supplies prepared.',`${prepared.join(' · ')}. Nothing is spent until you mine the first tile, so you can still change depths without losing them.`);
+        return;
+      }
+      const a=state.postgame?.armedSupplies||{};
+      if(a.prospectorKit||a.surveyChalk||a.collectorsFocus){
+        setMineMessage('🎒','Supplies still armed.','They are waiting for the next fresh face.');
+        return;
+      }
+    }
+    setMineMessage('⛏️','Fresh rock face.','Read the faint geological tells, survey where it seems worthwhile, then start crunching.');
   }
 
 
@@ -1203,7 +1236,14 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     if(!Array.isArray(face.metalSignalTiles)) face.metalSignalTiles = [];
     if(!Array.isArray(face.exceptionalHintTiles)) face.exceptionalHintTiles = [];
     if(face.exceptionalTileIndex === undefined) face.exceptionalTileIndex = null;
-    if(!face.prospectingEffects) face.prospectingEffects = {prospectorKit:false,surveyChalk:false,collectorsFocus:false,focusTarget:null};
+    if(!face.prospectingEffects) face.prospectingEffects = emptyProspectingEffects();
+    if(!face.preparedSupplies) face.preparedSupplies = emptyProspectingEffects();
+    if(face.prospectingCommitted === undefined){
+      // Faces saved before 1.4.4 already resolved their exceptional roll at generation
+      // or when a 1.4.3 supply was used. Preserve that result without charging twice.
+      face.prospectingCommitted = !!(face.prospectingEffects.prospectorKit||face.prospectingEffects.surveyChalk||face.prospectingEffects.collectorsFocus||faceHasMinedTile(face));
+    }
+    if(face.exceptionalResolved === undefined) face.exceptionalResolved = true;
     if(face.fullProspectingStackCounted === undefined) face.fullProspectingStackCounted = !!(face.prospectingEffects.prospectorKit&&face.prospectingEffects.surveyChalk&&face.prospectingEffects.collectorsFocus);
     if(face.fullCoverageAwarded === undefined) face.fullCoverageAwarded = false;
 
@@ -1279,8 +1319,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     if(Math.random()<(depth>=3?.085:depth===2?.055:.045))placeDeposit(weightedChoice(cfg.sideFinds),1,'side');
 
 
-    const prospectingEffects={prospectorKit:false,surveyChalk:false,collectorsFocus:false,focusTarget:null};
-    const exceptional=state.postgame?.completed?placeExceptionalOnFace(tiles,depth,prospectingEffects,EXCEPTIONAL_BASE_CHANCE):null;
+    const prospectingEffects=emptyProspectingEffects();
+    const preparedSupplies=state.postgame?.completed?preparedSuppliesForDepth(depth):emptyProspectingEffects();
 
 
     const face={
@@ -1290,7 +1330,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
       scanUsesRemaining:state.upgrades.surveying>0?currentMaxScans():0,
       scanHistory:[],scanCounts:Array(GRID_SIZE*GRID_SIZE).fill(0),lastScan:null,
       metalDetectorUsed:false,metalSignalTiles:[],fullCoverageAwarded:false,
-      prospectingEffects,exceptionalTileIndex:exceptional?.index??null,exceptionalHintTiles:[],fullProspectingStackCounted:false
+      prospectingEffects,preparedSupplies,prospectingCommitted:false,exceptionalResolved:!state.postgame?.completed,
+      exceptionalTileIndex:null,exceptionalHintTiles:[],fullProspectingStackCounted:false
     };
     face.hints=generateProspectHints(face);
     return face;
@@ -1512,6 +1553,7 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
       renderMine();
       return;
     }
+    const prospectingReport=!face.prospectingCommitted?commitProspectingFace():null;
     tile.revealed=true;
     if(!state.postgame?.completed)face.durability--;
     state.meta.tilesMined++;
@@ -1541,6 +1583,7 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     }else{
       setMineMessage('🪨','Crunch.','Nothing in that tile. Pick another spot.');
     }
+    if(prospectingReport&&!tile.exceptionalVariantId)showToast(prospectingReport);
 
 
     if(face.durability<=0){
@@ -1759,31 +1802,30 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     els.postgameProspectingTools.classList.toggle('hidden',!unlocked);
     els.collectorFocusPicker?.classList.toggle('hidden',!unlocked||!focusPickerOpen);
     if(!unlocked)return;
-    const fx=state.face.prospectingEffects||{};
     const stock=state.postgame.supplies||{};
-    const resolved=exceptionalAlreadyFound();
-    const canAffect=prospectingCanStillAffectFace();
-    const setButton=(button,status,key,usedText,extra='')=>{
-      const used=!!fx[key],count=stock[key]||0;
-      button.classList.toggle('used',used);
-      button.disabled=used||count<1||resolved||!canAffect;
-      status.textContent=used?usedText:`${count} owned${extra}`;
+    const armed=state.postgame.armedSupplies||emptyProspectingEffects();
+    const prepared=(!state.face?.prospectingCommitted&&state.face?.preparedSupplies)||emptyProspectingEffects();
+    const setButton=(button,status,key,extra='')=>{
+      const count=stock[key]||0,isArmed=!!armed[key],isPrepared=!!prepared[key];
+      button.classList.toggle('armed',isArmed);
+      button.classList.toggle('prepared',isPrepared);
+      button.classList.remove('used');
+      button.disabled=!isArmed&&count<1;
+      if(isPrepared)status.textContent=key==='prospectorKit'?'Ready · 30%':key==='surveyChalk'?'Ready · on first dig':`Ready · ${MATERIALS[prepared.focusTarget]?.name||'target'}`;
+      else if(isArmed)status.textContent=key==='collectorsFocus'?`Armed · ${MATERIALS[armed.focusTarget]?.name||'target'}`:'Armed · next face';
+      else status.textContent=`${count} owned${extra}`;
     };
-    setButton(els.prospectorKitButton,els.prospectorKitStatus,'prospectorKit','Used · 30%',' · 30%');
-    setButton(els.surveyChalkButton,els.surveyChalkStatus,'surveyChalk','Used this face');
-    setButton(els.collectorsFocusButton,els.collectorsFocusStatus,'collectorsFocus',fx.focusTarget?`Used · ${MATERIALS[fx.focusTarget]?.name||'focused'}`:'Used this face');
-    if(!canAffect){
-      if(!fx.surveyChalk)els.surveyChalkButton.disabled=true;
-      if(!fx.collectorsFocus)els.collectorsFocusButton.disabled=true;
-      focusPickerOpen=false;
-      els.collectorFocusPicker?.classList.add('hidden');
-    }
+    setButton(els.prospectorKitButton,els.prospectorKitStatus,'prospectorKit',' · 30%');
+    setButton(els.surveyChalkButton,els.surveyChalkStatus,'surveyChalk');
+    setButton(els.collectorsFocusButton,els.collectorsFocusStatus,'collectorsFocus');
     if(els.collectorFocusMineSelect){
       const eligible=exceptionalKeysForDepth(state.currentDepth);
       const prior=els.collectorFocusMineSelect.value;
       els.collectorFocusMineSelect.innerHTML=eligible.map(k=>`<option value="${k}">${MATERIALS[k].name}</option>`).join('');
-      if(eligible.includes(prior))els.collectorFocusMineSelect.value=prior;
-      els.applyCollectorFocusButton.disabled=!eligible.length||(stock.collectorsFocus||0)<1||!!fx.collectorsFocus||resolved||!canAffect;
+      const preferred=armed.focusTarget&&eligible.includes(armed.focusTarget)?armed.focusTarget:prior;
+      if(eligible.includes(preferred))els.collectorFocusMineSelect.value=preferred;
+      els.applyCollectorFocusButton.disabled=!eligible.length||(stock.collectorsFocus||0)<1;
+      els.applyCollectorFocusButton.textContent='Arm Focus';
     }
   }
 
@@ -2406,7 +2448,7 @@ const uvAvailable=!!state.upgrades.uvLamp;
     els.prospectingShop.classList.toggle('hidden',!unlocked);
     if(!unlocked){els.prospectingShop.innerHTML='';return;}
     const stock=state.postgame.supplies||{};
-    els.prospectingShop.innerHTML=`<div class="shop-section-heading"><div><span class="status-label">Postgame prospecting</span><h3>Prospecting Supplies</h3></div><span>Optional · stackable</span></div><p class="vault-help">Buy supplies here, then use them directly on the rock face you want to prospect. Changing depths never consumes them.</p><div class="shop-supply-list"></div>`;
+    els.prospectingShop.innerHTML=`<div class="shop-section-heading"><div><span class="status-label">Postgame prospecting</span><h3>Prospecting Supplies</h3></div><span>Optional · stackable</span></div><p class="vault-help">Buy supplies here, then arm them in the Mine. They prepare the next fresh face and are only consumed when you mine its first tile, so browsing between depths cannot waste them.</p><div class="shop-supply-list"></div>`;
     const host=els.prospectingShop.querySelector('.shop-supply-list');
     Object.entries(PROSPECTING_SUPPLIES).forEach(([key,cfg])=>{
       const card=document.createElement('article');card.className='shop-supply-card';
@@ -2578,9 +2620,9 @@ const up=DEPTH_UPGRADES[nextDepth];
 
 
   function resetGame(){
-    if(!window.confirm('Reset all Rockhound Beta 1.4.3 progress?'))return;
+    if(!window.confirm('Reset all Rockhound Beta 1.4.4 progress?'))return;
     localStorage.removeItem(SAVE_KEY);state=defaultState();state.face=generateFace(1);openWorkbenchKey=null;scanMode=false;
-    saveState();renderAll();showToast('Beta 1.4.3 save reset.');
+    saveState();renderAll();showToast('Beta 1.4.4 save reset.');
   }
 
   function showToast(msg){

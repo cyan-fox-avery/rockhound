@@ -1844,6 +1844,8 @@ body.modal-open{overflow:hidden}
 .postgame-supply-button:active{transform:scale(.98)}
 .postgame-supply-button:disabled{opacity:.4;cursor:not-allowed}
 .postgame-supply-button.used{border-color:rgba(212,179,105,.42);background:rgba(212,179,105,.075)}
+.postgame-supply-button.armed{border-color:rgba(212,179,105,.5);background:rgba(212,179,105,.085)}
+.postgame-supply-button.prepared{box-shadow:inset 0 0 0 1px rgba(239,213,151,.1),0 0 15px rgba(212,179,105,.055)}
 .postgame-supply-button>span{display:block;font-size:.9rem;line-height:1}
 .postgame-supply-button strong{display:block;margin-top:4px;font-size:.64rem}
 .postgame-supply-button small{display:block;overflow:hidden;margin-top:2px;color:var(--muted);font-size:.5rem;font-weight:750;line-height:1.15;text-overflow:ellipsis;white-space:nowrap}
@@ -1879,3 +1881,7 @@ body.modal-open{overflow:hidden}
 @media(min-width:650px){.shop-supply-list{grid-template-columns:repeat(2,minmax(0,1fr))}.shop-supply-card{grid-template-columns:auto 1fr}.shop-supply-action{grid-column:1/-1;justify-content:flex-end}}
 @media(max-width:560px){.storage-specimen-row{grid-template-columns:auto 1fr}.storage-specimen-actions{grid-column:1/-1;justify-content:flex-end}.shop-supply-card{grid-template-columns:auto 1fr}.shop-supply-action{grid-column:1/-1;justify-content:flex-end}}
 @media(max-width:380px){.collector-focus-picker{align-items:stretch;flex-direction:column}.collector-focus-picker button{width:100%}}
+
+
+/* ===== Beta 1.4.4 prospecting commitment polish ===== */
+/* Armed supplies stay selected across depth changes and are only spent on the first mined tile. */
