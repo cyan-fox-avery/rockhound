@@ -1190,6 +1190,25 @@
 .mine-tool-button strong{display:block;font-size:.74rem;line-height:1.15}
 .mine-tool-button small{display:block;margin-top:3px;color:var(--muted);font-size:.58rem;font-weight:750;line-height:1.15}
 
+.rock.geode-hint{
+  box-shadow:inset 0 0 0 2px rgba(240,215,150,.78),0 0 0 1px rgba(240,215,150,.20);
+}
+.geode-hint-mark{
+  position:absolute;
+  inset:auto auto 5px 5px;
+  display:grid;
+  place-items:center;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  color:#f6e4b2;
+  background:rgba(24,28,31,.88);
+  border:1px solid rgba(240,215,150,.48);
+  font-size:.68rem;
+  font-weight:900;
+  box-shadow:0 0 10px rgba(240,215,150,.14);
+}
+
 /* Upgrade max states have one label, not several competing ones. */
 .max-state{
   display:inline-flex;
@@ -1398,4 +1417,312 @@
   font-family:Georgia,"Times New Roman",serif;
   font-size:1.45rem;
   font-weight:800;
+}
+
+/* ============================================================
+   Lab 1.3 — full-game content + postgame
+   ============================================================ */
+
+.depth-selector{grid-template-columns:repeat(2,minmax(0,1fr))}
+.depth-chip:nth-child(5){grid-column:auto}
+.depth-field-note{
+  margin-top:8px;
+  padding:9px 10px;
+  border:1px solid rgba(212,179,105,.16);
+  border-radius:11px;
+  background:rgba(212,179,105,.035);
+}
+.depth-field-note p{margin:4px 0 0;color:var(--muted);font-size:.68rem;line-height:1.42}
+@media(min-width:650px){.depth-selector{grid-template-columns:repeat(6,minmax(0,1fr))}}
+
+/* Epithermal-zone mood: visually hotter without adding a survival meter. */
+.mine-board.epithermal-board{
+  background:
+    radial-gradient(circle at 78% 18%,rgba(219,113,55,.15),transparent 28%),
+    radial-gradient(circle at 15% 82%,rgba(173,70,34,.13),transparent 30%),
+    #0b0908;
+  box-shadow:inset 0 0 0 1px rgba(239,145,82,.08),0 0 28px rgba(148,61,28,.06);
+}
+.mine-board.epithermal-board .rock:not(.revealed){
+  background:
+    linear-gradient(140deg,rgba(255,189,128,.045),transparent 33%),
+    linear-gradient(320deg,rgba(0,0,0,.20),transparent 40%),
+    #413b38;
+}
+.mine-board.epithermal-board .rock:not(.revealed):nth-child(3n){background-color:#49403c}
+.mine-board.epithermal-board .rock:not(.revealed):nth-child(5n){background-color:#382f2c}
+.mine-board.epithermal-board .rock:not(.revealed):nth-child(7n){background-color:#4d423c}
+.mine-board.epithermal-board .rock.revealed{background:#1a1e20}
+
+/* Lab 1.3 final-roster placeholder art. Final custom sprites come later. */
+.material-icon.diamond,.tile-find.diamond{
+  clip-path:polygon(50% 0,90% 28%,72% 80%,50% 100%,28% 80%,10% 28%);
+  background:linear-gradient(135deg,#ffffff 0%,#cce7ee 34%,#90beca 67%,#5f8b99 100%);
+}
+.material-icon.obsidian,.tile-find.obsidian{
+  clip-path:polygon(13% 16%,54% 1%,88% 20%,97% 58%,70% 96%,29% 91%,3% 54%);
+  background:linear-gradient(135deg,#292a31 0%,#111218 52%,#4d3e55 76%,#090a0e 100%);
+}
+.material-icon.olivine,.tile-find.olivine{
+  clip-path:polygon(32% 1%,68% 6%,90% 33%,77% 90%,49% 100%,18% 82%,10% 26%);
+  background:linear-gradient(135deg,#d8ef80 0%,#9ac34f 43%,#628c32 72%,#36531f 100%);
+}
+.material-icon.native-sulfur,.tile-find.native-sulfur{
+  clip-path:polygon(23% 9%,60% 0,91% 30%,83% 74%,58% 100%,15% 88%,3% 46%);
+  background:linear-gradient(135deg,#fff58a 0%,#f0df32 45%,#c3a91d 73%,#7d6910 100%);
+}
+.material-icon.rhodochrosite,.tile-find.rhodochrosite{
+  clip-path:polygon(20% 10%,56% 0,88% 20%,98% 57%,72% 91%,35% 100%,5% 74%,2% 38%);
+  background:repeating-linear-gradient(145deg,#efb2c0 0 9px,#d77c91 9px 16px,#a94d69 16px 22px);
+}
+.material-icon.adularia,.tile-find.adularia{
+  clip-path:polygon(31% 2%,72% 8%,92% 35%,77% 91%,47% 100%,14% 79%,8% 29%);
+  background:linear-gradient(135deg,#f1ead7 0%,#c9d3c9 42%,#9dacaa 71%,#667477 100%);
+}
+.material-icon.acanthite,.tile-find.acanthite{
+  clip-path:polygon(10% 28%,37% 5%,76% 12%,96% 45%,77% 89%,39% 99%,9% 73%,2% 43%);
+  background:linear-gradient(135deg,#72757b 0%,#45484f 45%,#23262b 72%,#111318 100%);
+}
+.material-icon.native-gold,.tile-find.native-gold{
+  clip-path:polygon(9% 25%,39% 3%,79% 16%,96% 49%,73% 91%,32% 96%,3% 63%);
+  background:linear-gradient(135deg,#ffe985 0%,#e2bd3e 45%,#aa7f18 75%,#66470c 100%);
+}
+.silver{background:linear-gradient(135deg,#f5f6f7 0%,#c7cbcf 42%,#8d949a 72%,#596067 100%)}
+.material-icon.fern-impression,.tile-find.fern-impression{
+  display:grid;place-items:center;border-radius:50%;clip-path:none;color:#20301f;
+  background:radial-gradient(circle,#c6c69a,#8e916c 72%);font-weight:950;
+}
+.tile-find.fern-impression{width:72%;height:72%;font-size:clamp(.66rem,3.5vw,1.05rem)}
+.material-icon.survey-compass,.tile-find.survey-compass{
+  display:grid;place-items:center;clip-path:none;border-radius:50%;color:#33270e;
+  background:radial-gradient(circle,#e8d28d 0 38%,#9d7c2f 40% 62%,#51401b 64% 100%);font-weight:950;
+}
+.tile-find.survey-compass{width:66%;height:66%;font-size:clamp(.54rem,3vw,.9rem)}
+.geode-find{
+  display:grid;place-items:center;width:70%;height:70%;clip-path:none!important;border-radius:50%;
+  color:#cfd7da;background:radial-gradient(circle at 45% 40%,#5f686b 0 34%,#343a3d 36% 67%,#202528 70% 100%);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.06);font-weight:950;
+}
+
+/* Postgame Workbench */
+.postgame-workbench{display:grid;gap:10px;margin:0 0 12px}
+.postgame-station,.postgame-vault{
+  padding:13px;border:1px solid rgba(212,179,105,.27);border-radius:17px;
+  background:linear-gradient(180deg,rgba(212,179,105,.055),rgba(23,27,30,.94));box-shadow:var(--shadow)
+}
+.postgame-station{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+.postgame-station-copy strong,.postgame-vault-heading strong{display:block;margin-top:3px}
+.postgame-station-copy p{margin:4px 0 0;color:var(--muted);font-size:.72rem;line-height:1.4}
+.geode-action{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.geode-action span{color:var(--muted);font-size:.68rem;font-weight:800}
+.geode-reveal{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:10px;border:1px solid rgba(255,255,255,.07);border-radius:13px;background:rgba(8,10,11,.35)}
+.geode-reveal-icon{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#292f32;font-size:1.25rem}
+.geode-reveal strong{display:block;margin:2px 0 3px}.geode-reveal p{margin:0;color:var(--muted);font-size:.69rem;line-height:1.35}
+.postgame-vault-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:9px}
+.postgame-vault-heading>span{color:var(--muted);font-size:.68rem}
+.postgame-vault-list{display:grid;gap:7px}
+.vault-item{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;padding:8px;border:1px solid rgba(255,255,255,.07);border-radius:12px;background:rgba(8,10,11,.32)}
+.vault-item-icon{display:grid;place-items:center;width:38px;height:38px;font-size:1.05rem}
+.vault-item-icon .material-icon{width:32px;height:32px}
+.vault-item-copy strong{display:block;font-size:.78rem}.vault-item-copy span{display:block;margin-top:2px;color:var(--muted);font-size:.62rem}
+.vault-empty{padding:12px;border:1px dashed rgba(255,255,255,.09);border-radius:11px;color:var(--muted);font-size:.7rem;text-align:center}
+.personal-display{border-color:rgba(212,179,105,.33);color:#e7c978}
+
+/* Completion plaque and freeform Personal Collection */
+.completion-plaque{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 11px;padding:13px;
+  border:1px solid rgba(212,179,105,.44);border-radius:17px;
+  background:linear-gradient(135deg,rgba(212,179,105,.13),rgba(23,27,30,.96));box-shadow:var(--shadow)
+}
+.completion-plaque strong{display:block;margin:3px 0 4px;color:#f0d99e;font-family:Georgia,"Times New Roman",serif;font-size:1.05rem}
+.completion-plaque p{margin:0;color:var(--muted);font-size:.68rem;line-height:1.4}
+.personal-collection{margin-top:12px;padding:13px;border:1px solid rgba(212,179,105,.28);border-radius:18px;background:rgba(23,27,30,.94);box-shadow:var(--shadow)}
+.personal-heading{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:11px}
+.personal-heading h3{margin:3px 0 0;font-family:Georgia,"Times New Roman",serif;font-size:1.2rem}
+.personal-heading p{max-width:280px;margin:0;color:var(--muted);font-size:.7rem;line-height:1.4;text-align:right}
+.personal-collection-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.personal-slot{position:relative;min-height:118px;padding:9px;border:1px dashed rgba(255,255,255,.12);border-radius:12px;background:rgba(8,10,11,.32);text-align:center}
+.personal-slot.filled{border-style:solid;border-color:rgba(212,179,105,.20);background:linear-gradient(180deg,rgba(212,179,105,.035),rgba(8,10,11,.36))}
+.personal-slot-number{position:absolute;top:6px;left:7px;color:#5f6568;font-size:.55rem;font-weight:900}
+.personal-empty{display:grid;place-items:center;height:98px;color:#646b6e;font-size:.62rem}
+.personal-slot-visual{display:grid;place-items:center;height:45px;margin-bottom:6px;font-size:1.3rem}
+.personal-slot-visual .material-icon{width:36px;height:36px}
+.personal-slot-copy strong{display:block;font-size:.68rem;line-height:1.2}.personal-slot-copy span{display:block;margin:3px 0 6px;color:var(--muted);font-size:.56rem}
+
+/* Completion modal: celebratory, but still recognizably Rockhound. */
+body.modal-open{overflow:hidden}
+.completion-modal{position:fixed;z-index:100;inset:0;display:grid;place-items:center;padding:18px;background:rgba(5,7,8,.84);backdrop-filter:blur(8px)}
+.completion-dialog{width:min(100%,620px);max-height:min(90vh,780px);overflow:auto;padding:20px;border:1px solid rgba(212,179,105,.48);border-radius:22px;background:linear-gradient(180deg,#202021,#131719);box-shadow:0 30px 90px rgba(0,0,0,.55)}
+.completion-dialog h2{margin-bottom:10px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.55rem,7vw,2.2rem)}
+.completion-dialog>div>p{color:#d0cbc3;font-size:.82rem;line-height:1.5}
+.completion-rewards{display:grid;gap:7px;margin:14px 0}
+.completion-rewards>div{padding:10px;border:1px solid rgba(255,255,255,.075);border-radius:12px;background:rgba(255,255,255,.025);font-size:.75rem}
+.completion-rewards strong{margin-left:4px}.completion-rewards span{display:block;margin:4px 0 0 24px;color:var(--muted);font-size:.68rem;line-height:1.38}
+.completion-line{margin:15px 0!important;padding:12px;border-left:3px solid var(--gold);background:rgba(212,179,105,.045)}
+.avery-thanks{margin-top:15px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08)}
+.avery-thanks p{margin:5px 0;color:var(--muted)!important;font-size:.76rem!important}.avery-thanks>span:last-child{color:#b7b1a8;font-size:.7rem}
+.completion-continue{width:100%;margin-top:15px;padding:13px;font-size:.85rem;letter-spacing:.08em}
+
+@media(max-width:470px){
+  .postgame-station{grid-template-columns:1fr}.geode-action{align-items:stretch}.geode-action .primary-button{width:100%}
+  .vault-item{grid-template-columns:auto 1fr}.vault-item .mini-button{grid-column:1/-1}
+  .completion-plaque,.personal-heading{align-items:flex-start;flex-direction:column}.personal-heading p{text-align:left}
+  .personal-collection-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.personal-slot{min-height:108px;padding:7px}.personal-slot-copy strong{font-size:.62rem}
+}
+
+
+/* ===== Lab 1.3.1 patch ===== */
+.mine-board + .mine-message-inline{margin-top:8px}
+
+
+/* ===== Beta 1.3.7 polish ===== */
+.workbench-discovery-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:0 0 10px;
+  padding:9px 12px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:rgba(23,27,30,.78);
+}
+.workbench-discovery-card strong{
+  color:#ddd8cf;
+  font-size:.76rem;
+  text-align:right;
+}
+.workbench-discovery-card.complete{
+  border-color:rgba(230,204,142,.5);
+  background:linear-gradient(180deg,rgba(230,204,142,.05),rgba(23,27,30,.78));
+}
+.workbench-discovery-card.complete strong{color:#f0d897}
+
+.mine-board{position:relative}
+.mine-heat-warning{
+  position:absolute;
+  z-index:12;
+  left:50%;
+  bottom:9px;
+  transform:translateX(-50%);
+  width:max-content;
+  max-width:calc(100% - 18px);
+  padding:7px 10px;
+  border:1px solid rgba(212,179,105,.5);
+  border-radius:10px;
+  color:var(--text);
+  background:rgba(20,22,22,.95);
+  box-shadow:0 8px 24px rgba(0,0,0,.32);
+  text-align:center;
+  pointer-events:none;
+}
+.mine-heat-warning strong,
+.mine-heat-warning span{display:block}
+.mine-heat-warning strong{font-size:.69rem}
+.mine-heat-warning span{margin-top:2px;color:var(--muted);font-size:.58rem}
+
+.museum-wing.compact-wing .museum-groups-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.museum-wing.compact-wing .museum-group,
+.museum-wing.compact-wing .museum-group + .museum-group{
+  min-width:0;
+  margin:0;
+  padding:9px;
+  border:1px solid rgba(55,61,65,.72);
+  border-radius:13px;
+  background:rgba(10,12,13,.28);
+}
+.museum-wing.compact-wing .museum-group.mastered{
+  border-color:rgba(230,204,142,.5);
+  background:linear-gradient(180deg,rgba(230,204,142,.045),rgba(8,10,11,.10));
+}
+.museum-wing.compact-wing .museum-group-title{
+  align-items:flex-start;
+  margin-bottom:7px;
+}
+.museum-wing.compact-wing .museum-group-title strong{font-size:.76rem;line-height:1.25}
+.museum-wing.compact-wing .museum-group-title span{flex:0 0 auto;font-size:.59rem}
+.museum-wing.compact-wing .museum-specimen{min-height:86px}
+.museum-wing.compact-wing .museum-specimen .slot-visual{height:39px}
+.museum-wing.compact-wing .museum-specimen .slot-visual .material-icon{width:32px;height:32px}
+.museum-wing.compact-wing .specimen-fact-card{min-height:0;padding:7px}
+.museum-wing.compact-wing .specimen-fact-card p{font-size:.62rem;line-height:1.42}
+.museum-search-hint{display:block;margin-top:5px;color:#d7bf84;font-style:normal;font-size:.59rem;font-weight:850;line-height:1.35}
+
+@media(max-width:350px){
+  .museum-wing.compact-wing .museum-groups-grid{grid-template-columns:1fr}
+}
+
+
+/* ============================================================
+   Beta 1.4.1 — Personal Collection postgame room
+   ============================================================ */
+.bottom-nav.postgame-nav{grid-template-columns:repeat(6,1fr)}
+#collectionNavButton small{line-height:1.02}
+@media(max-width:470px){
+  .bottom-nav.postgame-nav .nav-button{padding-left:2px;padding-right:2px}
+  .bottom-nav.postgame-nav .nav-button small{font-size:.47rem;line-height:1.02}
+}
+
+/* Geodes now read as actual rough nodules and opened crystal cavities. */
+.geode-find{display:grid;place-items:center;width:78%;height:78%;clip-path:none!important;border-radius:0;background:none;box-shadow:none;color:inherit}
+.geode-sprite{display:inline-block;position:relative;flex:0 0 auto}
+.geode-closed{
+  width:44px;height:39px;border-radius:47% 53% 44% 56% / 54% 43% 57% 46%;
+  background:
+    radial-gradient(circle at 28% 30%,rgba(255,255,255,.18) 0 5%,transparent 6%),
+    radial-gradient(circle at 70% 65%,rgba(0,0,0,.22) 0 7%,transparent 8%),
+    radial-gradient(circle at 58% 25%,#697174 0 8%,transparent 9%),
+    linear-gradient(145deg,#71797b 0%,#50585b 42%,#343b3e 72%,#23292b 100%);
+  border:2px solid #202629;
+  box-shadow:inset -5px -5px 9px rgba(0,0,0,.25),inset 4px 4px 7px rgba(255,255,255,.08),0 2px 4px rgba(0,0,0,.25);
+  transform:rotate(-5deg)
+}
+.geode-closed::before{content:"";position:absolute;left:8%;right:10%;top:45%;height:3px;border-radius:50%;background:linear-gradient(90deg,transparent,#9ca5a6 24%,#42494c 52%,#8d9698 76%,transparent);opacity:.72;transform:rotate(9deg)}
+.geode-closed::after{content:"";position:absolute;width:7px;height:5px;right:8px;top:7px;border-radius:50%;background:#303638;box-shadow:-20px 14px 0 #60686a,-8px 22px 0 #2e3436;opacity:.75}
+.geode-find .geode-closed{width:100%;height:100%;min-width:0;min-height:0;border-width:1px}
+.geode-station-visual .geode-closed{width:76px;height:66px}
+
+.geode-open{--core1:#f2f0e8;--core2:#bfc9c8;display:inline-flex;align-items:center;justify-content:center;gap:2px;width:48px;height:42px}
+.geode-half{position:relative;display:block;width:22px;height:39px;overflow:hidden;background:linear-gradient(145deg,#777f81,#474f52 60%,#252b2d);border:2px solid #262c2e;box-shadow:inset 0 0 0 2px rgba(255,255,255,.05),0 2px 4px rgba(0,0,0,.24)}
+.geode-half.left{border-radius:85% 16% 18% 76% / 52% 18% 20% 50%;transform:rotate(-7deg)}
+.geode-half.right{border-radius:16% 85% 76% 18% / 18% 52% 50% 20%;transform:rotate(7deg)}
+.geode-cavity{position:absolute;inset:5px 3px;background:radial-gradient(circle at 50% 45%,var(--core1) 0 18%,var(--core2) 22% 53%,#5e6668 57% 69%,transparent 72%);filter:saturate(1.05);box-shadow:inset 0 0 7px rgba(255,255,255,.24)}
+.geode-half.left .geode-cavity{border-radius:78% 10% 12% 69% / 48% 15% 18% 45%}
+.geode-half.right .geode-cavity{border-radius:10% 78% 69% 12% / 15% 48% 45% 18%}
+.geode-amethyst{--core1:#ead8f2;--core2:#8656a0}
+.geode-calcite{--core1:#fff3d0;--core2:#d6c28e}
+.geode-bandedAgate{--core1:#f1d2aa;--core2:#a96957}
+.geode-chalcedony{--core1:#d7eef0;--core2:#76a9af}
+.geode-quartzDruzy{--core1:#f7fbfb;--core2:#b9d0d2}
+.geode-reveal-icon .geode-open,.vault-item-icon .geode-open,.personal-slot-visual .geode-open{width:46px;height:40px}
+
+.collection-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.collection-mini-stat{padding:10px 11px;border:1px solid var(--line);border-radius:14px;background:rgba(23,27,30,.94)}
+.collection-mini-stat strong{display:block;margin-top:4px;color:#ead6a0;font-size:1.05rem}
+.geode-cracker-station{grid-template-columns:auto 1fr auto}
+.geode-station-visual{display:grid;place-items:center;width:88px;min-height:82px;border:1px solid rgba(255,255,255,.07);border-radius:15px;background:rgba(8,10,11,.34)}
+.geode-action-buttons{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px}
+.vault-help{margin:-2px 0 9px;color:var(--muted);font-size:.68rem;line-height:1.42}
+.vault-item{grid-template-columns:auto 1fr auto}
+.vault-item-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:5px}
+.vault-sell{border-color:rgba(212,179,105,.24);color:#e5ce96}
+
+.personal-collection{margin-top:0}
+.personal-collection-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.personal-slot{min-height:122px}
+.cartridge-card .cartridge-actions{gap:7px}
+.cartridge-card .cartridge-actions button{min-width:108px}
+
+@media(max-width:560px){
+  .collection-overview{grid-template-columns:1fr 1fr 1fr}
+  .collection-mini-stat{padding:8px}.collection-mini-stat .status-label{font-size:.55rem}.collection-mini-stat strong{font-size:.9rem}
+  .geode-cracker-station{grid-template-columns:auto 1fr}.geode-action{grid-column:1/-1;align-items:stretch}.geode-action-buttons{justify-content:stretch}.geode-action-buttons button{flex:1 1 140px}
+  .vault-item{grid-template-columns:auto 1fr}.vault-item-actions{grid-column:1/-1;justify-content:stretch}.vault-item-actions button{flex:1}
+  .personal-collection-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .personal-slot{min-height:112px;padding:7px}
+  .personal-slot-copy strong{font-size:.6rem}.personal-slot-copy span{font-size:.52rem}
 }
