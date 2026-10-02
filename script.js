@@ -825,6 +825,7 @@ const DURABILITY_LEVELS = [
     els.newFaceButton.addEventListener('click',startNewFace);
     els.surfaceButton.addEventListener('click',startNewFace);
     els.scanButton.addEventListener('click',toggleScanMode);
+    els.mineBoard.addEventListener('click',handleBoardClick);
     els.metalDetectorButton.addEventListener('click',useMetalDetector);
     els.prospectorKitButton?.addEventListener('click',useProspectorKit);
     els.surveyChalkButton?.addEventListener('click',useSurveyChalk);
@@ -1452,7 +1453,24 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
-  function handleTile(index){ if(scanMode)scanAt(index);else mineTile(index); }
+  function handleBoardClick(event){
+    const tileButton=event.target.closest('.rock');
+    if(!tileButton||!els.mineBoard.contains(tileButton))return;
+    const index=Number(tileButton.dataset.index);
+    if(!Number.isInteger(index))return;
+
+    // Keep scanner targeting at the board level instead of relying on 100
+    // freshly-rendered button listeners. This is more reliable for touch taps,
+    // especially on mobile Safari after scan mode redraws the mine face.
+    if(scanMode){
+      event.preventDefault();
+      scanAt(index);
+      return;
+    }
+
+    if(tileButton.disabled)return;
+    mineTile(index);
+  }
 
 
   function scanAt(index){
@@ -1910,7 +1928,7 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
 
     state.face.tiles.forEach(t=>{
       const b=document.createElement('button');
-      b.type='button';b.className='rock';b.setAttribute('aria-label',`Mine tile ${t.index+1}`);
+      b.type='button';b.className='rock';b.dataset.index=String(t.index);b.setAttribute('aria-label',`Mine tile ${t.index+1}`);
       const scans=state.face.scanCounts?.[t.index]||0;
 if(scans>=1)b.classList.add('scan-area');
       if(scans>=2)b.classList.add('scan-overlap');
@@ -1942,7 +1960,6 @@ if(scans>=1)b.classList.add('scan-area');
       }
 
 
-      if(!b.disabled)b.addEventListener('click',()=>handleTile(t.index));
       els.mineBoard.appendChild(b);
     });
 
@@ -2668,9 +2685,9 @@ const up=DEPTH_UPGRADES[nextDepth];
 
 
   function resetGame(){
-    if(!window.confirm('Reset all Rockhound Beta 1.5.1 progress?'))return;
+    if(!window.confirm('Reset all Rockhound Beta 1.5.2 progress?'))return;
     localStorage.removeItem(SAVE_KEY);state=defaultState();state.face=generateFace(1);openWorkbenchKey=null;scanMode=false;
-    saveState();renderAll();showToast('Beta 1.5.1 save reset.');
+    saveState();renderAll();showToast('Beta 1.5.2 save reset.');
   }
 
   function showToast(msg){

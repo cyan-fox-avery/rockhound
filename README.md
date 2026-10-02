@@ -1,6 +1,6 @@
 # Rockhound
 
-**Beta 1.5.1 — museum and collection polish**
+**Beta 1.5.2 — scanner touch fix**
 
 > rock go crunch.
 
@@ -37,6 +37,12 @@ The museum ending still grants the permanent Completion Plaque and effectively u
 
 Rockhound contains **50 achievements**. **TRUE ROCKHOUND** marks museum completion. The hidden **ROCKAHOLIC** achievement is the full completionist challenge and requires every other achievement plus all permanent upgrades and core discoveries. The Personal Collection itself has no completion checklist.
 
+
+## Beta 1.5.2 changes
+
+- Fixes scanner targeting so tapping a mine tile reliably performs the selected 3×3 scan, including on touch devices.
+- Moves mine-tile input to a single board-level click handler instead of attaching fresh listeners to every tile after each redraw. Mining behavior is otherwise unchanged.
+- Preserves the existing `rockhound-lab-1.3` save key and all prior progress.
 
 ## Beta 1.5.1 changes
 
