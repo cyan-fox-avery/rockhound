@@ -1,6 +1,6 @@
 # Rockhound
 
-**Beta 1.5.6 — postgame polish and prospecting balance**
+**Beta 1.5.7 — final UI polish**
 
 > rock go crunch.
 
@@ -35,8 +35,19 @@ Only one kit tier can be armed at a time. Either kit can stack with Collector's 
 
 The museum ending still grants the permanent Completion Plaque and effectively unbreakable Gilded Steel Pickaxe. Continued mining is optional: the game is finished when the museum is finished.
 
-Rockhound contains **50 achievements**. **TRUE ROCKHOUND** marks museum completion. The hidden **ROCKAHOLIC** achievement is the full completionist challenge and requires every other achievement plus all permanent upgrades and core discoveries. The Personal Collection itself has no completion checklist.
+Rockhound contains **50 achievements**. Unobtained achievements remain secret until they are earned. **TRUE ROCKHOUND** marks museum completion, while **ROCKAHOLIC** is the full completionist challenge and requires every other achievement plus all permanent upgrades and core discoveries. The Personal Collection itself has no completion checklist.
 
+
+
+## Beta 1.5.7 changes
+
+- Remembers each tab's scroll position during play, so returning to a long Museum or other panel restores the place you left.
+- Adds direct **Inspect** access to exceptional specimens already placed in the Display Case; specimens no longer need to be returned to Storage first.
+- Reworks the Achievements shelf into a denser two-column badge layout with no oversized routine cards or awkward gaps.
+- Makes every unobtained achievement secret by showing only **???** for its name and description until it is earned.
+- Reserves the full-width treatment for **TRUE ROCKHOUND** and **ROCKAHOLIC** only.
+- Gives achievement icons a compact medal-style badge treatment while keeping the existing simple emoji symbols readable.
+- Preserves the existing `rockhound-lab-1.3` save key and prior beta progress.
 
 ## Beta 1.5.6 changes
 

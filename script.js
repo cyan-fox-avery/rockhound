@@ -789,6 +789,7 @@ const DURABILITY_LEVELS = [
   let heatWarningVisible = false;
   let focusPickerOpen = false;
   const openStorageKeys = new Set();
+  const panelScrollPositions = Object.create(null);
 
 
   const $ = id => document.getElementById(id);
@@ -803,7 +804,8 @@ const DURABILITY_LEVELS = [
     achievementGrid:$('achievementGrid'), achievementCount:$('achievementCount'), achievementMeter:$('achievementMeter'),
     shopBalance:$('shopBalance'), upgradeList:$('upgradeList'), prospectingShop:$('prospectingShop'), resetButton:$('resetButton'), toast:$('toast'),
     mobileMineHud:$('mobileMineHud'), mobileDurability:$('mobileDurability'), mobileScans:$('mobileScans'),
-    gameTitle:$('gameTitle'), gameTagline:$('gameTagline'), completionModal:$('completionModal'), completionBody:$('completionBody'), keepMiningButton:$('keepMiningButton')
+    gameTitle:$('gameTitle'), gameTagline:$('gameTagline'), completionModal:$('completionModal'), completionBody:$('completionBody'), keepMiningButton:$('keepMiningButton'),
+    specimenInspectModal:$('specimenInspectModal'), specimenInspectImage:$('specimenInspectImage'), specimenInspectTitle:$('specimenInspectTitle'), specimenInspectDetail:$('specimenInspectDetail'), specimenInspectMeta:$('specimenInspectMeta'), specimenInspectClose:$('specimenInspectClose')
   };
 
 
@@ -840,6 +842,9 @@ const DURABILITY_LEVELS = [
     els.sellAllMasteredButton.addEventListener('click',sellAllMastered);
     els.resetButton.addEventListener('click',resetGame);
     if(els.keepMiningButton)els.keepMiningButton.addEventListener('click',closeCompletionModal);
+    els.specimenInspectClose?.addEventListener('click',closeExceptionalInspect);
+    els.specimenInspectModal?.addEventListener('click',event=>{if(event.target===els.specimenInspectModal)closeExceptionalInspect();});
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!els.specimenInspectModal?.classList.contains('hidden'))closeExceptionalInspect();});
 
 
     renderAll();
@@ -1409,6 +1414,12 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   function switchPanel(btn){
     const target=btn.dataset.target;
     if(target==='collection'&&!state.postgame?.completed)return;
+    if(target===activePanel)return;
+
+    // Remember where the player was in each tab before its DOM is redrawn.
+    // The Museum is long enough that jumping back to the top is especially
+    // disruptive, but keeping this per-panel makes every tab behave the same.
+    panelScrollPositions[activePanel]=window.scrollY||window.pageYOffset||0;
     activePanel=target;
     scanMode=false;
     document.querySelectorAll('.nav-button').forEach(b=>b.classList.toggle('active',b===btn));
@@ -1420,6 +1431,12 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     if(target==='upgrades')renderUpgrades();
     syncMuseumUvPage();
     renderMobileHud();
+
+    const remembered=Math.max(0,panelScrollPositions[target]||0);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      const maxScroll=Math.max(0,document.documentElement.scrollHeight-window.innerHeight);
+      window.scrollTo(0,Math.min(remembered,maxScroll));
+    }));
   }
 
 
@@ -2189,6 +2206,29 @@ state.credits+=value;
   }
 
 
+  function openExceptionalInspect(item){
+    if(!item||item.kind!=='exceptional'||!els.specimenInspectModal)return;
+    const foundDepth=item.foundDepth&&DEPTHS[item.foundDepth]?`Depth ${item.foundDepth} · ${DEPTHS[item.foundDepth].name}`:'Postgame find';
+    let foundDate='';
+    try{if(item.foundAt)foundDate=new Date(item.foundAt).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});}catch{foundDate='';}
+    els.specimenInspectImage.src=exceptionalSpriteSrc(item);
+    els.specimenInspectImage.alt=item.label||'Exceptional specimen';
+    els.specimenInspectTitle.textContent=item.label||'Exceptional specimen';
+    els.specimenInspectDetail.textContent=item.detail||'An unusually fine example worth keeping because rocks are cool.';
+    els.specimenInspectMeta.innerHTML=`<span>${foundDepth}</span>${foundDate?`<span>Found ${foundDate}</span>`:''}<span>Specimen value ${formatMoney(specialItemSellValue(item))}</span>`;
+    els.specimenInspectModal.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+    els.specimenInspectClose?.focus({preventScroll:true});
+  }
+
+
+  function closeExceptionalInspect(){
+    if(!els.specimenInspectModal)return;
+    els.specimenInspectModal.classList.add('hidden');
+    document.body.classList.remove('modal-open');
+  }
+
+
   function renderPersonalCollection(){
     if(!els.personalCollectionSection||!els.personalCollectionGrid)return;
     if(!state.postgame?.completed){els.personalCollectionSection.classList.add('hidden');return;}
@@ -2201,8 +2241,10 @@ state.credits+=value;
         const visual=document.createElement('div');visual.className='personal-slot-visual';
         visual.appendChild(buildExceptionalSprite(item));
         const copy=document.createElement('div');copy.className='personal-slot-copy';copy.innerHTML=`<strong>${item.label}</strong><span class="specimen-note">${item.detail||'An unusual natural form of a familiar material.'}</span>`;
+        const actions=document.createElement('div');actions.className='personal-slot-actions';
+        const inspect=document.createElement('button');inspect.type='button';inspect.className='mini-button personal-inspect';inspect.textContent='Inspect';inspect.addEventListener('click',()=>openExceptionalInspect(item));
         const remove=document.createElement('button');remove.type='button';remove.className='mini-button';remove.textContent='Store';remove.addEventListener('click',()=>removePersonalSlot(index));
-        slot.append(visual,copy,remove);
+        actions.append(inspect,remove);slot.append(visual,copy,actions);
       }
       els.personalCollectionGrid.appendChild(slot);
     });
@@ -2509,18 +2551,17 @@ const uvAvailable=!!state.upgrades.uvLamp;
     els.achievementGrid.innerHTML='';
 
 
-    const featured=new Set(['sio2Enjoyer','familyResemblance','berylBuddies','metalhead','lastSwingLuck','fourFloorsDown','allThatGlitters','glowShow','epithermal','diamondRough','actualGold','fossilRecord','historyBuff','mineralHall','oreHall','finalVein','tenExceptional','preparedProspector']);
     const special=new Set(['rockaholic','trueRockhound']);
 
 
     ACHIEVEMENTS.forEach(a=>{
       const earned=!!state.achievements[a.id];
-      const tier=special.has(a.id)?'tier-special':featured.has(a.id)?'tier-featured':'tier-small';
+      const tier=special.has(a.id)?'tier-special':'tier-small';
       const card=document.createElement('article');
-      card.className=`achievement-card ${tier} ${earned?'unlocked':'locked'} ${a.hidden&&!earned?'hidden-achievement':''}`;
-      const name=a.hidden&&!earned?'???':a.name;
-      const desc=a.hidden&&!earned?'A hidden achievement.':maskUndiscoveredNames(a.description);
-      card.innerHTML=`<div class="achievement-icon">${earned?a.icon:'?'}</div><div><strong>${name}</strong><p>${desc}</p></div>`;
+      card.className=`achievement-card ${tier} ${earned?'unlocked':'locked'} ${!earned?'hidden-achievement':''}`;
+      const name=earned?a.name:'???';
+      const desc=earned?maskUndiscoveredNames(a.description):'???';
+      card.innerHTML=`<div class="achievement-icon"><span class="achievement-badge-glyph">${earned?a.icon:'?'}</span></div><div><strong>${name}</strong><p>${desc}</p></div>`;
       els.achievementGrid.appendChild(card);
     });
   }
@@ -2735,9 +2776,9 @@ const up=DEPTH_UPGRADES[nextDepth];
 
 
   function resetGame(){
-    if(!window.confirm('Reset all Rockhound Beta 1.5.6 progress?'))return;
+    if(!window.confirm('Reset all Rockhound Beta 1.5.7 progress?'))return;
     localStorage.removeItem(SAVE_KEY);state=defaultState();state.face=generateFace(1);openWorkbenchKey=null;scanMode=false;
-    saveState();renderAll();showToast('Beta 1.5.6 save reset.');
+    saveState();renderAll();showToast('Beta 1.5.7 save reset.');
   }
 
   function showToast(msg){
