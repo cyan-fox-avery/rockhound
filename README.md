@@ -1,6 +1,6 @@
 # Rockhound
 
-**Beta 1.5.7 — final UI polish**
+**Beta 1.5.8 — postgame balance polish**
 
 > rock go crunch.
 
@@ -38,6 +38,15 @@ The museum ending still grants the permanent Completion Plaque and effectively u
 Rockhound contains **50 achievements**. Unobtained achievements remain secret until they are earned. **TRUE ROCKHOUND** marks museum completion, while **ROCKAHOLIC** is the full completionist challenge and requires every other achievement plus all permanent upgrades and core discoveries. The Personal Collection itself has no completion checklist.
 
 
+
+## Beta 1.5.8 changes
+
+- Museum completion now permanently makes newly generated postgame rock faces **50% richer in ordinary mineral and ore specimen tiles**.
+- The density boost uses the same depth-specific material weights, so it does not create a new rarity ladder or alter which materials belong at each depth.
+- Exceptional Specimen odds remain a separate system: the natural 5% chance and the 50% / 80% prospecting-kit chances are unchanged.
+- Adds **Experienced Prospector** to the museum-completion rewards so the permanent postgame density boost is explained in-game.
+- Existing completed saves receive the boost automatically on their next fresh rock face.
+- Preserves the existing `rockhound-lab-1.3` save key and prior beta progress.
 
 ## Beta 1.5.7 changes
 

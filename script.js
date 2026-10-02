@@ -1383,6 +1383,27 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     placeDeposit(weightedChoice(cfg.materials),randInt(5,8),'large');
     for(let i=0;i<randInt(depth>=3?4:3,depth>=3?5:4);i++)placeDeposit(weightedChoice(cfg.materials),randInt(2,4),'small');
     for(let i=0;i<randInt(3,5);i++)placeDeposit(weightedChoice(cfg.materials),1,'isolated');
+
+    // Museum completion is allowed to feel generous. New postgame faces contain
+    // 50% more ordinary mineral/ore specimen tiles, while keeping the same
+    // depth-specific material weights and leaving exceptional odds untouched.
+    if(state.postgame?.completed){
+      const baseMaterialTiles=tiles.filter(t=>t.material).length;
+      const targetMaterialTiles=Math.min(GRID_SIZE*GRID_SIZE,Math.ceil(baseMaterialTiles*1.5));
+      let occupiedMaterialTiles=baseMaterialTiles;
+      while(occupiedMaterialTiles<targetMaterialTiles){
+        const remaining=targetMaterialTiles-occupiedMaterialTiles;
+        const bonusSize=Math.min(remaining,remaining>=3?randInt(2,4):1);
+        if(placeDeposit(weightedChoice(cfg.materials),bonusSize,bonusSize===1?'isolated':'small')){
+          occupiedMaterialTiles+=bonusSize;
+        }else if(bonusSize>1&&placeDeposit(weightedChoice(cfg.materials),1,'isolated')){
+          occupiedMaterialTiles+=1;
+        }else{
+          break;
+        }
+      }
+    }
+
     if(Math.random()<(depth>=3?.32:depth===2?.27:.24))placeDeposit(weightedChoice(cfg.sideFinds),1,'side');
     if(Math.random()<(depth>=3?.085:depth===2?.055:.045))placeDeposit(weightedChoice(cfg.sideFinds),1,'side');
 
@@ -2291,6 +2312,7 @@ state.credits+=value;
         <div>⛏️ <strong>Gilded Steel Pickaxe</strong><span>Effectively unbreakable. We considered solid gold. Gold is soft, heavy, and a terrible pickaxe material.</span></div>
         <div>🖼️ <strong>Personal Collection</strong><span>A new postgame tab with unlimited Specimen Storage plus twenty-one display spaces. No checklist. No percentage. Your rocks, your rules.</span></div>
         <div>✨ <strong>Exceptional Specimens</strong><span>Curated, unusually beautiful versions of familiar minerals can now appear throughout every depth.</span></div>
+        <div>🪨 <strong>Experienced Prospector</strong><span>Fresh postgame rock faces contain 50% more ordinary mineral and ore specimens. You know productive ground when you see it.</span></div>
         <div>🎒 <strong>Prospecting Supplies</strong><span>Optional consumables let you improve the odds or focus your hunt toward a favourite mineral. Choose one kit tier at a time; either kit can stack with Collector's Focus, and exceptional specimens can still appear without supplies.</span></div>
         <div>🌋 <strong>Postgame Prospecting</strong><span>Every depth stays open. There is nothing left you have to find.</span></div>
       </div>
@@ -2776,9 +2798,9 @@ const up=DEPTH_UPGRADES[nextDepth];
 
 
   function resetGame(){
-    if(!window.confirm('Reset all Rockhound Beta 1.5.7 progress?'))return;
+    if(!window.confirm('Reset all Rockhound Beta 1.5.8 progress?'))return;
     localStorage.removeItem(SAVE_KEY);state=defaultState();state.face=generateFace(1);openWorkbenchKey=null;scanMode=false;
-    saveState();renderAll();showToast('Beta 1.5.7 save reset.');
+    saveState();renderAll();showToast('Beta 1.5.8 save reset.');
   }
 
   function showToast(msg){
