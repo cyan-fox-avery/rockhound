@@ -784,6 +784,8 @@ const DURABILITY_LEVELS = [
   let openWorkbenchKey = null;
   let toastTimer = null;
   let scanMode = false;
+  let scanPointerStart = null;
+  let suppressBoardClickUntil = 0;
   let activePanel = 'mine';
   let heatWarningVisible = false;
   let focusPickerOpen = false;
@@ -825,6 +827,9 @@ const DURABILITY_LEVELS = [
     els.newFaceButton.addEventListener('click',startNewFace);
     els.surfaceButton.addEventListener('click',startNewFace);
     els.scanButton.addEventListener('click',toggleScanMode);
+    els.mineBoard.addEventListener('pointerdown',handleBoardPointerDown);
+    els.mineBoard.addEventListener('pointerup',handleBoardPointerUp);
+    els.mineBoard.addEventListener('pointercancel',clearBoardPointer);
     els.mineBoard.addEventListener('click',handleBoardClick);
     els.metalDetectorButton.addEventListener('click',useMetalDetector);
     els.prospectorKitButton?.addEventListener('click',useProspectorKit);
@@ -1453,23 +1458,68 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
-  function handleBoardClick(event){
-    const tileButton=event.target.closest('.rock');
-    if(!tileButton||!els.mineBoard.contains(tileButton))return;
+  function boardTileFromEvent(event){
+    const target=event.target;
+    if(!(target instanceof Element))return null;
+    const tileButton=target.closest('.rock');
+    if(!tileButton||!els.mineBoard.contains(tileButton))return null;
     const index=Number(tileButton.dataset.index);
-    if(!Number.isInteger(index))return;
+    if(!Number.isInteger(index))return null;
+    return {tileButton,index};
+  }
 
-    // Keep scanner targeting at the board level instead of relying on 100
-    // freshly-rendered button listeners. This is more reliable for touch taps,
-    // especially on mobile Safari after scan mode redraws the mine face.
-    if(scanMode){
+
+  function clearBoardPointer(){
+    scanPointerStart=null;
+  }
+
+
+  function handleBoardPointerDown(event){
+    if(!scanMode||event.pointerType==='mouse')return;
+    const hit=boardTileFromEvent(event);
+    if(!hit)return;
+    scanPointerStart={pointerId:event.pointerId,index:hit.index,x:event.clientX,y:event.clientY};
+  }
+
+
+  function handleBoardPointerUp(event){
+    if(!scanMode||event.pointerType==='mouse'||!scanPointerStart)return;
+    const start=scanPointerStart;
+    scanPointerStart=null;
+    if(event.pointerId!==start.pointerId)return;
+    const hit=boardTileFromEvent(event);
+    if(!hit||hit.index!==start.index)return;
+    const moved=Math.hypot(event.clientX-start.x,event.clientY-start.y);
+    if(moved>12)return;
+
+    // Mobile Safari can show the tile's pressed state without reliably
+    // delivering the synthesized click after a redraw. Handle the completed
+    // touch/pen tap directly, then suppress its follow-up click so the same
+    // tile is not immediately mined after the scan exits scan mode.
+    event.preventDefault();
+    suppressBoardClickUntil=performance.now()+750;
+    scanAt(start.index);
+  }
+
+
+  function handleBoardClick(event){
+    const hit=boardTileFromEvent(event);
+    if(!hit)return;
+
+    if(performance.now()<suppressBoardClickUntil){
       event.preventDefault();
-      scanAt(index);
       return;
     }
 
-    if(tileButton.disabled)return;
-    mineTile(index);
+    // Mouse and keyboard activation still use the normal click path.
+    if(scanMode){
+      event.preventDefault();
+      scanAt(hit.index);
+      return;
+    }
+
+    if(hit.tileButton.disabled)return;
+    mineTile(hit.index);
   }
 
 
@@ -2685,9 +2735,9 @@ const up=DEPTH_UPGRADES[nextDepth];
 
 
   function resetGame(){
-    if(!window.confirm('Reset all Rockhound Beta 1.5.2 progress?'))return;
+    if(!window.confirm('Reset all Rockhound Beta 1.5.3 progress?'))return;
     localStorage.removeItem(SAVE_KEY);state=defaultState();state.face=generateFace(1);openWorkbenchKey=null;scanMode=false;
-    saveState();renderAll();showToast('Beta 1.5.2 save reset.');
+    saveState();renderAll();showToast('Beta 1.5.3 save reset.');
   }
 
   function showToast(msg){

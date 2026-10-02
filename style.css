@@ -2122,3 +2122,10 @@ body.museum-uv-active .panel[data-panel="museum"] .completion-plaque{
 .museum-wings.uv-mode .detail-sprite.uv-willemite{filter:saturate(2.25) brightness(1.48) drop-shadow(0 0 12px #66ff7c) drop-shadow(0 0 21px rgba(102,255,124,.78))}
 .museum-wings.uv-mode .detail-sprite.uv-hackmanite{filter:saturate(1.95) brightness(1.4) drop-shadow(0 0 11px #ff789e) drop-shadow(0 0 19px rgba(255,120,158,.72))}
 .museum-wings.uv-mode .detail-sprite.uv-apatite{filter:hue-rotate(38deg) saturate(2.05) brightness(1.46) drop-shadow(0 0 11px #dfff63) drop-shadow(0 0 20px rgba(223,255,99,.74))}
+
+
+/* Beta 1.5.3: reliable scanner taps on touch devices */
+.rock{touch-action:manipulation}
+@media (hover:none),(pointer:coarse){
+  .rock:not(.revealed):hover{filter:none}
+}
