@@ -1887,7 +1887,7 @@ body.modal-open{overflow:hidden}
 /* Armed supplies stay selected across depth changes and are only spent on the first mined tile. */
 
 /* ============================================================
-   Beta 1.5.0 — finished specimen sprite pass
+   Beta 1.5.1 — museum polish patch
    ============================================================ */
 .sprite-wrap{
   display:grid !important;
@@ -2053,3 +2053,72 @@ body.modal-open{overflow:hidden}
   .personal-slot-visual{height:69px}
   .stage-actions{padding-left:0}
 }
+
+
+/* ============================================================
+   Beta 1.5.1 — museum viewport + UV presentation polish
+   ============================================================ */
+
+/* Keep every museum specimen viewport compact and square-ish, regardless
+   of whether its material has one, two, or three display stages. */
+.museum-specimen .slot-visual,
+.museum-wing.compact-wing .museum-specimen .slot-visual{
+  width:100%;
+  max-width:152px;
+  height:auto !important;
+  aspect-ratio:1 / 1;
+  margin:0 auto 7px;
+  overflow:hidden;
+}
+.museum-specimen-grid.one .museum-specimen .slot-visual{max-width:164px}
+.museum-specimen-grid.two .museum-specimen .slot-visual{max-width:156px}
+.museum-specimen-grid.three .museum-specimen .slot-visual{max-width:144px}
+.museum-specimen .slot-visual .detail-sprite{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  background:#0d1011;
+}
+
+/* UV viewing should feel like the room lights dropped. Navigation and text
+   remain readable, while the actual reactive specimens become the focus. */
+body.museum-uv-active .topbar,
+body.museum-uv-active .bottom-nav{
+  filter:brightness(.78);
+  transition:filter .18s ease;
+}
+body.museum-uv-active .panel[data-panel="museum"] .section-heading,
+body.museum-uv-active .panel[data-panel="museum"] .collection-progress-card,
+body.museum-uv-active .panel[data-panel="museum"] .completion-plaque{
+  filter:brightness(.72);
+  transition:filter .18s ease;
+}
+.museum-wings.uv-mode{
+  background:radial-gradient(circle at 50% 0,rgba(60,35,118,.16),transparent 32rem),#05070b;
+}
+.museum-wings.uv-mode .museum-wing{
+  border-color:#1d1f2b;
+  background:rgba(7,8,13,.98);
+}
+.museum-wings.uv-mode .museum-group-title,
+.museum-wings.uv-mode .specimen-fact-card,
+.museum-wings.uv-mode .mastery-panel,
+.museum-wings.uv-mode .slot-stage,
+.museum-wings.uv-mode .slot-state{
+  filter:brightness(.68);
+  transition:filter .18s ease;
+}
+.museum-wings.uv-mode .detail-sprite{
+  opacity:.56;
+  filter:brightness(.38) saturate(.52);
+  transition:filter .18s ease,opacity .18s ease;
+}
+.museum-wings.uv-mode .detail-sprite.uv-reactive{opacity:1}
+.museum-wings.uv-mode .detail-sprite.uv-fluorite{filter:brightness(1.38) saturate(1.8) drop-shadow(0 0 10px #728cff) drop-shadow(0 0 18px rgba(114,140,255,.72))}
+.museum-wings.uv-mode .detail-sprite.uv-calcite{filter:sepia(.12) saturate(1.9) brightness(1.34) drop-shadow(0 0 10px #ff7162) drop-shadow(0 0 18px rgba(255,113,98,.68))}
+.museum-wings.uv-mode .detail-sprite.uv-ruby{filter:saturate(2.15) brightness(1.34) drop-shadow(0 0 11px #ff3158) drop-shadow(0 0 19px rgba(255,49,88,.72))}
+.museum-wings.uv-mode .detail-sprite.uv-sphalerite{filter:sepia(.24) saturate(2.05) brightness(1.36) drop-shadow(0 0 11px #ff9f38) drop-shadow(0 0 19px rgba(255,159,56,.7))}
+.museum-wings.uv-mode .detail-sprite.uv-scheelite{filter:saturate(.55) brightness(1.58) hue-rotate(155deg) drop-shadow(0 0 11px #b7e9ff) drop-shadow(0 0 19px rgba(183,233,255,.7))}
+.museum-wings.uv-mode .detail-sprite.uv-willemite{filter:saturate(2.25) brightness(1.48) drop-shadow(0 0 12px #66ff7c) drop-shadow(0 0 21px rgba(102,255,124,.78))}
+.museum-wings.uv-mode .detail-sprite.uv-hackmanite{filter:saturate(1.95) brightness(1.4) drop-shadow(0 0 11px #ff789e) drop-shadow(0 0 19px rgba(255,120,158,.72))}
+.museum-wings.uv-mode .detail-sprite.uv-apatite{filter:hue-rotate(38deg) saturate(2.05) brightness(1.46) drop-shadow(0 0 11px #dfff63) drop-shadow(0 0 20px rgba(223,255,99,.74))}

@@ -1,6 +1,6 @@
 # Rockhound
 
-**Beta 1.5.0 — finished sprite pass**
+**Beta 1.5.1 — museum and collection polish**
 
 > rock go crunch.
 
@@ -18,7 +18,7 @@ Museum completion unlocks the **Personal Collection** tab and expands the existi
 
 - **Exceptional Specimens** can begin appearing on postgame rock faces. They are curated named variants of familiar materials, chosen to show that every mineral can be interesting for different geological reasons.
 - **Specimen Storage** is effectively unlimited. Exceptional finds can be kept indefinitely even when they are not on display.
-- The **Display Case** has 30 freeform spaces, shown three across on mobile. Displayed specimens are protected from selling.
+- The **Display Case** has 21 freeform spaces, shown three across on mobile. Displayed specimens are protected from selling.
 - Exceptional specimens may also be sold individually for ordinary game money. There is no variant checklist or completion percentage.
 
 ## Postgame prospecting supplies
@@ -36,6 +36,14 @@ All three can be armed together. Exceptional specimens can still appear naturall
 The museum ending still grants the permanent Completion Plaque and effectively unbreakable Gilded Steel Pickaxe. Continued mining is optional: the game is finished when the museum is finished.
 
 Rockhound contains **50 achievements**. **TRUE ROCKHOUND** marks museum completion. The hidden **ROCKAHOLIC** achievement is the full completionist challenge and requires every other achievement plus all permanent upgrades and core discoveries. The Personal Collection itself has no completion checklist.
+
+
+## Beta 1.5.1 changes
+
+- Keeps Museum specimen image windows compact and square-ish across one-, two-, and three-stage displays so the finished art is not awkwardly cropped.
+- Reduces the Personal Collection Display Case from 30 spaces to 21 while keeping Specimen Storage unlimited. Older saves safely return any exceptional specimens from retired display slots to storage.
+- Strengthens UV-reactive specimen glow and slightly darkens the surrounding museum presentation so fluorescent specimens stand out more clearly.
+- Preserves the existing `rockhound-lab-1.3` save key and all prior progress.
 
 ## Beta 1.5.0 changes
 

@@ -767,7 +767,7 @@ const DURABILITY_LEVELS = [
     achievements:{},
     postgame:{
       completed:false,completedAt:null,completionSeen:false,exceptionalFound:0,exceptionalSold:0,nextCollectibleId:1,
-      specimenStorage:[],personalSlots:Array(30).fill(null),
+      specimenStorage:[],personalSlots:Array(21).fill(null),
       supplies:{prospectorKit:0,surveyChalk:0,collectorsFocus:0},
       armedSupplies:{prospectorKit:false,surveyChalk:false,collectorsFocus:false,focusTarget:null},
       geodeRetiredMigration:false
@@ -861,7 +861,7 @@ const DURABILITY_LEVELS = [
         discovery:fresh.discovery,
         achievements:{...(parsed.achievements||{})},
         meta:{...fresh.meta,...(parsed.meta||{}),depthsMined:{...(fresh.meta.depthsMined||{}),...(parsed.meta?.depthsMined||{})}},
-        postgame:{...fresh.postgame,...(parsed.postgame||{}),specimenStorage:Array.isArray(parsed.postgame?.specimenStorage)?parsed.postgame.specimenStorage:Array.isArray(parsed.postgame?.vault)?parsed.postgame.vault:[],personalSlots:Array.isArray(parsed.postgame?.personalSlots)?parsed.postgame.personalSlots.slice(0,30):Array(30).fill(null),supplies:{...fresh.postgame.supplies,...(parsed.postgame?.supplies||{})},armedSupplies:{...fresh.postgame.armedSupplies,...(parsed.postgame?.armedSupplies||{})}}
+        postgame:{...fresh.postgame,...(parsed.postgame||{}),specimenStorage:Array.isArray(parsed.postgame?.specimenStorage)?[...parsed.postgame.specimenStorage]:Array.isArray(parsed.postgame?.vault)?[...parsed.postgame.vault]:[],personalSlots:Array.isArray(parsed.postgame?.personalSlots)?parsed.postgame.personalSlots.slice(0,21):Array(21).fill(null),supplies:{...fresh.postgame.supplies,...(parsed.postgame?.supplies||{})},armedSupplies:{...fresh.postgame.armedSupplies,...(parsed.postgame?.armedSupplies||{})}}
       };
 
 
@@ -925,7 +925,17 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
       merged.postgame.armedSupplies = {...fresh.postgame.armedSupplies,...(parsed.postgame?.armedSupplies||{})};
       ['prospectorKit','surveyChalk','collectorsFocus'].forEach(k=>merged.postgame.armedSupplies[k]=!!merged.postgame.armedSupplies[k]&&(merged.postgame.supplies[k]||0)>0);
       if(!merged.postgame.armedSupplies.collectorsFocus)merged.postgame.armedSupplies.focusTarget=null;
-      while(merged.postgame.personalSlots.length<30)merged.postgame.personalSlots.push(null);
+      // Beta 1.5.1 trims the display case from 30 to 21 spaces. Anything that
+      // occupied retired slots is preserved instead of disappearing.
+      if(Array.isArray(parsed.postgame?.personalSlots) && parsed.postgame.personalSlots.length>21){
+        parsed.postgame.personalSlots.slice(21).filter(Boolean).forEach(item=>{
+          if(item?.kind==='exceptional')merged.postgame.specimenStorage.push(item);
+          else if(item?.kind==='regular'&&item.key&&item.stage&&merged.inventory[item.key]?.[item.stage]!==undefined)merged.inventory[item.key][item.stage]++;
+          else if(item?.kind==='geode')merged.credits+=Math.max(0,Number(item.sellValue)||1000);
+        });
+      }
+      while(merged.postgame.personalSlots.length<21)merged.postgame.personalSlots.push(null);
+      if(merged.postgame.personalSlots.length>21)merged.postgame.personalSlots=merged.postgame.personalSlots.slice(0,21);
 
 
       // Beta 1.4.2 retires the geode experiment. Preserve exceptional specimens,
@@ -1370,6 +1380,11 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
+  function syncMuseumUvPage(){
+    document.body.classList.toggle('museum-uv-active',activePanel==='museum'&&!!state.upgrades.uvLamp&&!!state.settings.museumUv);
+  }
+
+
   function switchPanel(btn){
     const target=btn.dataset.target;
     if(target==='collection'&&!state.postgame?.completed)return;
@@ -1382,6 +1397,7 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     if(target==='collection'){renderPostgameWorkbench();renderPersonalCollection();renderSpecimenStorage();}
     if(target==='achievements')renderAchievements();
     if(target==='upgrades')renderUpgrades();
+    syncMuseumUvPage();
     renderMobileHud();
   }
 
@@ -2031,7 +2047,7 @@ if(scans>=1)b.classList.add('scan-area');
     els.postgameWorkbench.innerHTML=`
       <div class="collection-overview">
         <div class="collection-mini-stat"><span class="status-label">Specimen Storage</span><strong>${storage.length}</strong></div>
-        <div class="collection-mini-stat"><span class="status-label">On display</span><strong>${displayed} / 30</strong></div>
+        <div class="collection-mini-stat"><span class="status-label">On display</span><strong>${displayed} / 21</strong></div>
         <div class="collection-mini-stat"><span class="status-label">Exceptional finds</span><strong>${state.postgame.exceptionalFound||0}</strong></div>
       </div>`;
   }
@@ -2321,6 +2337,7 @@ const uvAvailable=!!state.upgrades.uvLamp;
     els.museumWings.classList.toggle('uv-mode',uvAvailable&&state.settings.museumUv);
     els.normalLightButton.classList.toggle('active',!state.settings.museumUv);
     els.uvLightButton.classList.toggle('active',!!state.settings.museumUv);
+    syncMuseumUvPage();
     let filledTotal=0;
     const total=Object.values(MATERIALS).reduce((a,m)=>a+m.stages.length,0);
 
@@ -2651,9 +2668,9 @@ const up=DEPTH_UPGRADES[nextDepth];
 
 
   function resetGame(){
-    if(!window.confirm('Reset all Rockhound Beta 1.4.4 progress?'))return;
+    if(!window.confirm('Reset all Rockhound Beta 1.5.1 progress?'))return;
     localStorage.removeItem(SAVE_KEY);state=defaultState();state.face=generateFace(1);openWorkbenchKey=null;scanMode=false;
-    saveState();renderAll();showToast('Beta 1.4.4 save reset.');
+    saveState();renderAll();showToast('Beta 1.5.1 save reset.');
   }
 
   function showToast(msg){
