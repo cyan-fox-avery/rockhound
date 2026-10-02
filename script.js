@@ -784,7 +784,6 @@ const DURABILITY_LEVELS = [
   let openWorkbenchKey = null;
   let toastTimer = null;
   let scanMode = false;
-  let scanPointerStart = null;
   let suppressBoardClickUntil = 0;
   let activePanel = 'mine';
   let heatWarningVisible = false;
@@ -827,9 +826,12 @@ const DURABILITY_LEVELS = [
     els.newFaceButton.addEventListener('click',startNewFace);
     els.surfaceButton.addEventListener('click',startNewFace);
     els.scanButton.addEventListener('click',toggleScanMode);
+    // Scan taps are committed on press-down on touch devices. Waiting for
+    // pointerup/click proved unreliable in iOS/WKWebView: the tile could show
+    // its pressed state without the scan ever firing. touchstart is retained
+    // as a fallback for WebKit builds that do not deliver Pointer Events.
     els.mineBoard.addEventListener('pointerdown',handleBoardPointerDown);
-    els.mineBoard.addEventListener('pointerup',handleBoardPointerUp);
-    els.mineBoard.addEventListener('pointercancel',clearBoardPointer);
+    els.mineBoard.addEventListener('touchstart',handleBoardTouchStart,{passive:false});
     els.mineBoard.addEventListener('click',handleBoardClick);
     els.metalDetectorButton.addEventListener('click',useMetalDetector);
     els.prospectorKitButton?.addEventListener('click',useProspectorKit);
@@ -1469,36 +1471,31 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
-  function clearBoardPointer(){
-    scanPointerStart=null;
+  function commitScanFromBoardEvent(event){
+    if(!scanMode)return false;
+    const hit=boardTileFromEvent(event);
+    if(!hit)return false;
+
+    // Commit the scan at the first reliable touch signal. This deliberately
+    // avoids depending on pointerup or the synthesized click on mobile Safari.
+    if(event.cancelable)event.preventDefault();
+    suppressBoardClickUntil=performance.now()+1000;
+    scanAt(hit.index);
+    return true;
   }
 
 
   function handleBoardPointerDown(event){
-    if(!scanMode||event.pointerType==='mouse')return;
-    const hit=boardTileFromEvent(event);
-    if(!hit)return;
-    scanPointerStart={pointerId:event.pointerId,index:hit.index,x:event.clientX,y:event.clientY};
+    if(!scanMode||event.pointerType==='mouse'||event.isPrimary===false)return;
+    commitScanFromBoardEvent(event);
   }
 
 
-  function handleBoardPointerUp(event){
-    if(!scanMode||event.pointerType==='mouse'||!scanPointerStart)return;
-    const start=scanPointerStart;
-    scanPointerStart=null;
-    if(event.pointerId!==start.pointerId)return;
-    const hit=boardTileFromEvent(event);
-    if(!hit||hit.index!==start.index)return;
-    const moved=Math.hypot(event.clientX-start.x,event.clientY-start.y);
-    if(moved>12)return;
-
-    // Mobile Safari can show the tile's pressed state without reliably
-    // delivering the synthesized click after a redraw. Handle the completed
-    // touch/pen tap directly, then suppress its follow-up click so the same
-    // tile is not immediately mined after the scan exits scan mode.
-    event.preventDefault();
-    suppressBoardClickUntil=performance.now()+750;
-    scanAt(start.index);
+  function handleBoardTouchStart(event){
+    // If pointerdown already handled the tap, scanMode is now false and this
+    // becomes a no-op. Otherwise it is the iOS/WebKit fallback path.
+    if(!scanMode)return;
+    commitScanFromBoardEvent(event);
   }
 
 
@@ -1511,7 +1508,7 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
       return;
     }
 
-    // Mouse and keyboard activation still use the normal click path.
+    // Mouse and keyboard activation still use click for scanner targeting.
     if(scanMode){
       event.preventDefault();
       scanAt(hit.index);
@@ -2735,9 +2732,9 @@ const up=DEPTH_UPGRADES[nextDepth];
 
 
   function resetGame(){
-    if(!window.confirm('Reset all Rockhound Beta 1.5.3 progress?'))return;
+    if(!window.confirm('Reset all Rockhound Beta 1.5.4 progress?'))return;
     localStorage.removeItem(SAVE_KEY);state=defaultState();state.face=generateFace(1);openWorkbenchKey=null;scanMode=false;
-    saveState();renderAll();showToast('Beta 1.5.3 save reset.');
+    saveState();renderAll();showToast('Beta 1.5.4 save reset.');
   }
 
   function showToast(msg){

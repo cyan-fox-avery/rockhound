@@ -2129,3 +2129,7 @@ body.museum-uv-active .panel[data-panel="museum"] .completion-plaque{
 @media (hover:none),(pointer:coarse){
   .rock:not(.revealed):hover{filter:none}
 }
+
+
+/* Beta 1.5.4: scanner touch targeting */
+.rock.scan-selectable:active{transform:none}
