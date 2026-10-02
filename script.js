@@ -784,7 +784,6 @@ const DURABILITY_LEVELS = [
   let openWorkbenchKey = null;
   let toastTimer = null;
   let scanMode = false;
-  let suppressBoardClickUntil = 0;
   let activePanel = 'mine';
   let heatWarningVisible = false;
   let focusPickerOpen = false;
@@ -826,12 +825,9 @@ const DURABILITY_LEVELS = [
     els.newFaceButton.addEventListener('click',startNewFace);
     els.surfaceButton.addEventListener('click',startNewFace);
     els.scanButton.addEventListener('click',toggleScanMode);
-    // Scan taps are committed on press-down on touch devices. Waiting for
-    // pointerup/click proved unreliable in iOS/WKWebView: the tile could show
-    // its pressed state without the scan ever firing. touchstart is retained
-    // as a fallback for WebKit builds that do not deliver Pointer Events.
-    els.mineBoard.addEventListener('pointerdown',handleBoardPointerDown);
-    els.mineBoard.addEventListener('touchstart',handleBoardTouchStart,{passive:false});
+    // A single delegated click handler covers mouse, keyboard, and touch.
+    // The earlier touch-specific patches were masking a scanner analysis error,
+    // not an input problem.
     els.mineBoard.addEventListener('click',handleBoardClick);
     els.metalDetectorButton.addEventListener('click',useMetalDetector);
     els.prospectorKitButton?.addEventListener('click',useProspectorKit);
@@ -1471,44 +1467,10 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
-  function commitScanFromBoardEvent(event){
-    if(!scanMode)return false;
-    const hit=boardTileFromEvent(event);
-    if(!hit)return false;
-
-    // Commit the scan at the first reliable touch signal. This deliberately
-    // avoids depending on pointerup or the synthesized click on mobile Safari.
-    if(event.cancelable)event.preventDefault();
-    suppressBoardClickUntil=performance.now()+1000;
-    scanAt(hit.index);
-    return true;
-  }
-
-
-  function handleBoardPointerDown(event){
-    if(!scanMode||event.pointerType==='mouse'||event.isPrimary===false)return;
-    commitScanFromBoardEvent(event);
-  }
-
-
-  function handleBoardTouchStart(event){
-    // If pointerdown already handled the tap, scanMode is now false and this
-    // becomes a no-op. Otherwise it is the iOS/WebKit fallback path.
-    if(!scanMode)return;
-    commitScanFromBoardEvent(event);
-  }
-
-
   function handleBoardClick(event){
     const hit=boardTileFromEvent(event);
     if(!hit)return;
 
-    if(performance.now()<suppressBoardClickUntil){
-      event.preventDefault();
-      return;
-    }
-
-    // Mouse and keyboard activation still use click for scanner targeting.
     if(scanMode){
       event.preventDefault();
       scanAt(hit.index);
@@ -1605,6 +1567,23 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
 
 
 
+
+
+  function signalStrength(count){
+    if(count>=5)return 'Strong';
+    if(count>=3)return 'Moderate';
+    return 'Faint';
+  }
+
+
+  function depositPattern(types){
+    const set=types instanceof Set?types:new Set(types||[]);
+    if(set.has('large'))return set.size>1?'broad vein with mixed edges':'broad vein pattern';
+    if(set.has('small'))return set.size>1?'clustered with isolated traces':'clustered pocket pattern';
+    if(set.has('isolated'))return 'isolated occurrence';
+    if(set.has('side'))return 'isolated anomaly';
+    return 'mixed deposit pattern';
+  }
 
 
   function analyzeScan(indices,level){
@@ -2732,9 +2711,9 @@ const up=DEPTH_UPGRADES[nextDepth];
 
 
   function resetGame(){
-    if(!window.confirm('Reset all Rockhound Beta 1.5.4 progress?'))return;
+    if(!window.confirm('Reset all Rockhound Beta 1.5.5 progress?'))return;
     localStorage.removeItem(SAVE_KEY);state=defaultState();state.face=generateFace(1);openWorkbenchKey=null;scanMode=false;
-    saveState();renderAll();showToast('Beta 1.5.4 save reset.');
+    saveState();renderAll();showToast('Beta 1.5.5 save reset.');
   }
 
   function showToast(msg){

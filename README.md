@@ -1,6 +1,6 @@
 # Rockhound
 
-**Beta 1.5.4 — scanner touch reliability fix**
+**Beta 1.5.5 — scanner touch reliability fix**
 
 > rock go crunch.
 
@@ -71,3 +71,11 @@ Rockhound contains **50 achievements**. **TRUE ROCKHOUND** marks museum completi
 - Preserves the existing `rockhound-lab-1.3` save key and prior beta progress.
 
 The game remains in final-polish/playtest territory. The sprite pass changes presentation, not the core progression or ending.
+
+
+## Beta 1.5.5 changes
+
+- Fixes the Field Scanner failing after a target tile is tapped.
+- Restores the simple delegated click/tap targeting path; the earlier touch-specific workarounds were not the root cause.
+- Adds the missing scanner-analysis helpers for signal strength and deposit-pattern descriptions, which were causing the scan to throw before it could finish.
+- Keeps the existing `rockhound-lab-1.3` save key and all Beta 1.5.1 museum, UV, display-case, and sprite changes.
