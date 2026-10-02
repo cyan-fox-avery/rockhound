@@ -1,6 +1,6 @@
 # Rockhound
 
-**Beta 1.5.5 — scanner touch reliability fix**
+**Beta 1.5.6 — postgame polish and prospecting balance**
 
 > rock go crunch.
 
@@ -23,19 +23,41 @@ Museum completion unlocks the **Personal Collection** tab and expands the existi
 
 ## Postgame prospecting supplies
 
-Three optional consumables give completed players something meaningful to spend money on. They are bought in the **Shop** and armed from the **Mine** for the next fresh rock face. The player can switch depths or generate another fresh face without spending them. Armed supplies are only consumed when the first rock tile on a prepared face is mined.
+Three optional consumables give completed players meaningful ways to spend money on exceptional-specimen hunts. They are bought in the **Shop** and armed from the **Mine** for the next fresh rock face. The player can switch depths or generate another fresh face without spending them. Armed supplies are only consumed when the first rock tile on a prepared face is mined.
 
-- **Prospector's Kit — $40.00:** raises that prepared face's exceptional chance from 5% to 30%.
-- **Survey Chalk — $20.00:** once the face is committed by the first dig, reports whether an exceptional specimen is present and marks a vague 3×3 promising zone if one exists.
+- **Prospector's Kit — $40.00:** raises that prepared face's exceptional chance from 5% to 50%.
+- **Master Prospector's Kit — $100.00:** raises that prepared face's exceptional chance from 5% to 80%.
 - **Collector's Focus — $40.00:** choose an eligible material before preparing the face; if an exceptional specimen spawns and that material is present, the target receives a 60% weighting.
 
-All three can be armed together. Exceptional specimens can still appear naturally without any supplies, and at most one exceptional specimen appears on a face.
+Only one kit tier can be armed at a time. Either kit can stack with Collector's Focus. Exceptional specimens can still appear naturally without supplies, and at most one exceptional specimen appears on a face. Survey Chalk was retired in Beta 1.5.6; unused Chalk from older saves is automatically refunded at full price.
 
 ## Ending and achievements
 
 The museum ending still grants the permanent Completion Plaque and effectively unbreakable Gilded Steel Pickaxe. Continued mining is optional: the game is finished when the museum is finished.
 
 Rockhound contains **50 achievements**. **TRUE ROCKHOUND** marks museum completion. The hidden **ROCKAHOLIC** achievement is the full completionist challenge and requires every other achievement plus all permanent upgrades and core discoveries. The Personal Collection itself has no completion checklist.
+
+
+## Beta 1.5.6 changes
+
+- Corrects the completion reward copy to say the Personal Collection has **21 display spaces**.
+- Rewrites Native Gold's bonus fact so it no longer clashes with the Gilded Steel Pickaxe reward.
+- Makes undiscovered fossils and historical artifacts genuine mystery entries: names and artwork stay hidden until first discovery, while compact depth-number search hints remain visible.
+- Removes the redundant single-stage "Fossil specimen" and "Historical artifact" labels from museum cards.
+- Replaces the generic "Exceptional [material]" subtitle in the Display Case with a short geology/mineralogy explanation of what makes each specimen unusual.
+- Retires **Survey Chalk** and automatically refunds unused Chalk from older saves at full purchase price.
+- Raises the regular **Prospector's Kit** exceptional chance from 30% to **50%**.
+- Adds the **Master Prospector's Kit** for $100.00 with an **80%** exceptional chance. Only one kit tier can be armed at a time; either can stack with Collector's Focus.
+- Updates the **Going Prepared** achievement to require a kit plus Collector's Focus on the same face.
+- Preserves the existing `rockhound-lab-1.3` save key and prior beta progress.
+
+
+## Beta 1.5.5 changes
+
+- Fixes the Field Scanner failing after a target tile is tapped.
+- Restores the simple delegated click/tap targeting path; the earlier touch-specific workarounds were not the root cause.
+- Adds the missing scanner-analysis helpers for signal strength and deposit-pattern descriptions, which were causing the scan to throw before it could finish.
+- Keeps the existing `rockhound-lab-1.3` save key and all Beta 1.5.1 museum, UV, display-case, and sprite changes.
 
 
 ## Beta 1.5.4 changes
@@ -71,11 +93,3 @@ Rockhound contains **50 achievements**. **TRUE ROCKHOUND** marks museum completi
 - Preserves the existing `rockhound-lab-1.3` save key and prior beta progress.
 
 The game remains in final-polish/playtest territory. The sprite pass changes presentation, not the core progression or ending.
-
-
-## Beta 1.5.5 changes
-
-- Fixes the Field Scanner failing after a target tile is tapped.
-- Restores the simple delegated click/tap targeting path; the earlier touch-specific workarounds were not the root cause.
-- Adds the missing scanner-analysis helpers for signal strength and deposit-pattern descriptions, which were causing the scan to throw before it could finish.
-- Keeps the existing `rockhound-lab-1.3` save key and all Beta 1.5.1 museum, UV, display-case, and sprite changes.
