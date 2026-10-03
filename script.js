@@ -1,9 +1,13 @@
-(() => {
+﻿(() => {
   'use strict';
+
+
 
 
   const SAVE_KEY = 'rockhound-lab-1.3';
   const GRID_SIZE = 10;
+
+
 
 
   const MATERIALS = {
@@ -124,6 +128,8 @@
     },
 
 
+
+
     roseQuartz: {
       name:'Rose Quartz', subtitle:'Pink quartz · SiO₂', family:'mineral', wing:'minerals', iconClass:'gem rose-quartz',
       signature:{id:'silicon-dioxide',label:'Silicon dioxide',formula:'SiO₂'},
@@ -174,6 +180,8 @@
     },
 
 
+
+
     hematite: {
       name:'Hematite', subtitle:'Iron ore → Iron', family:'ore', wing:'ores', iconClass:'ore hematite', metalDetectable:true,
       signature:{id:'iron-oxide',label:'Iron oxide',formula:'Fe₂O₃'},
@@ -209,6 +217,8 @@
     },
 
 
+
+
     galena: {
       name:'Galena', subtitle:'Lead ore → Lead', family:'ore', wing:'ores', iconClass:'ore galena', metalDetectable:true,
       signature:{id:'lead-sulfide',label:'Lead sulfide',formula:'PbS'},
@@ -231,6 +241,8 @@
       },
       mastery:{fact:'Some sphalerite can glow under ultraviolet light, and certain specimens show especially bright fluorescence.'}
     },
+
+
 
 
     scheelite: {
@@ -292,6 +304,10 @@
       },
       mastery:{fact:'Not every opal shows play-of-colour. Common opal can still be beautiful even when it lacks the shifting spectral flashes associated with precious opal.'}
     },
+
+
+
+
 
 
 
@@ -395,6 +411,8 @@
     },
 
 
+
+
     crinoidStem: {
       name:'Crinoid Stem', subtitle:'Fossil marine animal fragment', family:'fossil', wing:'fossils', iconClass:'round crinoid-stem', iconText:'✣',
       signature:{id:'fossil',label:'Fossilized biological material',formula:''},
@@ -413,6 +431,8 @@ belemnite: {
       stages:['found'], stageLabels:{found:'Fossil specimen'}, prices:{found:210}, process:{},
       facts:{found:'Belemnites were extinct squid-like cephalopods. Their hard internal guards often fossilize as distinctive bullet-shaped objects.'}
     },
+
+
 
 
     fernImpression: {
@@ -435,12 +455,16 @@ belemnite: {
     },
 
 
+
+
     railSpike: {
       name:'Old Rail Spike', subtitle:'Historical mine-haulage hardware', family:'artifact', wing:'history', iconClass:'tag rail-spike', iconText:'⌟', metalDetectable:true,
       signature:{id:'artifact',label:'Historical object',formula:''},
       stages:['found'], stageLabels:{found:'Historical artifact'}, prices:{found:235}, process:{},
       facts:{found:'Underground rail systems carried ore, waste rock, people, and supplies. Hardware such as spikes and fasteners helped keep those haulage tracks in place.'}
     },
+
+
 
 
     surveyCompass: {
@@ -464,6 +488,8 @@ belemnite: {
   };
 
 
+
+
   const SPARKLE_KEYS = new Set(['quartz','amethyst','garnet','topaz','citrine','calcite','fluorite','aquamarine','sapphire','roseQuartz','malachite','ruby','emerald','willemite','hackmanite','apatite','opal','diamond','obsidian','olivine','nativeSulfur','rhodochrosite','adularia']);
   const UV_CLASSES = {
     fluorite:'uv-fluorite',
@@ -479,6 +505,10 @@ belemnite: {
 
 
 
+
+
+
+
   const EXCEPTIONAL_BASE_CHANCE = 0.05;
   const EXCEPTIONAL_KIT_CHANCE = 0.50;
   const EXCEPTIONAL_MASTER_KIT_CHANCE = 0.80;
@@ -488,6 +518,8 @@ belemnite: {
     masterProspectorKit:{label:"Master Prospector's Kit",icon:'🧰',cost:10000,description:'A high-end kit for a serious hunt. On a committed fresh face, it raises the exceptional-specimen chance from 5% to 80%.'},
     collectorsFocus:{label:"Collector's Focus",icon:'◎',cost:4000,description:'Arm it with a target for a fresh face. If an exceptional specimen spawns and that material is present, the target receives a 60% weighting.'}
   };
+
+
 
 
   const EXCEPTIONAL_VARIANTS = {
@@ -542,6 +574,7 @@ belemnite: {
     ]
   };
 
+
   const SPRITE_SLUGS = {
     roseQuartz:'rose-quartz', nativeSulfur:'native-sulfur', nativeGold:'native-gold'
   };
@@ -569,6 +602,7 @@ belemnite: {
     dendriticGold:'dendritic-native-gold'
   };
 
+
   function spriteSlug(key){ return SPRITE_SLUGS[key]||key; }
   function miniSpriteSrc(key){
     const m=MATERIALS[key];
@@ -583,12 +617,16 @@ belemnite: {
   }
 
 
+
+
   const WINGS = [
     {id:'minerals',name:'Mineral Hall'},
     {id:'ores',name:'Ores & Metals'},
     {id:'fossils',name:'Fossil Wing'},
     {id:'history',name:'History Wing'}
   ];
+
+
 
 
   const DEPTHS = {
@@ -631,6 +669,8 @@ belemnite: {
   };
 
 
+
+
 const DURABILITY_LEVELS = [
     {swings:28,cost:60,label:'Basic pick'},
     {swings:34,cost:140,label:'Reinforced handle'},
@@ -641,12 +681,16 @@ const DURABILITY_LEVELS = [
   ];
 
 
+
+
   const SURVEY_LEVELS = [
     {name:'None',cost:75,next:'Field Scanner',description:'Unlocks the 3×3 area scanner. Early scans report chemical signatures rather than exact gem names.'},
     {name:'Field Scanner',cost:160,next:'Spectral Scanner',description:'Reports chemistry and signal strength inside the selected 3×3 area. Scanned tiles stay marked.'},
     {name:'Spectral Scanner',cost:360,next:'Mineral Analyzer',description:'Adds deposit-pattern information and notices unusual non-mineral signatures.'},
     {name:'Mineral Analyzer',cost:null,next:null,description:'Identifies exact minerals and distinguishes fossil signatures from historical objects.'}
   ];
+
+
 
 
   const SCAN_CHARGE_LEVELS = [
@@ -659,6 +703,8 @@ const DURABILITY_LEVELS = [
   ];
 
 
+
+
   const WORKSHOP_LEVELS = [
     {name:'Basic Workshop',cost:180,next:'Precision Workshop',description:'Handles your earliest processable minerals and ores.'},
     {name:'Precision Workshop',cost:650,next:'Advanced Lapidary',description:'Adds support for a broader range of mid-game minerals and ores.'},
@@ -669,6 +715,8 @@ const DURABILITY_LEVELS = [
   ];
 
 
+
+
   const DEPTH_UPGRADES = {
     2:{cost:225,description:'Unlock Depth 2: the Lower Works, adding new gemstones, metallic minerals, and more fossil hunting.'},
     3:{cost:850,description:'Unlock Depth 3: the Deep Gallery, adding new crystal families, colourful minerals, another metal-bearing ore, and deeper historical finds.'},
@@ -676,6 +724,10 @@ const DURABILITY_LEVELS = [
     5:{cost:3600,description:'Unlock Depth 5: the Luminous Zone, adding fluorescent minerals, an unusual heavy-metal ore, a mineraloid, belemnites, and deeper mining history.'},
     6:{cost:5200,description:'Open the final route into Depth 6: the Epithermal Zone, a hot volcanic-hydrothermal environment where boiling fluids deposited unusual minerals and metals.'}
   };
+
+
+
+
 
 
 
@@ -749,10 +801,14 @@ const DURABILITY_LEVELS = [
   ];
 
 
+
+
   const emptyInventory = () => Object.fromEntries(Object.entries(MATERIALS).map(([k,m]) => [k,Object.fromEntries(m.stages.map(s => [s,0]))]));
   const emptyCollection = () => Object.fromEntries(Object.entries(MATERIALS).map(([k,m]) => [k,Object.fromEntries(m.stages.map(s => [s,false]))]));
   const emptyStats = () => Object.fromEntries(Object.keys(MATERIALS).map(k => [k,{found:0,sold:0,donated:0,processed:0,earned:0}]));
   const emptyDiscovery = () => Object.fromEntries(Object.keys(MATERIALS).map(k => [k,{discovered:false,depths:[]}]));
+
+
 
 
   const defaultState = () => ({
@@ -781,6 +837,8 @@ const DURABILITY_LEVELS = [
   });
 
 
+
+
   let state = loadState();
   let openWorkbenchKey = null;
   let toastTimer = null;
@@ -790,6 +848,8 @@ const DURABILITY_LEVELS = [
   let focusPickerOpen = false;
   const openStorageKeys = new Set();
   const panelScrollPositions = Object.create(null);
+
+
 
 
   const $ = id => document.getElementById(id);
@@ -809,7 +869,11 @@ const DURABILITY_LEVELS = [
   };
 
 
+
+
   init();
+
+
 
 
   function init(){
@@ -820,8 +884,12 @@ const DURABILITY_LEVELS = [
     }
 
 
+
+
     checkAchievements(true);
     saveState();
+
+
 
 
     document.querySelectorAll('.nav-button').forEach(btn => btn.addEventListener('click',() => switchPanel(btn)));
@@ -847,15 +915,21 @@ const DURABILITY_LEVELS = [
     document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!els.specimenInspectModal?.classList.contains('hidden'))closeExceptionalInspect();});
 
 
+
+
     renderAll();
     if(state.postgame?.completed&&!state.postgame.completionSeen)setTimeout(openCompletionModal,120);
   }
+
+
 
 
   function loadState(){
     try{
       const raw = localStorage.getItem(SAVE_KEY);
       if(!raw) return defaultState();
+
+
 
 
       const parsed = JSON.parse(raw);
@@ -875,6 +949,8 @@ const DURABILITY_LEVELS = [
       };
 
 
+
+
       Object.entries(MATERIALS).forEach(([k,m]) => {
         m.stages.forEach(stage => {
           merged.inventory[k][stage] = parsed.inventory?.[k]?.[stage] ?? 0;
@@ -883,10 +959,14 @@ const DURABILITY_LEVELS = [
         merged.stats[k] = {...fresh.stats[k],...(parsed.stats?.[k]||{})};
 
 
+
+
         const priorDiscovery=parsed.discovery?.[k];
         const hasHistoricalEvidence=(merged.stats[k].found||0)>0 || (merged.stats[k].sold||0)>0 || (merged.stats[k].donated||0)>0 || (merged.stats[k].processed||0)>0 || m.stages.some(stage=>(merged.inventory[k][stage]||0)>0 || !!merged.collection[k][stage]);
 const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
         let depths=Array.isArray(priorDiscovery?.depths)?priorDiscovery.depths.map(Number).filter(d=>DEPTHS[d]&&d<=merged.unlockedDepth):[];
+
+
 
 
         // Beta 1.2.2 begins tracking where each discovery was actually encountered.
@@ -901,6 +981,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
       });
 
 
+
+
       // v2.1 migration: if global automation was on, keep it on for materials
       // that are already mastered in the migrated save.
       if(parsed.settings?.autoProcess === true){
@@ -910,6 +992,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
           }
         });
       }
+
+
 
 
       merged.unlockedDepth = Math.max(1,Math.min(6,merged.unlockedDepth||1));
@@ -949,6 +1033,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
       if(merged.postgame.personalSlots.length>21)merged.postgame.personalSlots=merged.postgame.personalSlots.slice(0,21);
 
 
+
+
       // Beta 1.5.6 retires Survey Chalk because the completion pickaxe makes its
       // vague location hint largely redundant. Refund any unused Chalk at full price
       // once, then clear old armed/prepared Chalk state without changing the save key.
@@ -962,6 +1048,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
       if(merged.face?.preparedSupplies)delete merged.face.preparedSupplies.surveyChalk;
       if(merged.face?.prospectingEffects)delete merged.face.prospectingEffects.surveyChalk;
       if(Array.isArray(merged.face?.exceptionalHintTiles))merged.face.exceptionalHintTiles=[];
+
+
 
 
       // Beta 1.4.2 retires the geode experiment. Preserve exceptional specimens,
@@ -1001,11 +1089,15 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
       merged.settings.museumUv = !!merged.settings.museumUv && merged.upgrades.uvLamp;
 
 
+
+
       return merged;
     }catch{
       return defaultState();
     }
   }
+
+
 
 
   function saveState(){ localStorage.setItem(SAVE_KEY,JSON.stringify(state)); }
@@ -1240,6 +1332,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
+
+
   function totalFound(){ return Object.values(state.stats).reduce((sum,x)=>sum+(x.found||0),0); }
   function allDepthsMined(){ return Object.keys(DEPTHS).every(d=>(state.meta.depthsMined?.[d]||0)>0); }
   function countCollectedFamily(family){
@@ -1251,6 +1345,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   function isMetalTarget(k){ return !!MATERIALS[k]?.metalDetectable; }
 
 
+
+
   function weightedChoice(source){
     const entries=Array.isArray(source)?source.map(x=>[x.key,x.weight]):Object.entries(source);
     let total=entries.reduce((a,[,w])=>a+w,0),r=Math.random()*total;
@@ -1259,11 +1355,15 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
+
+
   function neighbors(index){
     const r=Math.floor(index/GRID_SIZE),c=index%GRID_SIZE,out=[];
     [[r-1,c],[r+1,c],[r,c-1],[r,c+1]].forEach(([rr,cc])=>{if(rr>=0&&rr<GRID_SIZE&&cc>=0&&cc<GRID_SIZE)out.push(rr*GRID_SIZE+cc);});
     return out;
   }
+
+
 
 
   function scanAreaIndices(index){
@@ -1279,6 +1379,10 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
 
 
 
+
+
+
+
   function exceptionalHintArea(index){
     const targetRow=Math.floor(index/GRID_SIZE),targetCol=index%GRID_SIZE;
     const centerRow=Math.max(1,Math.min(GRID_SIZE-2,targetRow));
@@ -1287,6 +1391,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     for(let r=centerRow-1;r<=centerRow+1;r++)for(let c=centerCol-1;c<=centerCol+1;c++)out.push(r*GRID_SIZE+c);
     return out;
   }
+
+
 
 
   function normalizeFace(face){
@@ -1316,6 +1422,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     if(face.fullCoverageAwarded === undefined) face.fullCoverageAwarded = false;
 
 
+
+
     if(!Array.isArray(face.scanCounts) || face.scanCounts.length!==GRID_SIZE*GRID_SIZE){
       face.scanCounts = Array(GRID_SIZE*GRID_SIZE).fill(0);
       const oldHistory = Array.isArray(face.scanHistory)?face.scanHistory:[];
@@ -1329,12 +1437,16 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     }
 
 
+
+
     if(face.scanUsesRemaining === undefined || face.scanUsesRemaining === null){
       face.scanUsesRemaining = state.upgrades.surveying>0 ? currentMaxScans() : 0;
     }else{
       face.scanUsesRemaining = Math.min(face.scanUsesRemaining,currentMaxScans());
     }
   }
+
+
 
 
   function generateProspectHints(face){
@@ -1350,10 +1462,14 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
+
+
   function generateFace(depth){
     const tiles=Array.from({length:GRID_SIZE*GRID_SIZE},(_,i)=>({index:i,revealed:false,material:null,special:null,depositId:null,depositType:null}));
     const deposits=[];
     let nextId=0;
+
+
 
 
     function placeDeposit(material,size,type){
@@ -1379,10 +1495,13 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     }
 
 
+
+
     const cfg=DEPTHS[depth];
     placeDeposit(weightedChoice(cfg.materials),randInt(5,8),'large');
     for(let i=0;i<randInt(depth>=3?4:3,depth>=3?5:4);i++)placeDeposit(weightedChoice(cfg.materials),randInt(2,4),'small');
     for(let i=0;i<randInt(3,5);i++)placeDeposit(weightedChoice(cfg.materials),1,'isolated');
+
 
     // Museum completion is allowed to feel generous. New postgame faces contain
     // 50% more ordinary mineral/ore specimen tiles, while keeping the same
@@ -1404,12 +1523,17 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
       }
     }
 
+
     if(Math.random()<(depth>=3?.32:depth===2?.27:.24))placeDeposit(weightedChoice(cfg.sideFinds),1,'side');
     if(Math.random()<(depth>=3?.085:depth===2?.055:.045))placeDeposit(weightedChoice(cfg.sideFinds),1,'side');
 
 
+
+
     const prospectingEffects=emptyProspectingEffects();
     const preparedSupplies=state.postgame?.completed?preparedSuppliesForDepth(depth):emptyProspectingEffects();
+
+
 
 
     const face={
@@ -1427,15 +1551,20 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
+
+
   function syncMuseumUvPage(){
     document.body.classList.toggle('museum-uv-active',activePanel==='museum'&&!!state.upgrades.uvLamp&&!!state.settings.museumUv);
   }
+
+
 
 
   function switchPanel(btn){
     const target=btn.dataset.target;
     if(target==='collection'&&!state.postgame?.completed)return;
     if(target===activePanel)return;
+
 
     // Remember where the player was in each tab before its DOM is redrawn.
     // The Museum is long enough that jumping back to the top is especially
@@ -1453,6 +1582,7 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     syncMuseumUvPage();
     renderMobileHud();
 
+
     const remembered=Math.max(0,panelScrollPositions[target]||0);
     requestAnimationFrame(()=>requestAnimationFrame(()=>{
       const maxScroll=Math.max(0,document.documentElement.scrollHeight-window.innerHeight);
@@ -1461,12 +1591,16 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
+
+
   function renderPostgameAccess(){
     const unlocked=!!state.postgame?.completed;
     els.collectionNavButton?.classList.toggle('hidden',!unlocked);
     els.personalCollectionPanel?.classList.toggle('hidden',!unlocked);
     els.bottomNav?.classList.toggle('postgame-nav',unlocked);
   }
+
+
 
 
   function startNewFace(){
@@ -1480,6 +1614,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     renderMine();
     showToast('Fresh rock face.');
   }
+
+
 
 
   function setDepth(d){
@@ -1497,6 +1633,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
 }
 
 
+
+
   function toggleScanMode(){
     if(state.currentDepth===6&&!state.upgrades.scannerHeatShield){showToast('The scanner needs heat-shielded housing in the Epithermal Zone.');return;}
     if(state.upgrades.surveying===0){showToast('Unlock the Field Scanner first.');return;}
@@ -1511,6 +1649,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
+
+
   function boardTileFromEvent(event){
     const target=event.target;
     if(!(target instanceof Element))return null;
@@ -1522,9 +1662,12 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
+
+
   function handleBoardClick(event){
     const hit=boardTileFromEvent(event);
     if(!hit)return;
+
 
     if(scanMode){
       event.preventDefault();
@@ -1532,9 +1675,12 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
       return;
     }
 
+
     if(hit.tileButton.disabled)return;
     mineTile(hit.index);
   }
+
+
 
 
   function scanAt(index){
@@ -1562,6 +1708,10 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
 
 
 
+
+
+
+
   function metalSignalZone(targetIndex){
     const targetRow=Math.floor(targetIndex/GRID_SIZE),targetCol=targetIndex%GRID_SIZE;
     const centerRow=Math.max(0,Math.min(GRID_SIZE-1,targetRow+randInt(-1,1)));
@@ -1577,15 +1727,21 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
+
+
   function useMetalDetector(){
     if(state.currentDepth===6&&!state.upgrades.detectorHeatShield){showToast('The metal detector needs heat-shielded housing in the Epithermal Zone.');return;}
     if(!state.upgrades.metalDetector){showToast('Unlock the Metal Detector first.');return;}
     if(state.face.metalDetectorUsed){showToast('The metal detector has already swept this face.');return;}
 
 
+
+
     const targets=state.face.tiles.filter(t=>!t.revealed&&t.material&&isMetalTarget(t.material));
     state.face.metalDetectorUsed=true;
     state.meta.metalSweeps++;
+
+
 
 
     const selected=[];
@@ -1602,9 +1758,13 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     if(!selected.length && targets.length)selected.push(targets[0]);
 
 
+
+
     const marked=new Set();
     selected.forEach(tile=>metalSignalZone(tile.index).forEach(i=>marked.add(i)));
     state.face.metalSignalTiles=[...marked];
+
+
 
 
     checkAchievements();
@@ -1624,11 +1784,19 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
 
 
 
+
+
+
+
+
+
   function signalStrength(count){
     if(count>=5)return 'Strong';
     if(count>=3)return 'Moderate';
     return 'Faint';
   }
+
+
 
 
   function depositPattern(types){
@@ -1641,15 +1809,21 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
+
+
   function analyzeScan(indices,level){
     const scannedTiles=indices.map(i=>state.face.tiles[i]).filter(Boolean);
     const occupied=scannedTiles.filter(t=>t.material);
     if(!occupied.length)return [{html:'No significant mineral signature detected.',plain:'No significant mineral signature detected.'}];
 
 
+
+
     const results=[];
     const side=occupied.filter(t=>['fossil','artifact'].includes(MATERIALS[t.material].family));
     const geo=occupied.filter(t=>!['fossil','artifact'].includes(MATERIALS[t.material].family));
+
+
 
 
     if(level<3){
@@ -1687,8 +1861,12 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     }
 
 
+
+
     return results.length?results:[{html:'No significant mineral signature detected.',plain:'No significant mineral signature detected.'}];
   }
+
+
 
 
   function mineTile(index){
@@ -1708,8 +1886,12 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     state.meta.depthsMined[state.currentDepth]=(state.meta.depthsMined[state.currentDepth]||0)+1;
 
 
+
+
     const hadDoubleScan=(face.scanCounts?.[index]||0)>=2;
     const inMetalZone=(face.metalSignalTiles||[]).includes(index);
+
+
 
 
     if(tile.material){
@@ -1733,6 +1915,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     if(prospectingReport&&!tile.exceptionalVariantId)showToast(prospectingReport);
 
 
+
+
     if(face.durability<=0){
       state.meta.facesFinished++;
       setMineMessage('⛏️','Pick worn out.','That face is finished. Return to the surface for a fresh one.');
@@ -1740,11 +1924,15 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     }
 
 
+
+
     checkAchievements();
     saveState();
     renderMine();
     renderWorkbench();
   }
+
+
 
 
   function collectFind(k,exceptionalVariantId=null){
@@ -1755,6 +1943,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     state.discovery[k].discovered=true;
     if(!state.discovery[k].depths.includes(state.currentDepth))state.discovery[k].depths.push(state.currentDepth);
     state.discovery[k].depths.sort((a,b)=>a-b);
+
+
 
 
     if(state.postgame?.completed&&exceptionalVariantId&&exceptionalEligible(k)){
@@ -1770,14 +1960,20 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     }
 
 
+
+
     state.inventory[k][stage]++;
     if(canAutoProcess(k) && state.settings.autoProcessByMaterial[k])autoProcessOne(k);
     return null;
   }
 
 
+
+
   function canProcessMaterial(k){ return state.upgrades.workshop >= (MATERIALS[k].workshopRequired||0); }
   function canAutoProcess(k){ return hasProcessing(k) && isMastered(k) && canProcessMaterial(k); }
+
+
 
 
   function autoProcessOne(k){
@@ -1795,6 +1991,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
+
+
   function maybeAnnounceDeposit(id){
     const d=state.face.deposits.find(x=>x.id===id);
     if(!d||d.announced||['isolated','side'].includes(d.type))return;
@@ -1805,6 +2003,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
       showToast(`${d.type==='large'?'Rich vein':'Vein'} discovered: ${MATERIALS[d.material].name}`);
     }
   }
+
+
 
 
   function findMessage(k){
@@ -1857,14 +2057,20 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
+
+
   function setMineMessage(icon,title,body){
     els.mineMessage.innerHTML=`<span class="message-icon">${icon}</span><div><strong>${title}</strong><p>${body}</p></div>`;
   }
 
 
+
+
   function renderAll(){
     renderPostgameAccess();renderMine();renderWorkbench();renderMuseum();renderPostgameWorkbench();renderPersonalCollection();renderSpecimenStorage();renderAchievements();renderUpgrades();renderMobileHud();
   }
+
+
 
 
   function renderMine(){
@@ -1883,6 +2089,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
+
+
   function renderDepthSelector(){
     els.depthSelector.innerHTML='';
     Object.keys(DEPTHS).forEach(x=>{
@@ -1894,9 +2102,13 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
+
+
   function renderSurvey(){
     const level=state.upgrades.surveying,f=state.face;
     els.scanButton.classList.toggle('active',scanMode);
+
+
 
 
     if(state.currentDepth===6&&!state.upgrades.scannerHeatShield){
@@ -1907,6 +2119,8 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     }
 
 
+
+
     if(level===0){
       els.scanButton.disabled=true;
       els.scanButton.querySelector('strong').textContent='Scan area';
@@ -1915,10 +2129,14 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     }
 
 
+
+
     els.scanButton.disabled=f.scanUsesRemaining<=0;
     els.scanButton.querySelector('strong').textContent=scanMode?'Cancel scan':'Scan area';
     els.scanButtonStatus.textContent=scanMode?`Tap a tile · ${f.scanUsesRemaining} left`:`${f.scanUsesRemaining}/${currentMaxScans()} scans`;
   }
+
+
 
 
   function renderMetalDetector(){
@@ -1936,11 +2154,15 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     }
 
 
+
+
     const used=!!state.face.metalDetectorUsed;
     els.metalDetectorButton.disabled=used;
     els.metalDetectorButton.querySelector('strong').textContent='Sweep face';
     els.detectorButtonStatus.textContent=used?'Used this face':'1/1 sweep';
   }
+
+
 
 
   function renderProspectingTools(){
@@ -1979,6 +2201,10 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
 
 
 
+
+
+
+
   function buildIcon(key,forTile=false,stage=null){
     const m=MATERIALS[key],wrap=document.createElement('span');
     wrap.className=forTile?'tile-sprite sprite-wrap':'material-icon sprite-wrap';
@@ -1988,12 +2214,14 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
     return wrap;
   }
 
+
   function buildDetailSprite(key,stage){
     const img=document.createElement('img');
     img.className='detail-sprite';img.src=detailSpriteSrc(key,stage);img.alt='';img.loading='lazy';img.decoding='async';
     if(UV_CLASSES[key])img.classList.add('uv-reactive',UV_CLASSES[key]);
     return img;
   }
+
 
   function buildExceptionalSprite(item,compact=false){
     const img=document.createElement('img');
@@ -2002,9 +2230,13 @@ const discovered=!!priorDiscovery?.discovered || hasHistoricalEvidence;
   }
 
 
+
+
   function renderBoard(){
     els.mineBoard.innerHTML='';
     const hints=new Set(state.face.hints||[]);
+
+
 
 
     state.face.tiles.forEach(t=>{
@@ -2016,6 +2248,8 @@ if(scans>=1)b.classList.add('scan-area');
       if((state.face.metalSignalTiles||[]).includes(t.index)&&!t.revealed)b.classList.add('metal-signal');
       if((state.face.exceptionalHintTiles||[]).includes(t.index)&&!t.revealed)b.classList.add('exceptional-zone-hint');
       if(scanMode)b.classList.add('scan-selectable');
+
+
 
 
       if(t.revealed){
@@ -2041,8 +2275,12 @@ if(scans>=1)b.classList.add('scan-area');
       }
 
 
+
+
       els.mineBoard.appendChild(b);
     });
+
+
 
 
     if(heatWarningVisible&&state.currentDepth===6&&!state.upgrades.geothermalGear){
@@ -2053,6 +2291,8 @@ if(scans>=1)b.classList.add('scan-area');
       els.mineBoard.appendChild(warning);
     }
   }
+
+
 
 
   function renderFaceFinds(){
@@ -2067,6 +2307,8 @@ if(scans>=1)b.classList.add('scan-area');
   }
 
 
+
+
   function renderMobileHud(){
     if(!els.mobileMineHud)return;
     els.mobileMineHud.classList.toggle('hidden',activePanel!=='mine');
@@ -2074,6 +2316,8 @@ if(scans>=1)b.classList.add('scan-area');
     els.mobileDurability.textContent=state.postgame?.completed?'⛏️ ∞ · gilded steel':`⛏️ ${state.face.durability} / ${max}`;
     els.mobileScans.textContent=state.upgrades.surveying>0?`⌁ ${state.face.scanUsesRemaining} / ${currentMaxScans()}`:'⌁ locked';
   }
+
+
 
 
   function renderWorkbench(){
@@ -2091,6 +2335,8 @@ if(scans>=1)b.classList.add('scan-area');
     }
 
 
+
+
     els.workbenchList.innerHTML='';
     const discoveredEntries=Object.entries(MATERIALS).filter(([k])=>isDiscovered(k));
     if(!discoveredEntries.length){
@@ -2103,8 +2349,12 @@ if(scans>=1)b.classList.add('scan-area');
       card.className=`workbench-card ${openWorkbenchKey===k?'open':''} ${stock>0?'has-stock':''} ${mastered?(silverMastered?'silver-mastered':'mastered'):''}`;
 
 
+
+
       const toggle=document.createElement('button');
       toggle.type='button';toggle.className='accordion-toggle';toggle.setAttribute('aria-expanded',openWorkbenchKey===k?'true':'false');
+
+
 
 
       const alert=document.createElement('span');
@@ -2114,7 +2364,11 @@ if(scans>=1)b.classList.add('scan-area');
       toggle.appendChild(alert);
 
 
+
+
       toggle.appendChild(buildIcon(k));
+
+
 
 
       const main=document.createElement('div');main.className='accordion-main';
@@ -2122,9 +2376,13 @@ if(scans>=1)b.classList.add('scan-area');
       toggle.appendChild(main);
 
 
+
+
       const chev=document.createElement('span');chev.className='chevron';chev.textContent='⌄';toggle.appendChild(chev);
       toggle.addEventListener('click',()=>{openWorkbenchKey=openWorkbenchKey===k?null:k;renderWorkbench();});
       card.appendChild(toggle);
+
+
 
 
       const details=document.createElement('div');details.className='workbench-details';details.innerHTML=workbenchDetails(k);card.appendChild(details);
@@ -2132,8 +2390,12 @@ if(scans>=1)b.classList.add('scan-area');
     });
 
 
+
+
     els.workbenchList.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',workbenchAction));
   }
+
+
 
 
   function renderPostgameWorkbench(){
@@ -2149,6 +2411,7 @@ if(scans>=1)b.classList.add('scan-area');
         <div class="collection-mini-stat"><span class="status-label">Exceptional finds</span><strong>${state.postgame.exceptionalFound||0}</strong></div>
       </div>`;
   }
+
 
   function renderSpecimenStorage(){
     if(!els.specimenStorageSection)return;
@@ -2192,6 +2455,7 @@ if(scans>=1)b.classList.add('scan-area');
     });
   }
 
+
   function buyProspectingSupply(key){
     const cfg=PROSPECTING_SUPPLIES[key];
     if(!state.postgame?.completed||!cfg||state.credits<cfg.cost)return;
@@ -2199,6 +2463,8 @@ if(scans>=1)b.classList.add('scan-area');
     state.postgame.supplies[key]=(state.postgame.supplies[key]||0)+1;
     saveState();renderAll();showToast(`${cfg.label} added to your supplies.`);
   }
+
+
 
 
   function sellStoredSpecimen(id){
@@ -2211,6 +2477,8 @@ state.credits+=value;
   }
 
 
+
+
   function displayStoredSpecimen(id){
     const slot=firstEmptyPersonalSlot();if(slot<0){showToast('Personal Collection is full. Remove something first.');return;}
     const i=state.postgame.specimenStorage.findIndex(x=>x.id===id);if(i<0)return;
@@ -2219,12 +2487,16 @@ state.credits+=value;
   }
 
 
+
+
   function removePersonalSlot(index){
     const item=state.postgame.personalSlots[index];if(!item)return;
     state.postgame.personalSlots[index]=null;
     if(item.kind==='exceptional')state.postgame.specimenStorage.push(item);
     saveState();renderAll();showToast('Returned to Specimen Storage.');
   }
+
+
 
 
   function openExceptionalInspect(item){
@@ -2243,11 +2515,15 @@ state.credits+=value;
   }
 
 
+
+
   function closeExceptionalInspect(){
     if(!els.specimenInspectModal)return;
     els.specimenInspectModal.classList.add('hidden');
     document.body.classList.remove('modal-open');
   }
+
+
 
 
   function renderPersonalCollection(){
@@ -2272,6 +2548,8 @@ state.credits+=value;
   }
 
 
+
+
   function checkGameCompletion(){
     if(state.postgame?.completed||!isMuseumComplete())return false;
     state.postgame.completed=true;
@@ -2286,10 +2564,14 @@ state.credits+=value;
   }
 
 
+
+
   function completionDate(){
     if(!state.postgame?.completedAt)return 'Completed';
     try{return new Date(state.postgame.completedAt).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});}catch{return 'Completed';}
   }
+
+
 
 
   function renderCompletionPlaque(){
@@ -2299,6 +2581,8 @@ state.credits+=value;
     els.completionPlaque.innerHTML=`<div><span class="status-label">Permanent museum plaque</span><strong>🏆 True Rockhound</strong><p>Collection completed ${completionDate()} · ${state.meta.tilesMined.toLocaleString()} rock tiles mined · ${totalFound().toLocaleString()} specimens found</p></div><button id="reopenCompletionButton" class="secondary-button" type="button">View rewards</button>`;
     els.completionPlaque.querySelector('#reopenCompletionButton')?.addEventListener('click',openCompletionModal);
   }
+
+
 
 
   function openCompletionModal(){
@@ -2317,10 +2601,12 @@ state.credits+=value;
         <div>🌋 <strong>Postgame Prospecting</strong><span>Every depth stays open. There is nothing left you have to find.</span></div>
       </div>
       <p class="completion-line"><strong>There's nothing left you have to find.</strong><br>But there's always another rock.</p>
-      <div class="avery-thanks"><span class="status-label">One more thing</span><p>Thanks for sticking with Rockhound all the way to the bottom. I made this game because rocks are cool, learning things is fun, and I wanted an incremental game that actually lets you finish.</p><p><strong>I'm really glad you played. 🩵</strong></p><span>— Avery</span></div>`;
+      <div class="avery-thanks"><span class="status-label">One more thing</span><p>Thanks for sticking with Rockhound all the way to the bottom. I made this game because rocks are cool, learning things is fun, and I wanted an incremental game that actually lets you finish.</p><p>To Sarah, Harley, Ben, Fiona, and everyone who played Rockhound while it was still becoming itself. Thank you for testing it, encouraging me, finding bugs, and most of all, for actually playing the weird little geology game I made.</p><p><strong>You helped make this real. 🩵</strong></p><p><strong>I'm really glad you played. 🩵</strong></p><span>— Avery</span></div>`;
     els.completionModal.classList.remove('hidden');
     document.body.classList.add('modal-open');
   }
+
+
 
 
   function closeCompletionModal(){
@@ -2330,6 +2616,8 @@ state.credits+=value;
     state.postgame.completionSeen=true;
     saveState();renderAll();showToast('Postgame unlocked. Rock still go crunch. ✦');
   }
+
+
 
 
   function workbenchDetails(k){
@@ -2346,14 +2634,20 @@ state.credits+=value;
     }
 
 
+
+
     const rows=m.stages.map(stage=>{
       const count=state.inventory[k][stage],next=m.process?.[stage],can=canProcessMaterial(k),donated=state.collection[k][stage];
       return `<div class="stage-row"><div class="stage-art"><img src="${detailSpriteSrc(k,stage)}" alt="" loading="lazy" decoding="async"></div><div class="stage-copy"><strong>${m.stageLabels[stage]} · ${count} owned</strong><span>${formatMoney(m.prices[stage])} each</span>${next&&!can?`<span class="process-lock">Needs ${WORKSHOP_LEVELS[m.workshopRequired||0].name}</span>`:''}</div><div class="stage-actions">${next?`<button class="mini-button accent" data-action="process" data-material="${k}" data-stage="${stage}" ${count<1||!can?'disabled':''}>${m.processLabels[stage]}</button>`:''}<button class="mini-button donate" data-action="donate" data-material="${k}" data-stage="${stage}" ${count<1||donated?'disabled':''}>${donated?'In museum':'Donate'}</button><button class="mini-button" data-action="sell" data-material="${k}" data-stage="${stage}" ${count<1?'disabled':''}>Sell ${formatMoney(m.prices[stage])}</button></div></div>`;
     }).join('');
 
 
+
+
     return `<p class="material-subtitle">${m.subtitle}</p><div class="stats-grid"><div class="stat-box"><span>Found</span><strong>${s.found}</strong></div><div class="stat-box"><span>Sold</span><strong>${s.sold}</strong></div><div class="stat-box"><span>Donated</span><strong>${s.donated}</strong></div><div class="stat-box"><span>Processed</span><strong>${s.processed}</strong></div><div class="stat-box"><span>Earned</span><strong>${formatMoney(s.earned)}</strong></div></div>${rows}${automation}`;
   }
+
+
 
 
   function workbenchAction(e){
@@ -2365,12 +2659,16 @@ state.credits+=value;
   }
 
 
+
+
   function processOne(k,stage){
     const m=MATERIALS[k],next=m.process?.[stage];
     if(!next||!canProcessMaterial(k)||state.inventory[k][stage]<1)return;
     state.inventory[k][stage]--;state.inventory[k][next]++;state.stats[k].processed++;
     checkAchievements();saveState();renderWorkbench();renderAchievements();showToast(`${m.name}: ${m.stageLabels[stage]} → ${m.stageLabels[next]}`);
   }
+
+
 
 
   function donateOne(k,stage){
@@ -2391,6 +2689,8 @@ state.credits+=value;
   }
 
 
+
+
   function sellOne(k,stage){
     if(state.inventory[k][stage]<1)return;
     const value=MATERIALS[k].prices[stage];
@@ -2399,9 +2699,13 @@ state.credits+=value;
   }
 
 
+
+
   function sellAllMastered(){
     const bulk=masteredSellSummary();
     if(bulk.items<1)return;
+
+
 
 
     let sold=0,value=0;
@@ -2420,12 +2724,16 @@ state.credits+=value;
     });
 
 
+
+
     state.credits+=value;
     state.meta.sellAllUses++;
     checkAchievements();
     saveState();renderAll();
     showToast(`Sold ${sold} bulk-sell item${sold===1?'':'s'} for ${formatMoney(value)}.`);
   }
+
+
 
 
   function toggleAutoProcess(k){
@@ -2435,11 +2743,15 @@ state.credits+=value;
   }
 
 
+
+
   function isMastered(k){
     const m=MATERIALS[k];
     const complete=m.stages.every(stage=>!!state.collection[k][stage]);
     return complete && (!!m.mastery || m.family==='fossil' || m.family==='artifact');
   }
+
+
 
 
   function setMuseumLighting(useUv){
@@ -2451,6 +2763,8 @@ state.credits+=value;
     saveState();
     renderMuseum();
   }
+
+
 
 
   function renderMuseum(){
@@ -2466,11 +2780,15 @@ const uvAvailable=!!state.upgrades.uvLamp;
     const total=Object.values(MATERIALS).reduce((a,m)=>a+m.stages.length,0);
 
 
+
+
     WINGS.forEach(w=>{
       const pairs=Object.entries(MATERIALS).filter(([,m])=>m.wing===w.id);
       let wf=0,wt=0;
       pairs.forEach(([k,m])=>{wt+=m.stages.length;wf+=m.stages.filter(s=>state.collection[k][s]).length;});
       filledTotal+=wf;
+
+
 
 
       const wing=document.createElement('section');
@@ -2482,6 +2800,8 @@ const uvAvailable=!!state.upgrades.uvLamp;
       wing.appendChild(groupHost);
 
 
+
+
       pairs.forEach(([k,m])=>{
         const group=document.createElement('div');
         const gf=m.stages.filter(s=>state.collection[k][s]).length,mastered=isMastered(k),silverMastered=mastered&&['fossil','artifact'].includes(m.family),obscured=shouldObscureIdentity(k);
@@ -2491,8 +2811,12 @@ const uvAvailable=!!state.upgrades.uvLamp;
         group.innerHTML=`<div class="museum-group-title"><strong>${obscured?hiddenName:m.name}</strong><span>${compactDiscovery?`${gf} / ${m.stages.length}`:obscured?'Unidentified':`${gf} / ${m.stages.length}`}</span></div>`;
 
 
+
+
         const grid=document.createElement('div');
         grid.className=`museum-specimen-grid ${m.stages.length>=3?'three':m.stages.length===2?'two':'one'}`;
+
+
 
 
         m.stages.forEach(stage=>{
@@ -2517,7 +2841,11 @@ const uvAvailable=!!state.upgrades.uvLamp;
         });
 
 
+
+
         group.appendChild(grid);
+
+
 
 
         if(mastered&&m.mastery){
@@ -2528,18 +2856,28 @@ const uvAvailable=!!state.upgrades.uvLamp;
         }
 
 
+
+
         groupHost.appendChild(group);
       });
+
+
 
 
       els.museumWings.appendChild(wing);
     });
 
 
+
+
     els.museumCount.textContent=`${filledTotal} / ${total}`;
     els.museumMeter.style.width=`${filledTotal/total*100}%`;
     renderCompletionPlaque();
   }
+
+
+
+
 
 
 
@@ -2564,6 +2902,8 @@ const uvAvailable=!!state.upgrades.uvLamp;
   }
 
 
+
+
   function renderAchievements(){
     if(!els.achievementGrid)return;
     checkAchievements(true);
@@ -2573,7 +2913,11 @@ const uvAvailable=!!state.upgrades.uvLamp;
     els.achievementGrid.innerHTML='';
 
 
+
+
     const special=new Set(['rockaholic','trueRockhound']);
+
+
 
 
     ACHIEVEMENTS.forEach(a=>{
@@ -2589,9 +2933,13 @@ const uvAvailable=!!state.upgrades.uvLamp;
   }
 
 
+
+
   function renderUpgrades(){
     els.shopBalance.textContent=formatMoney(state.credits);
     els.upgradeList.innerHTML='';
+
+
 
 
     const addCard=(builder,label)=>{
@@ -2602,6 +2950,8 @@ const uvAvailable=!!state.upgrades.uvLamp;
         console.error(`Upgrade card failed: ${label}`,err);
       }
     };
+
+
 
 
     addCard(depthCard,'mine depth');
@@ -2620,6 +2970,8 @@ const uvAvailable=!!state.upgrades.uvLamp;
   }
 
 
+
+
   function renderProspectingShop(){
     if(!els.prospectingShop)return;
     const unlocked=!!state.postgame?.completed;
@@ -2635,6 +2987,7 @@ const uvAvailable=!!state.upgrades.uvLamp;
     });
   }
 
+
   function upgradeCard({icon,eyebrow,title,description,current,cost,label,disabled,onClick,maxText=null}){
     const card=document.createElement('article');card.className='upgrade-card';
     const action=maxText
@@ -2645,12 +2998,16 @@ const uvAvailable=!!state.upgrades.uvLamp;
   }
 
 
+
+
   function depthCard(){
     const nextDepth=state.unlockedDepth+1;
     if(nextDepth>6)return upgradeCard({icon:'🪜',eyebrow:'Mine depth',title:'All depths unlocked',description:'The Upper Seam through the Epithermal Zone are all available.',current:'Depths 1–6 available',maxText:'MAX'});
 const up=DEPTH_UPGRADES[nextDepth];
     return upgradeCard({icon:'🪜',eyebrow:'Mine depth',title:`Unlock Depth ${nextDepth}`,description:up.description,current:`Current: Depths 1–${state.unlockedDepth}`,cost:up.cost,label:'Go deeper',disabled:state.credits<up.cost,onClick:buyDepth});
   }
+
+
 
 
   function geothermalGearCard(){
@@ -2661,12 +3018,16 @@ const up=DEPTH_UPGRADES[nextDepth];
   }
 
 
+
+
   function durabilityCard(){
     if(state.postgame?.completed)return upgradeCard({icon:'⛏️',eyebrow:'Completion reward',title:'Gilded Steel Pickaxe',description:'Effectively unbreakable. Solid gold would have been soft, heavy, and an objectively terrible material for a working pickaxe.',current:'Current: Gilded Steel Pickaxe · ∞ durability',maxText:'YOURS'});
     const i=state.upgrades.durability,cur=DURABILITY_LEVELS[i],max=cur.cost===null,next=max?null:DURABILITY_LEVELS[i+1];
     if(max)return upgradeCard({icon:'⛏️',eyebrow:'Pick durability',title:cur.label,description:'Built for the toughest rock in the deepest workings.',current:`Current: ${cur.label} · ${cur.swings} swings`,maxText:'MAX'});
     return upgradeCard({icon:'⛏️',eyebrow:'Pick durability',title:`${cur.swings} → ${next.swings} swings`,description:'More swings per rock face.',current:`Current: ${cur.label} · ${cur.swings} swings`,cost:cur.cost,label:'Upgrade pick',disabled:state.credits<cur.cost,onClick:buyDurability});
   }
+
+
 
 
   function surveyCard(){
@@ -2677,11 +3038,15 @@ const up=DEPTH_UPGRADES[nextDepth];
   }
 
 
+
+
   function scannerUsesCard(){
     const cur=SCAN_CHARGE_LEVELS[state.upgrades.scannerUses],max=cur.cost===null,next=max?null:SCAN_CHARGE_LEVELS[state.upgrades.scannerUses+1],locked=state.upgrades.surveying===0;
     if(max)return upgradeCard({icon:'📡',eyebrow:'Scanner charges',title:cur.label,description:'Each charge scans one selected 3×3 area.',current:`Current: ${cur.uses} scans per face`,maxText:'MAX'});
     return upgradeCard({icon:'📡',eyebrow:'Scanner charges',title:`${cur.uses} → ${next.uses} scans per face`,description:locked?'Unlock the Field Scanner first.':'Add another 3×3 scan per rock face.',current:`Current: ${cur.uses} scan${cur.uses===1?'':'s'} per face`,cost:cur.cost,label:locked?'Scanner locked':'Add scan',disabled:locked||state.credits<cur.cost,onClick:buyScannerUse});
   }
+
+
 
 
   function metalDetectorCard(){
@@ -2690,6 +3055,8 @@ const up=DEPTH_UPGRADES[nextDepth];
     if(owned)return upgradeCard({icon:'🧲',eyebrow:'Prospecting tool',title:'Metal Detector',description,current:'Current: Metal Detector equipped',maxText:'MAX'});
     return upgradeCard({icon:'🧲',eyebrow:'Prospecting tool',title:'Unlock Metal Detector',description,current:depthReady?'Available after reaching the Lower Works':'Reach Depth 2 first',cost,label:depthReady?'Buy detector':'Depth 2 required',disabled:!depthReady||state.credits<cost,onClick:buyMetalDetector});
   }
+
+
 
 
   function scannerHeatShieldCard(){
@@ -2701,6 +3068,8 @@ const up=DEPTH_UPGRADES[nextDepth];
   }
 
 
+
+
   function detectorHeatShieldCard(){
     const owned=!!state.upgrades.detectorHeatShield,gear=!!state.upgrades.geothermalGear,detector=!!state.upgrades.metalDetector,cost=650;
     const ready=gear&&detector;
@@ -2708,6 +3077,8 @@ const up=DEPTH_UPGRADES[nextDepth];
     if(owned)return upgradeCard({icon:'🧲',eyebrow:'Environmental adaptation',title:'Heat-Shielded Detector Housing',description,current:'Current: detector rated for Depth 6',maxText:'MAX'});
     return upgradeCard({icon:'🧲',eyebrow:'Environmental adaptation',title:'Heat-Shielded Detector Housing',description,current:ready?'Ready to install':!gear?'Needs Geothermal Protective Gear':'Needs Metal Detector',cost,label:ready?'Install housing':'Locked',disabled:!ready||state.credits<cost,onClick:buyDetectorHeatShield});
   }
+
+
 
 
   function uvLampCard(){
@@ -2718,11 +3089,17 @@ const up=DEPTH_UPGRADES[nextDepth];
   }
 
 
+
+
   function workshopCard(){
     const i=state.upgrades.workshop,cur=WORKSHOP_LEVELS[i],max=cur.cost===null;
     if(max)return upgradeCard({icon:'🛠️',eyebrow:'Workshop equipment',title:cur.name,description:cur.description,current:`Current: ${cur.name}`,maxText:'MAX'});
     return upgradeCard({icon:'🛠️',eyebrow:'Workshop equipment',title:`Unlock ${cur.next}`,description:cur.description,current:`Current: ${cur.name}`,cost:cur.cost,label:'Upgrade workshop',disabled:state.credits<cur.cost,onClick:buyWorkshop});
   }
+
+
+
+
 
 
 
@@ -2738,15 +3115,18 @@ const up=DEPTH_UPGRADES[nextDepth];
     state.credits-=cost;state.upgrades.geothermalGear=true;heatWarningVisible=false;checkAchievements();saveState();renderAll();showToast('Geothermal Protective Gear equipped.');
   }
 
+
   function buyScannerHeatShield(){
     const cost=800;if(state.upgrades.scannerHeatShield||!state.upgrades.geothermalGear||state.upgrades.surveying===0||state.credits<cost)return;
     state.credits-=cost;state.upgrades.scannerHeatShield=true;saveState();renderAll();showToast('Scanner heat shielding installed.');
   }
 
+
   function buyDetectorHeatShield(){
     const cost=650;if(state.upgrades.detectorHeatShield||!state.upgrades.geothermalGear||!state.upgrades.metalDetector||state.credits<cost)return;
     state.credits-=cost;state.upgrades.detectorHeatShield=true;saveState();renderAll();showToast('Detector heat shielding installed.');
   }
+
 
   function buyDurability(){
     const i=state.upgrades.durability,cur=DURABILITY_LEVELS[i];
@@ -2756,6 +3136,7 @@ const up=DEPTH_UPGRADES[nextDepth];
     checkAchievements();saveState();renderAll();showToast(`Pick durability increased to ${newer} swings.`);
   }
 
+
   function buySurvey(){
     const cur=SURVEY_LEVELS[state.upgrades.surveying];
     if(cur.cost===null||state.credits<cur.cost)return;
@@ -2764,6 +3145,7 @@ const up=DEPTH_UPGRADES[nextDepth];
     checkAchievements();saveState();renderAll();showToast(`${SURVEY_LEVELS[state.upgrades.surveying].name} unlocked.`);
   }
 
+
   function buyScannerUse(){
     const i=state.upgrades.scannerUses,cur=SCAN_CHARGE_LEVELS[i];
     if(state.upgrades.surveying===0||cur.cost===null||state.credits<cur.cost)return;
@@ -2771,6 +3153,8 @@ const up=DEPTH_UPGRADES[nextDepth];
     const newUses=SCAN_CHARGE_LEVELS[state.upgrades.scannerUses].uses;state.face.scanUsesRemaining+=newUses-oldUses;
     checkAchievements();saveState();renderAll();showToast(`${newUses} scans per rock face unlocked.`);
   }
+
+
 
 
   function buyMetalDetector(){
@@ -2782,12 +3166,14 @@ const up=DEPTH_UPGRADES[nextDepth];
     saveState();renderAll();showToast('Metal Detector unlocked.');
   }
 
+
   function buyUvLamp(){
     const cost=950;
     if(state.upgrades.uvLamp||state.unlockedDepth<5||state.credits<cost)return;
     state.credits-=cost;state.upgrades.uvLamp=true;
     saveState();renderAll();showToast('UV Fluorescence Lamp installed in the museum.');
   }
+
 
   function buyWorkshop(){
     const cur=WORKSHOP_LEVELS[state.upgrades.workshop];
@@ -2797,14 +3183,18 @@ const up=DEPTH_UPGRADES[nextDepth];
   }
 
 
+
+
   function resetGame(){
     if(!window.confirm('Reset all Rockhound Beta 1.5.8 progress?'))return;
     localStorage.removeItem(SAVE_KEY);state=defaultState();state.face=generateFace(1);openWorkbenchKey=null;scanMode=false;
     saveState();renderAll();showToast('Beta 1.5.8 save reset.');
   }
 
+
   function showToast(msg){
     clearTimeout(toastTimer);els.toast.textContent=msg;els.toast.classList.add('show');toastTimer=setTimeout(()=>els.toast.classList.remove('show'),1900);
   }
+
 
 })();
