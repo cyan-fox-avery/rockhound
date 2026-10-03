@@ -2601,7 +2601,7 @@ state.credits+=value;
         <div>🌋 <strong>Postgame Prospecting</strong><span>Every depth stays open. There is nothing left you have to find.</span></div>
       </div>
       <p class="completion-line"><strong>There's nothing left you have to find.</strong><br>But there's always another rock.</p>
-      <div class="avery-thanks"><span class="status-label">One more thing</span><p>Thanks for sticking with Rockhound all the way to the bottom. I made this game because rocks are cool, learning things is fun, and I wanted an incremental game that actually lets you finish.</p><p>To Sarah, Harley, Ben, Fiona, and everyone who played Rockhound while it was still becoming itself. Thank you for testing it, encouraging me, finding bugs, and most of all, for actually playing the weird little geology game I made.</p><p><strong>You helped make this real. 🩵</strong></p><p><strong>I'm really glad you played. 🩵</strong></p><span>— Avery</span></div>`;
+      <div class="avery-thanks"><span class="status-label">One more thing</span><p>Thanks for sticking with Rockhound all the way to the bottom. I made this game because rocks are cool, learning things is fun, and I wanted an incremental game that actually lets you finish.</p><p><strong>I'm really glad you played. 🩵</strong></p><p>To Sarah, Harley, Ben, Fiona, and everyone who played Rockhound while it was still becoming itself. Thank you for testing it, encouraging me, finding bugs, and most of all, for actually playing the weird little geology game I made.</p><p><strong>You helped make this real. 🩵</strong></p><span>— Avery</span></div>`;
     els.completionModal.classList.remove('hidden');
     document.body.classList.add('modal-open');
   }
