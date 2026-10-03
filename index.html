@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -18,6 +18,8 @@
     </header>
 
 
+
+
     <main>
       <section class="panel active" data-panel="mine">
         <div class="status-grid">
@@ -28,11 +30,15 @@
         </div>
 
 
+
+
         <div class="mine-card">
           <div class="mine-heading">
             <div><h2>Rock face</h2><p>Read the rock, survey promising areas, then follow the veins you uncover.</p></div>
             <button id="newFaceButton" class="secondary-button" type="button">New face</button>
           </div>
+
+
 
 
           <div class="depth-picker">
@@ -42,21 +48,30 @@
           </div>
 
 
+
+
           <div class="mine-feedback">
             <div class="face-find-strip"><span class="status-label">Found this face</span><div id="faceFinds" class="face-find-list"><span class="face-find-empty">Nothing yet</span></div></div>
           </div>
 
 
+
+
           <div id="mineBoard" class="mine-board" aria-label="10 by 10 mine grid"></div>
 
 
+
+
           <div id="mineMessage" class="message-card mine-message-inline"><span class="message-icon">⛏️</span><div><strong>Rock go crunch.</strong><p>Faint geological tells can suggest where to begin. Repeated scans can reveal the vaguest hint of something hidden.</p></div></div>
+
+
 
 
           <div class="mine-tool-buttons" aria-label="Prospecting tools">
             <button id="scanButton" class="mine-tool-button" type="button"><span class="tool-button-icon">⌁</span><span><strong>Scan area</strong><small id="scanButtonStatus">Locked</small></span></button>
             <button id="metalDetectorButton" class="mine-tool-button" type="button"><span class="tool-button-icon">🧲</span><span><strong>Sweep face</strong><small id="detectorButtonStatus">Locked</small></span></button>
           </div>
+
 
           <div id="postgameProspectingTools" class="postgame-prospecting-tools hidden" aria-label="Postgame prospecting supplies">
             <button id="prospectorKitButton" class="postgame-supply-button" type="button"><span>🎒</span><strong>Kit</strong><small id="prospectorKitStatus">0 owned</small></button>
@@ -69,12 +84,16 @@
           </div>
 
 
+
+
           <div class="run-footer mine-actions">
             <span class="status-note">Scanner and detector reset on every fresh face.</span>
             <button id="surfaceButton" class="primary-button" type="button">Return to surface</button>
           </div>
         </div>
       </section>
+
+
 
 
       <section class="panel" data-panel="workbench">
@@ -98,6 +117,8 @@
       </section>
 
 
+
+
       <section class="panel" data-panel="museum">
         <div class="section-heading">
           <div><p class="eyebrow">THE COLLECTION</p><h2>Museum</h2></div>
@@ -114,6 +135,8 @@
         </div>
         <div id="museumWings" class="museum-wings"></div>
       </section>
+
+
 
 
       <section id="personalCollectionPanel" class="panel hidden" data-panel="collection">
@@ -133,6 +156,8 @@
       </section>
 
 
+
+
       <section class="panel" data-panel="achievements">
         <div class="section-heading">
           <div><p class="eyebrow">ODDITIES & MILESTONES</p><h2>Achievements</h2></div>
@@ -141,6 +166,8 @@
         <div class="collection-progress-card"><div><span class="status-label">Unlocked</span><strong id="achievementCount">0 / 50</strong></div><div class="big-meter"><span id="achievementMeter"></span></div></div>
         <div id="achievementGrid" class="achievement-grid"></div>
       </section>
+
+
 
 
       <section class="panel" data-panel="upgrades">
@@ -153,10 +180,14 @@
     </main>
 
 
+
+
     <div id="mobileMineHud" class="mobile-mine-hud" aria-live="polite">
       <span id="mobileDurability">⛏️ 0 / 0</span>
       <span id="mobileScans">⌁ locked</span>
     </div>
+
+
 
 
     <nav class="bottom-nav" aria-label="Game navigation">
@@ -170,6 +201,8 @@
   </div>
 
 
+
+
   <div id="completionModal" class="completion-modal hidden" role="dialog" aria-modal="true" aria-labelledby="completionTitle">
     <div class="completion-dialog">
       <p class="eyebrow">MUSEUM COMPLETE</p>
@@ -178,6 +211,7 @@
       <button id="keepMiningButton" class="primary-button completion-continue" type="button">KEEP MINING</button>
     </div>
   </div>
+
 
   <div id="specimenInspectModal" class="specimen-inspect-modal hidden" role="dialog" aria-modal="true" aria-labelledby="specimenInspectTitle">
     <div class="specimen-inspect-dialog">
@@ -190,6 +224,6 @@
     </div>
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="script.js?v=1.5.8"></script>
+  <script src="script.js?v=1.5.8a"></script>
 </body>
 </html>
