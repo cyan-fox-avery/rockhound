@@ -2372,3 +2372,11 @@ body.museum-uv-active .panel[data-panel="museum"] .completion-plaque{
   .achievement-card.tier-special .achievement-icon{width:50px;height:50px}
   .personal-slot-actions .mini-button{font-size:.54rem;padding:6px 3px}
 }
+.tutorial-overlay{position:fixed;z-index:200;inset:0;background:rgba(5,7,8,.72);backdrop-filter:blur(3px)}
+.tutorial-highlight{position:fixed;z-index:201;border:2px solid var(--gold);border-radius:14px;box-shadow:0 0 0 4000px rgba(5,7,8,.55),0 0 24px rgba(212,179,105,.45);pointer-events:none;transition:top .25s ease,left .25s ease,width .25s ease,height .25s ease}
+.tutorial-card{position:fixed;z-index:202;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom));width:min(calc(100% - 26px),520px);padding:16px;border:1px solid rgba(212,179,105,.45);border-radius:20px;background:linear-gradient(180deg,#202021,#131719);box-shadow:0 30px 90px rgba(0,0,0,.55)}
+.tutorial-card h2{margin:0 0 6px;font-size:1.25rem}
+.tutorial-body{margin:0 0 12px;color:#d0cbc3;font-size:.82rem;line-height:1.5}
+.tutorial-actions{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tutorial-buttons{display:flex;gap:8px}
+#replayTutorialButton{width:100%;margin-top:10px}
