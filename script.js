@@ -912,7 +912,11 @@ const DURABILITY_LEVELS = [
     els.resetButton.addEventListener('click',resetGame);
     els.tutorialNext?.addEventListener('click',nextTutorialStep);
     els.tutorialSkip?.addEventListener('click',closeTutorial);
-    els.replayTutorialButton?.addEventListener('click',openTutorial);
+    els.replayTutorialButton?.addEventListener('click',()=>{
+      const mineBtn=document.querySelector('.nav-button[data-target="mine"]');
+      if(mineBtn)switchPanel(mineBtn);
+      openTutorial();
+    });
     window.addEventListener('resize',()=>{ if(els.tutorialOverlay && !els.tutorialOverlay.classList.contains('hidden')) positionTutorialHighlight(); });
     if(els.keepMiningButton)els.keepMiningButton.addEventListener('click',closeCompletionModal);
     els.specimenInspectClose?.addEventListener('click',closeExceptionalInspect);
@@ -2639,12 +2643,12 @@ state.credits+=value;
   const TUTORIAL_STEPS = [
     {selector:'#mineBoard', title:'Tap the rock.',
      body:'Tap tiles to swing your pick. Faint geological tells can hint where to begin \u2014 follow the veins you uncover.'},
-    {selector:'.mine-tool-buttons', title:'Survey first.',
-     body:'Scan areas and sweep for metal before you dig. The tools hint where the good stuff hides \u2014 discovering how they behave is half the fun.'},
+    {selector:'.mine-tool-buttons', title:'Tools unlock as you go.',
+     body:'The area scanner and metal detector unlock as you progress. The tools hint where the good stuff hides \u2014 discovering how they behave is half the fun.'},
     {selector:'.bottom-nav', title:'Workbench, Museum, Shop.',
      body:'Process finds at the Workbench, grow your Museum, spend earnings in the Shop. Each tab keeps its own scroll spot.'},
     {selector:'.bottom-nav [data-target="museum"]', title:'Fill the museum.',
-     body:'That is the whole game \u2014 44 specimens across six depths and four wings. No resets, no prestige. When the museum is finished, you have finished the game.'}
+     body:'That is the whole game \u2014 44 subjects across six depths and four wings. No resets, no prestige. When the museum is finished, you have finished the game.'}
   ];
   let tutorialStep = 0;
 
@@ -2655,7 +2659,9 @@ state.credits+=value;
     const step = TUTORIAL_STEPS[tutorialStep];
     const target = step && step.selector ? document.querySelector(step.selector) : null;
     if(!target){ els.tutorialHighlight.classList.add('hidden'); return; }
-    target.scrollIntoView({block:'nearest',behavior:'smooth'});
+    // Scroll instantly, then measure: measuring mid-smooth-scroll lands the
+    // spotlight in the wrong place.
+    target.scrollIntoView({block:'nearest'});
     const r = target.getBoundingClientRect();
     const pad = 6;
     const h = els.tutorialHighlight;
