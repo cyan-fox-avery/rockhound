@@ -176,6 +176,7 @@
         <section id="prospectingShop" class="prospecting-shop hidden"></section>
         <div id="upgradeList" class="upgrade-list"></div>
         <button id="resetButton" class="danger-button" type="button">Reset Beta 1.5.8 save</button>
+        <button id="replayTutorialButton" class="secondary-button" type="button">Replay intro</button>
       </section>
     </main>
 
@@ -202,6 +203,22 @@
 
 
 
+
+  <div id="tutorialOverlay" class="tutorial-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle">
+    <div id="tutorialHighlight" class="tutorial-highlight hidden"></div>
+    <div class="tutorial-card">
+      <p class="eyebrow">FIRST DAY ON THE JOB</p>
+      <h2 id="tutorialTitle"></h2>
+      <p id="tutorialBody" class="tutorial-body"></p>
+      <div class="tutorial-actions">
+        <span id="tutorialStepLabel" class="status-note"></span>
+        <span class="tutorial-buttons">
+          <button id="tutorialSkip" class="secondary-button" type="button">Skip</button>
+          <button id="tutorialNext" class="primary-button" type="button">Next</button>
+        </span>
+      </div>
+    </div>
+  </div>
 
   <div id="completionModal" class="completion-modal hidden" role="dialog" aria-modal="true" aria-labelledby="completionTitle">
     <div class="completion-dialog">
