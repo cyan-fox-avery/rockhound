@@ -831,7 +831,7 @@ const DURABILITY_LEVELS = [
     },
     meta:{
       tilesMined:0,scansUsed:0,doubleScans:0,anomalyFinds:0,metalSweeps:0,metalSignalFinds:0,
-      facesFinished:0,lastSwingFinds:0,sellAllUses:0,fullSurveyFaces:0,taglineTaps:0,uvViews:0,fullProspectingStacks:0,focusedExceptionalFinds:0,depthsMined:{}
+      facesFinished:0,lastSwingFinds:0,sellAllUses:0,fullSurveyFaces:0,taglineTaps:0,uvViews:0,fullProspectingStacks:0,focusedExceptionalFinds:0,depthsMined:{},seenTutorial:false
     },
     face:null
   });
@@ -865,7 +865,8 @@ const DURABILITY_LEVELS = [
     shopBalance:$('shopBalance'), upgradeList:$('upgradeList'), prospectingShop:$('prospectingShop'), resetButton:$('resetButton'), toast:$('toast'),
     mobileMineHud:$('mobileMineHud'), mobileDurability:$('mobileDurability'), mobileScans:$('mobileScans'),
     gameTitle:$('gameTitle'), gameTagline:$('gameTagline'), completionModal:$('completionModal'), completionBody:$('completionBody'), keepMiningButton:$('keepMiningButton'),
-    specimenInspectModal:$('specimenInspectModal'), specimenInspectImage:$('specimenInspectImage'), specimenInspectTitle:$('specimenInspectTitle'), specimenInspectDetail:$('specimenInspectDetail'), specimenInspectMeta:$('specimenInspectMeta'), specimenInspectClose:$('specimenInspectClose')
+    specimenInspectModal:$('specimenInspectModal'), specimenInspectImage:$('specimenInspectImage'), specimenInspectTitle:$('specimenInspectTitle'), specimenInspectDetail:$('specimenInspectDetail'), specimenInspectMeta:$('specimenInspectMeta'), specimenInspectClose:$('specimenInspectClose'),
+    tutorialOverlay:$('tutorialOverlay'), tutorialHighlight:$('tutorialHighlight'), tutorialTitle:$('tutorialTitle'), tutorialBody:$('tutorialBody'), tutorialStepLabel:$('tutorialStepLabel'), tutorialNext:$('tutorialNext'), tutorialSkip:$('tutorialSkip'), replayTutorialButton:$('replayTutorialButton'),
   };
 
 
@@ -909,16 +910,28 @@ const DURABILITY_LEVELS = [
     els.uvLightButton.addEventListener('click',()=>setMuseumLighting(true));
     els.sellAllMasteredButton.addEventListener('click',sellAllMastered);
     els.resetButton.addEventListener('click',resetGame);
+    els.tutorialNext?.addEventListener('click',nextTutorialStep);
+    els.tutorialSkip?.addEventListener('click',closeTutorial);
+    els.replayTutorialButton?.addEventListener('click',()=>{
+      const mineBtn=document.querySelector('.nav-button[data-target="mine"]');
+      if(mineBtn)switchPanel(mineBtn);
+      // switchPanel() restores the tab's remembered scroll position inside two
+      // nested requestAnimationFrame() calls; wait one more frame so the
+      // tutorial's first spotlight measures after the page has settled.
+      requestAnimationFrame(()=>requestAnimationFrame(()=>requestAnimationFrame(openTutorial)));
+    });
+    window.addEventListener('resize',()=>{ if(els.tutorialOverlay && !els.tutorialOverlay.classList.contains('hidden')) positionTutorialHighlight(); });
     if(els.keepMiningButton)els.keepMiningButton.addEventListener('click',closeCompletionModal);
     els.specimenInspectClose?.addEventListener('click',closeExceptionalInspect);
     els.specimenInspectModal?.addEventListener('click',event=>{if(event.target===els.specimenInspectModal)closeExceptionalInspect();});
-    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!els.specimenInspectModal?.classList.contains('hidden'))closeExceptionalInspect();});
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!els.specimenInspectModal?.classList.contains('hidden'))closeExceptionalInspect();if(event.key==='Escape'&&els.tutorialOverlay&&!els.tutorialOverlay.classList.contains('hidden'))closeTutorial();});
 
 
 
 
     renderAll();
     if(state.postgame?.completed&&!state.postgame.completionSeen)setTimeout(openCompletionModal,120);
+    else if(!state.meta.seenTutorial)setTimeout(openTutorial,700);
   }
 
 
@@ -947,6 +960,16 @@ const DURABILITY_LEVELS = [
         meta:{...fresh.meta,...(parsed.meta||{}),depthsMined:{...(fresh.meta.depthsMined||{}),...(parsed.meta?.depthsMined||{})}},
         postgame:{...fresh.postgame,...(parsed.postgame||{}),specimenStorage:Array.isArray(parsed.postgame?.specimenStorage)?[...parsed.postgame.specimenStorage]:Array.isArray(parsed.postgame?.vault)?[...parsed.postgame.vault]:[],personalSlots:Array.isArray(parsed.postgame?.personalSlots)?parsed.postgame.personalSlots.slice(0,21):Array(21).fill(null),supplies:{...fresh.postgame.supplies,...(parsed.postgame?.supplies||{})},armedSupplies:{...fresh.postgame.armedSupplies,...(parsed.postgame?.armedSupplies||{})}}
       };
+
+
+
+
+      // Grandfather existing players out of the first-run tutorial: anyone with
+      // recorded progress keeps their flow uninterrupted. Brand-new saves see it once.
+      if(parsed.meta?.seenTutorial === undefined){
+        const hasProgress = (parsed.meta?.tilesMined||0) > 0 || Object.keys(parsed.achievements||{}).length > 0;
+        if(hasProgress) merged.meta.seenTutorial = true;
+      }
 
 
 
@@ -2615,6 +2638,84 @@ state.credits+=value;
     document.body.classList.remove('modal-open');
     state.postgame.completionSeen=true;
     saveState();renderAll();showToast('Postgame unlocked. Rock still go crunch. ✦');
+  }
+
+
+
+
+  const TUTORIAL_STEPS = [
+    {selector:'#mineBoard', title:'Tap the rock.',
+     body:'Tap tiles to swing your pick. Faint geological tells can hint where to begin \u2014 follow the veins you uncover.'},
+    {selector:'.mine-tool-buttons', title:'Tools unlock as you go.',
+     body:'The area scanner and metal detector unlock as you progress. The tools hint where the good stuff hides \u2014 discovering how they behave is half the fun.'},
+    {selector:'.bottom-nav', title:'Workbench, Museum, Shop.',
+     body:'Process finds at the Workbench, grow your Museum, spend earnings in the Shop. Each tab keeps its own scroll spot.'},
+    {selector:'.bottom-nav [data-target="museum"]', title:'Fill the museum.',
+     body:'That is the whole game \u2014 44 subjects across six depths and four wings. No resets, no prestige. When the museum is finished, you have finished the game.'}
+  ];
+  let tutorialStep = 0;
+
+
+
+
+  function positionTutorialHighlight(){
+    const step = TUTORIAL_STEPS[tutorialStep];
+    const target = step && step.selector ? document.querySelector(step.selector) : null;
+    if(!target){ els.tutorialHighlight.classList.add('hidden'); return; }
+    // Scroll instantly, then measure: measuring mid-smooth-scroll lands the
+    // spotlight in the wrong place.
+    target.scrollIntoView({block:'nearest'});
+    const r = target.getBoundingClientRect();
+    const pad = 6;
+    const h = els.tutorialHighlight;
+    h.style.top = Math.max(4, r.top - pad) + 'px';
+    h.style.left = Math.max(4, r.left - pad) + 'px';
+    h.style.width = (r.width + pad * 2) + 'px';
+    h.style.height = (r.height + pad * 2) + 'px';
+    h.classList.remove('hidden');
+  }
+
+
+
+
+  function showTutorialStep(){
+    const step = TUTORIAL_STEPS[tutorialStep];
+    if(!step){ closeTutorial(); return; }
+    els.tutorialTitle.textContent = step.title;
+    els.tutorialBody.textContent = step.body;
+    els.tutorialStepLabel.textContent = (tutorialStep + 1) + ' / ' + TUTORIAL_STEPS.length;
+    els.tutorialNext.textContent = tutorialStep === TUTORIAL_STEPS.length - 1 ? 'Start mining' : 'Next';
+    positionTutorialHighlight();
+  }
+
+
+
+
+  function openTutorial(){
+    if(!els.tutorialOverlay) return;
+    tutorialStep = 0;
+    els.tutorialOverlay.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+    showTutorialStep();
+  }
+
+
+
+
+  function closeTutorial(){
+    if(!els.tutorialOverlay) return;
+    els.tutorialOverlay.classList.add('hidden');
+    els.tutorialHighlight.classList.add('hidden');
+    document.body.classList.remove('modal-open');
+    if(!state.meta.seenTutorial){ state.meta.seenTutorial = true; saveState(); }
+  }
+
+
+
+
+  function nextTutorialStep(){
+    if(tutorialStep < TUTORIAL_STEPS.length - 1){ tutorialStep++; showTutorialStep(); }
+    else closeTutorial();
   }
 
 
