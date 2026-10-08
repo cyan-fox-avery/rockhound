@@ -2380,3 +2380,4 @@ body.museum-uv-active .panel[data-panel="museum"] .completion-plaque{
 .tutorial-actions{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .tutorial-buttons{display:flex;gap:8px}
 #replayTutorialButton{width:100%;margin-top:10px}
+.tutorial-card.tutorial-card-top{top:calc(10px + env(safe-area-inset-top));bottom:auto}
