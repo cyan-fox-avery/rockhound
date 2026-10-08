@@ -915,7 +915,10 @@ const DURABILITY_LEVELS = [
     els.replayTutorialButton?.addEventListener('click',()=>{
       const mineBtn=document.querySelector('.nav-button[data-target="mine"]');
       if(mineBtn)switchPanel(mineBtn);
-      openTutorial();
+      // switchPanel() restores the tab's remembered scroll position inside two
+      // nested requestAnimationFrame() calls; wait one more frame so the
+      // tutorial's first spotlight measures after the page has settled.
+      requestAnimationFrame(()=>requestAnimationFrame(()=>requestAnimationFrame(openTutorial)));
     });
     window.addEventListener('resize',()=>{ if(els.tutorialOverlay && !els.tutorialOverlay.classList.contains('hidden')) positionTutorialHighlight(); });
     if(els.keepMiningButton)els.keepMiningButton.addEventListener('click',closeCompletionModal);
