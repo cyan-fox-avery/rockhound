@@ -866,7 +866,7 @@ const DURABILITY_LEVELS = [
     mobileMineHud:$('mobileMineHud'), mobileDurability:$('mobileDurability'), mobileScans:$('mobileScans'),
     gameTitle:$('gameTitle'), gameTagline:$('gameTagline'), completionModal:$('completionModal'), completionBody:$('completionBody'), keepMiningButton:$('keepMiningButton'),
     specimenInspectModal:$('specimenInspectModal'), specimenInspectImage:$('specimenInspectImage'), specimenInspectTitle:$('specimenInspectTitle'), specimenInspectDetail:$('specimenInspectDetail'), specimenInspectMeta:$('specimenInspectMeta'), specimenInspectClose:$('specimenInspectClose'),
-    tutorialOverlay:$('tutorialOverlay'), tutorialHighlight:$('tutorialHighlight'), tutorialTitle:$('tutorialTitle'), tutorialBody:$('tutorialBody'), tutorialStepLabel:$('tutorialStepLabel'), tutorialNext:$('tutorialNext'), tutorialSkip:$('tutorialSkip'), replayTutorialButton:$('replayTutorialButton'),
+    tutorialOverlay:$('tutorialOverlay'), tutorialCard:$('tutorialCard'), tutorialHighlight:$('tutorialHighlight'), tutorialTitle:$('tutorialTitle'), tutorialBody:$('tutorialBody'), tutorialStepLabel:$('tutorialStepLabel'), tutorialNext:$('tutorialNext'), tutorialSkip:$('tutorialSkip'), replayTutorialButton:$('replayTutorialButton'),
   };
 
 
@@ -2673,6 +2673,11 @@ state.credits+=value;
     h.style.width = (r.width + pad * 2) + 'px';
     h.style.height = (r.height + pad * 2) + 'px';
     h.classList.remove('hidden');
+
+    // Keep the card from covering its own target: targets in the lower half
+    // of the screen get the card docked at the top instead of the bottom.
+    const midY = r.top + r.height / 2;
+    els.tutorialCard.classList.toggle('tutorial-card-top', midY > window.innerHeight * 0.55);
   }
 
 
